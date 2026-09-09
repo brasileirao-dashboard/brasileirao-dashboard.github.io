@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer">
   
   <title>Brasileirão</title>
   
-  <!-- ÍCONE OFICIAL DA TAÇA DO BRASILEIRÃO NA ABA (Via Proxy Anti-Bloqueio) -->
-  <link rel="icon" type="image/png" href="https://wsrv.nl/?url=upload.wikimedia.org/wikipedia/pt/4/42/Campeonato_Brasileiro_S%C3%A9rie_A_logo.png&w=64&output=png">
+  <!-- ÍCONE OFICIAL DA TAÇA NA ABA DO NAVEGADOR -->
+  <link rel="icon" type="image/png" href="https://logodownload.org/wp-content/uploads/2017/02/taca-campeonato-brasileiro.png">
   
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
@@ -18,8 +19,8 @@
     .painel-jogos { width: 35vw; }
     .logo-clube { width: 20px; height: 20px; object-fit: contain; margin-right: 6px; vertical-align: middle; }
     
-    /* ESTÁDIOS MAIORES E DESTACADOS (40x40px) */
-    .logo-estadio { width: 40px; height: 40px; object-fit: cover; border-radius: 8px; margin-right: 10px; border: 1px solid #dcdcdc; box-shadow: 0 1px 3px rgba(0,0,0,0.15); }
+    /* ESTÁDIOS NO TAMANHO IDEAL E ELEGANTES */
+    .logo-estadio { width: 40px; height: 40px; object-fit: cover; border-radius: 6px; margin-right: 10px; border: 1px solid #c0c0c0; }
     
     .zona-libertadores td:first-child { border-left: 4px solid #0d6efd !important; } 
     .zona-pre-liberta td:first-child { border-left: 4px solid #0dcaf0 !important; } 
@@ -27,8 +28,8 @@
     .zona-rebaixamento td:first-child { border-left: 4px solid #dc3545 !important; } 
     .tabela-alinhada td, .tabela-alinhada th { vertical-align: middle; padding: 3px 6px !important; font-size: 0.8rem; }
     .box-cor { display: inline-block; width: 10px; height: 10px; margin-right: 3px; border-radius: 3px; vertical-align: middle; }
-    .card-jogo { background: #f8f9fa; border-radius: 6px; padding: 8px 10px; margin-bottom: 8px; border-left: 4px solid #007A33; box-shadow: 0 2px 4px rgba(0,0,0,0.06); }
-    .info-partida { font-size: 0.75rem; color: #555; text-align: center; margin-bottom: 6px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+    .card-jogo { background: #f8f9fa; border-radius: 6px; padding: 8px 10px; margin-bottom: 8px; border-left: 4px solid #007A33; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+    .info-partida { font-size: 0.72rem; color: #555; text-align: center; margin-bottom: 6px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
     .input-simulacao { width: 35px; text-align: center; font-weight: bold; border: 1px solid #ced4da; border-radius: 4px; }
     @media (max-width: 900px) { .painel-classificacao, .painel-jogos { width: 100%; height: auto; min-height: 40vh; } .d-flex.gap-4 { flex-direction: column; gap: 15px !important; } body { overflow-y: auto; height: auto; } }
   </style>
@@ -37,9 +38,9 @@
 
 <div class="container-fluid px-2 py-1">
   <div class="d-flex justify-content-between align-items-center mb-1 px-3">
-    <!-- IMAGEM DA TAÇA OFICIAL AO LADO DO TÍTULO (Via Proxy Anti-Bloqueio) -->
+    <!-- IMAGEM DA TAÇA DO BRASILEIRÃO NO TOPO DO SITE -->
     <h4 class="m-0 fw-bold text-dark d-flex align-items-center">
-      <img src="https://wsrv.nl/?url=upload.wikimedia.org/wikipedia/pt/4/42/Campeonato_Brasileiro_S%C3%A9rie_A_logo.png&w=150&output=png" style="height: 45px; margin-right: 12px; object-fit: contain;">
+      <img src="https://logodownload.org/wp-content/uploads/2017/02/taca-campeonato-brasileiro.png" style="height: 40px; margin-right: 10px; object-fit: contain;">
       <span><span class="text-brasil">BRASILEIRÃO</span> Série A</span>
     </h4>
     <button id="btn-simulacao" class="btn btn-warning btn-sm fw-bold shadow-sm" onclick="alternarModoSimulacao()">Modo Simulação: DESLIGADO</button>
@@ -84,7 +85,7 @@
 </div>
 
 <script>
-  // URL DO SEU BANCO DE DADOS NO APPS SCRIPT
+  // O link do seu Apps Script
   const API_URL = 'https://script.google.com/macros/s/AKfycby2W_byRD0m1qHTSs_W20VynlNc2zcFPW6j01U9YWJnGNM4eqLrwmfWF_gp_20DTgdDWA/exec';
 
   const escudos = {
@@ -110,29 +111,31 @@
     "Chapecoense": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/K7JQUKTRsuXfO9YrD5dq5g_500x500.png"
   };
 
-  // BANCO DE FOTOS DOS ESTÁDIOS
+  // MINIATURAS DIRETAS (Leves e Impossíveis de Quebrar)
   const estadiosFotos = {
-    "maracan": "https://upload.wikimedia.org/wikipedia/commons/6/62/Maracan%C3%A3_Stadium_Rio_de_Janeiro_2013.jpg",
-    "allianz": "https://upload.wikimedia.org/wikipedia/commons/a/a2/Allianz_Parque_geral.jpg",
-    "mineir": "https://upload.wikimedia.org/wikipedia/commons/3/36/Mineir%C3%A3o_Belo_Horizonte_%28cropped%29.jpg",
-    "química": "https://upload.wikimedia.org/wikipedia/commons/1/1d/Arena_Corinthians_2014-06-11.jpg",
-    "morum": "https://upload.wikimedia.org/wikipedia/commons/5/52/Est%C3%A1dio_C%C3%ADcero_Pompeu_de_Toledo_2023.jpg",
-    "beira": "https://upload.wikimedia.org/wikipedia/commons/2/23/Beira-Rio_2014.jpg",
-    "grêmio": "https://upload.wikimedia.org/wikipedia/commons/e/e1/Arena_do_Gr%C3%AAmio_geral.jpg",
-    "nilton": "https://upload.wikimedia.org/wikipedia/commons/4/4b/Engenh%C3%A3o_panor%C3%A2mica.jpg",
-    "januário": "https://upload.wikimedia.org/wikipedia/commons/8/8c/Est%C3%A1dio_Vasco_da_Gama_2020.jpg",
-    "couto": "https://upload.wikimedia.org/wikipedia/commons/1/1a/Est%C3%A1dio_Major_Ant%C3%B4nio_Couto_Pereira.jpg",
-    "mrv": "https://upload.wikimedia.org/wikipedia/commons/1/18/Arena_MRV_in_2023.jpg",
-    "fonte": "https://upload.wikimedia.org/wikipedia/commons/6/63/Arena_Fonte_Nova_2013.jpg",
-    "barradão": "https://upload.wikimedia.org/wikipedia/commons/0/07/Est%C3%A1dio_Manoel_Barradas.jpg",
-    "belmiro": "https://upload.wikimedia.org/wikipedia/commons/8/84/Estadio_Vila_Belmiro_Santos.jpg",
-    "baixada": "https://upload.wikimedia.org/wikipedia/commons/f/fa/Arena_da_Baixada_2014.jpg",
-    "mangueirão": "https://upload.wikimedia.org/wikipedia/commons/a/a2/Estadio_olimpico_do_Para.jpg",
-    "bragantino": "https://upload.wikimedia.org/wikipedia/commons/b/b3/Estadio_Nabi_Abi_Chedid.jpg",
-    "chedid": "https://upload.wikimedia.org/wikipedia/commons/b/b3/Estadio_Nabi_Abi_Chedid.jpg",
-    "campos maia": "https://upload.wikimedia.org/wikipedia/commons/e/e5/Estadio_Municipal_Jose_Maria_de_Campos_Maia_em_Mirassol.jpg",
-    "condá": "https://upload.wikimedia.org/wikipedia/commons/e/e4/Arena_Cond%C3%A1_2015.jpg"
+    "maracan": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Maracan%C3%A3_Stadium_Rio_de_Janeiro_2013.jpg/320px-Maracan%C3%A3_Stadium_Rio_de_Janeiro_2013.jpg",
+    "allianz": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Allianz_Parque_geral.jpg/320px-Allianz_Parque_geral.jpg",
+    "mineir": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Mineir%C3%A3o_Belo_Horizonte_%28cropped%29.jpg/320px-Mineir%C3%A3o_Belo_Horizonte_%28cropped%29.jpg",
+    "química": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Arena_Corinthians_2014-06-11.jpg/320px-Arena_Corinthians_2014-06-11.jpg",
+    "morum": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Est%C3%A1dio_C%C3%ADcero_Pompeu_de_Toledo_2023.jpg/320px-Est%C3%A1dio_C%C3%ADcero_Pompeu_de_Toledo_2023.jpg",
+    "beira": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Beira-Rio_2014.jpg/320px-Beira-Rio_2014.jpg",
+    "grêmio": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Arena_do_Gr%C3%AAmio_geral.jpg/320px-Arena_do_Gr%C3%AAmio_geral.jpg",
+    "nilton": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Engenh%C3%A3o_panor%C3%A2mica.jpg/320px-Engenh%C3%A3o_panor%C3%A2mica.jpg",
+    "januário": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Est%C3%A1dio_Vasco_da_Gama_2020.jpg/320px-Est%C3%A1dio_Vasco_da_Gama_2020.jpg",
+    "couto": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Est%C3%A1dio_Major_Ant%C3%B4nio_Couto_Pereira.jpg/320px-Est%C3%A1dio_Major_Ant%C3%B4nio_Couto_Pereira.jpg",
+    "mrv": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Arena_MRV_in_2023.jpg/320px-Arena_MRV_in_2023.jpg",
+    "fonte": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Arena_Fonte_Nova_2013.jpg/320px-Arena_Fonte_Nova_2013.jpg",
+    "barradão": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Est%C3%A1dio_Manoel_Barradas.jpg/320px-Est%C3%A1dio_Manoel_Barradas.jpg",
+    "belmiro": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Estadio_Vila_Belmiro_Santos.jpg/320px-Estadio_Vila_Belmiro_Santos.jpg",
+    "baixada": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Arena_da_Baixada_2014.jpg/320px-Arena_da_Baixada_2014.jpg",
+    "mangueirão": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Estadio_olimpico_do_Para.jpg/320px-Estadio_olimpico_do_Para.jpg",
+    "bragantino": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Estadio_Nabi_Abi_Chedid.jpg/320px-Estadio_Nabi_Abi_Chedid.jpg",
+    "chedid": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Estadio_Nabi_Abi_Chedid.jpg/320px-Estadio_Nabi_Abi_Chedid.jpg",
+    "campos maia": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Estadio_Municipal_Jose_Maria_de_Campos_Maia_em_Mirassol.jpg/320px-Estadio_Municipal_Jose_Maria_de_Campos_Maia_em_Mirassol.jpg",
+    "condá": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Arena_Cond%C3%A1_2015.jpg/320px-Arena_Cond%C3%A1_2015.jpg"
   };
+
+  const fallbackIcon = "https://cdn-icons-png.flaticon.com/512/2809/2809840.png";
 
   let rodadaAtual = 25;
   let todosOsJogos = [];
@@ -152,7 +155,7 @@
       renderizarRodada();
       recalcularEAtualizarTabela();
     } catch (erro) {
-      document.getElementById('lista-jogos').innerHTML = `<p class="text-center text-danger py-5">Erro ao carregar dados. Verifique a API.</p>`;
+      document.getElementById('lista-jogos').innerHTML = `<p class="text-center text-danger py-5">Erro ao carregar dados.</p>`;
     }
   }
 
@@ -284,18 +287,16 @@
         centralHtml = `<div class="text-center bg-white px-2 py-1 rounded shadow-sm fw-bold text-muted" style="width: 24%; font-size: 0.8rem;">x</div>`;
       }
 
-      const estadioNome = jogo['Estadio'] || 'Estádio';
-      const imgPadrao = "https://upload.wikimedia.org/wikipedia/commons/6/62/Maracan%C3%A3_Stadium_Rio_de_Janeiro_2013.jpg";
-      let estadioSrc = imgPadrao;
+      const estadioNome = jogo['Estadio'] || 'A Definir';
+      let estadioSrc = fallbackIcon; 
       
       const estadioNomeMin = estadioNome.toLowerCase();
       for (const [chaveEstadio, urlFoto] of Object.entries(estadiosFotos)) {
         if (estadioNomeMin.includes(chaveEstadio)) { estadioSrc = urlFoto; break; }
       }
       
-      // O SISTEMA ANTI-BLOQUEIO: Passamos a imagem pelo wsrv.nl para recorta-la perfeitamente e evitar o erro 403 da Wikipedia
-      const proxyEstadio = `https://wsrv.nl/?url=${encodeURIComponent(estadioSrc.replace('https://', ''))}&w=80&h=80&fit=cover&output=webp`;
-      const estadioFoto = `<img src="${proxyEstadio}" class="logo-estadio" onerror="this.style.display='none';">`;
+      // LINK DIRETO, SEM PROXY:
+      const estadioFoto = `<img src="${estadioSrc}" class="logo-estadio" onerror="this.onerror=null; this.src='${fallbackIcon}';">`;
 
       const dataStr = jogo['Data'] ? jogo['Data'] : "A Definir";
       const horaStr = jogo['Horario'] ? jogo['Horario'] : "";

@@ -3,14 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <!-- ESSA TAG DESBLOQUEIA AS FOTOS DA WIKIPEDIA -->
   <meta name="referrer" content="no-referrer">
   
   <title>Brasileirão</title>
   
-  <!-- ÍCONE DE UMA TAÇA DOURADA PARA A ABA DO NAVEGADOR -->
-  <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/1051/1051160.png">
+  <!-- ÍCONE DA TAÇA GARANTIDO PARA QUALQUER NAVEGADOR -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏆</text></svg>">
   
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
@@ -30,6 +28,8 @@
     .card-jogo { background: #f8f9fa; border-radius: 6px; padding: 6px 10px; margin-bottom: 6px; border-left: 4px solid #007A33; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
     .info-partida { font-size: 0.68rem; color: #555; text-align: center; margin-bottom: 2px; font-weight: 600; }
     .input-simulacao { width: 35px; text-align: center; font-weight: bold; border: 1px solid #ced4da; border-radius: 4px; }
+    .status-vivo { color: #dc3545; font-weight: bold; animation: piscar 1.5s infinite; }
+    @keyframes piscar { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
     @media (max-width: 900px) { .painel-classificacao, .painel-jogos { width: 100%; height: auto; min-height: 40vh; } .d-flex.gap-4 { flex-direction: column; gap: 15px !important; } body { overflow-y: auto; height: auto; } }
   </style>
 </head>
@@ -42,6 +42,7 @@
   </div>
   
   <div class="d-flex justify-content-center gap-4">
+    <!-- CLASSIFICAÇÃO -->
     <div>
       <div class="painel-classificacao">
         <h6 class="mb-2 text-secondary fw-bold text-center">Classificação</h6>
@@ -51,7 +52,7 @@
               <tr><th style="width: 6%;">Pos</th><th class="text-start">Clube</th><th>P</th><th>J</th><th>V</th><th>E</th><th>D</th><th>GP</th><th>GC</th><th>SG</th></tr>
             </thead>
             <tbody id="tabela-corpo" class="text-center border-top-0">
-              <tr><td colspan="10" class="py-3 text-muted">Carregando tabela...</td></tr>
+              <tr><td colspan="10" class="py-3 text-muted">Carregando dados oficiais da CBF...</td></tr>
             </tbody>
           </table>
         </div>
@@ -64,15 +65,16 @@
       </div>
     </div>
 
+    <!-- JOGOS -->
     <div>
       <div class="painel-jogos">
         <div class="d-flex justify-content-between align-items-center mb-2">
           <button class="btn btn-outline-success btn-sm fw-bold px-2 py-1" onclick="mudarRodada(-1)">◀ Anterior</button>
-          <h6 id="titulo-rodada" class="m-0 text-secondary fw-bold">Carregando...</h6>
+          <h6 id="titulo-rodada" class="m-0 text-secondary fw-bold">Buscando...</h6>
           <button class="btn btn-outline-success btn-sm fw-bold px-2 py-1" onclick="mudarRodada(1)">Próxima ▶</button>
         </div>
         <div id="lista-jogos" style="flex-grow: 1; overflow-y: auto; padding-right: 4px;">
-          <p class="text-center text-muted py-5">Buscando confrontos...</p>
+          <p class="text-center text-muted py-5">Carregando jogos...</p>
         </div>
       </div>
     </div>
@@ -80,52 +82,31 @@
 </div>
 
 <script>
-  // O link do seu Apps Script
+  // Link para o seu banco de dados no Google Apps Script
   const API_URL = 'https://script.google.com/macros/s/AKfycby2W_byRD0m1qHTSs_W20VynlNc2zcFPW6j01U9YWJnGNM4eqLrwmfWF_gp_20DTgdDWA/exec';
 
-  const escudos = {
-    "Flamengo": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/orE554NToSkH6nuwofe7Yg_500x500.png",
-    "Palmeiras": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/7spurne-xDt2p6C0imYYNA_500x500.png",
-    "Athletico-PR": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/9LkdBR4L5plovKM8eIy7nQ_500x500.png",
-    "Fluminense": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/fCMxMMDF2AZPU7LzYKSlig_500x500.png",
-    "Bahia": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/nIdbR6qIUDyZUBO9vojSPw_500x500.png",
-    "Cruzeiro": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/Tcv9X__nIh-6wFNJPMwIXQ_500x500.png",
-    "Coritiba": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/LaFlBADLmsjHfGTehCYtuA_500x500.png",
-    "Atlético-MG": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/q9fhEsgpuyRq58OgmSndcQ_500x500.png",
-    "Bragantino": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/lMyw2zn1Z4cdkaxKJWnsQw_500x500.png",
-    "São Paulo": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/4w2Z97Hf9CSOqICK3a8AxQ_500x500.png",
-    "Vitória": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/LHSM6VchpkI4NIptoSTHOg_500x500.png",
-    "Corinthians": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/tCMSqgXVHROpdCpQhzTo1g_500x500.png",
-    "Santos": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/VHdNOT6wWOw_vJ38GMjMzg_500x500.png",
-    "Botafogo": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/KLDWYp-H8CAOT9H_JgizRg_500x500.png",
-    "Grêmio": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/Ku-73v_TW9kpex-IEGb0ZA_500x500.png",
-    "Mirassol": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/5J3JY7fcdiDYU5rbPW7AKA_500x500.png",
-    "Vasco": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/hHwT8LwRmYCAGxQ-STLxYA_500x500.png",
-    "Internacional": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/OWVFKuHrQuf4q2Wk0hEmSA_500x500.png",
-    "Remo": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/bENrK5iSMF6sXrEkDNNxng_500x500.png",
-    "Chapecoense": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/K7JQUKTRsuXfO9YrD5dq5g_500x500.png"
-  };
-
+  // Caçador Inteligente de Estádios (usamos termos em minúsculo para casar com qualquer texto da API)
   const estadiosFotos = {
-    "Maracanã": "https://upload.wikimedia.org/wikipedia/commons/6/62/Maracan%C3%A3_Stadium_Rio_de_Janeiro_2013.jpg",
-    "Allianz Parque": "https://upload.wikimedia.org/wikipedia/commons/a/a2/Allianz_Parque_geral.jpg",
-    "Mineirão": "https://upload.wikimedia.org/wikipedia/commons/3/36/Mineir%C3%A3o_Belo_Horizonte_%28cropped%29.jpg",
-    "Neo Química Arena": "https://upload.wikimedia.org/wikipedia/commons/1/1d/Arena_Corinthians_2014-06-11.jpg",
-    "MorumBIS": "https://upload.wikimedia.org/wikipedia/commons/5/52/Est%C3%A1dio_C%C3%ADcero_Pompeu_de_Toledo_2023.jpg",
-    "Beira-Rio": "https://upload.wikimedia.org/wikipedia/commons/2/23/Beira-Rio_2014.jpg",
-    "Arena do Grêmio": "https://upload.wikimedia.org/wikipedia/commons/e/e1/Arena_do_Gr%C3%AAmio_geral.jpg",
-    "Nilton Santos": "https://upload.wikimedia.org/wikipedia/commons/4/4b/Engenhão_panorâmica.jpg",
-    "São Januário": "https://upload.wikimedia.org/wikipedia/commons/8/8c/Est%C3%A1dio_Vasco_da_Gama_2020.jpg",
-    "Couto Pereira": "https://upload.wikimedia.org/wikipedia/commons/1/1a/Est%C3%A1dio_Major_Ant%C3%B4nio_Couto_Pereira.jpg",
-    "Arena MRV": "https://upload.wikimedia.org/wikipedia/commons/1/18/Arena_MRV_in_2023.jpg",
-    "Arena Fonte Nova": "https://upload.wikimedia.org/wikipedia/commons/6/63/Arena_Fonte_Nova_2013.jpg",
-    "Mangueirão": "https://upload.wikimedia.org/wikipedia/commons/a/a2/Estadio_olimpico_do_Para.jpg",
-    "Barradão": "https://upload.wikimedia.org/wikipedia/commons/0/07/Est%C3%A1dio_Manoel_Barradas.jpg",
-    "Vila Belmiro": "https://upload.wikimedia.org/wikipedia/commons/8/84/Estadio_Vila_Belmiro_Santos.jpg",
-    "Arena da Baixada": "https://upload.wikimedia.org/wikipedia/commons/f/fa/Arena_da_Baixada_2014.jpg",
-    "Nabi Abi Chedid": "https://upload.wikimedia.org/wikipedia/commons/b/b3/Estadio_Nabi_Abi_Chedid.jpg",
-    "José Maria de Campos Maia": "https://upload.wikimedia.org/wikipedia/commons/e/e5/Estadio_Municipal_Jose_Maria_de_Campos_Maia_em_Mirassol.jpg",
-    "Arena Condá": "https://upload.wikimedia.org/wikipedia/commons/e/e4/Arena_Cond%C3%A1_2015.jpg"
+    "maracan": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Maracan%C3%A3_Stadium_Rio_de_Janeiro_2013.jpg/320px-Maracan%C3%A3_Stadium_Rio_de_Janeiro_2013.jpg",
+    "allianz": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Allianz_Parque_geral.jpg/320px-Allianz_Parque_geral.jpg",
+    "mineir": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Mineir%C3%A3o_Belo_Horizonte_%28cropped%29.jpg/320px-Mineir%C3%A3o_Belo_Horizonte_%28cropped%29.jpg",
+    "neo qu": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Arena_Corinthians_2014-06-11.jpg/320px-Arena_Corinthians_2014-06-11.jpg",
+    "morum": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Est%C3%A1dio_C%C3%ADcero_Pompeu_de_Toledo_2023.jpg/320px-Est%C3%A1dio_C%C3%ADcero_Pompeu_de_Toledo_2023.jpg",
+    "beira": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Beira-Rio_2014.jpg/320px-Beira-Rio_2014.jpg",
+    "grêmio": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Arena_do_Gr%C3%AAmio_geral.jpg/320px-Arena_do_Gr%C3%AAmio_geral.jpg",
+    "nilton": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Engenhão_panorâmica.jpg/320px-Engenhão_panorâmica.jpg",
+    "januário": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Est%C3%A1dio_Vasco_da_Gama_2020.jpg/320px-Est%C3%A1dio_Vasco_da_Gama_2020.jpg",
+    "couto": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Est%C3%A1dio_Major_Ant%C3%B4nio_Couto_Pereira.jpg/320px-Est%C3%A1dio_Major_Ant%C3%B4nio_Couto_Pereira.jpg",
+    "mrv": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Arena_MRV_in_2023.jpg/320px-Arena_MRV_in_2023.jpg",
+    "fonte": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Arena_Fonte_Nova_2013.jpg/320px-Arena_Fonte_Nova_2013.jpg",
+    "barradão": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Est%C3%A1dio_Manoel_Barradas.jpg/320px-Est%C3%A1dio_Manoel_Barradas.jpg",
+    "belmiro": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Estadio_Vila_Belmiro_Santos.jpg/320px-Estadio_Vila_Belmiro_Santos.jpg",
+    "baixada": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Arena_da_Baixada_2014.jpg/320px-Arena_da_Baixada_2014.jpg",
+    "ligga": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Arena_da_Baixada_2014.jpg/320px-Arena_da_Baixada_2014.jpg",
+    "bragan": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Estadio_Nabi_Abi_Chedid.jpg/320px-Estadio_Nabi_Abi_Chedid.jpg",
+    "jaconi": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Estadio_Alfredo_Jaconi_Caxias.jpg/320px-Estadio_Alfredo_Jaconi_Caxias.jpg",
+    "accioly": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Estadio_Antonio_Accioly.jpg/320px-Estadio_Antonio_Accioly.jpg",
+    "castelão": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Arena_Castelão_em_2013.jpg/320px-Arena_Castelão_em_2013.jpg"
   };
 
   let rodadaAtual = 27;
@@ -138,28 +119,17 @@
     try {
       const resClass = await fetch(API_URL + "?acao=classificacao");
       dadosClassificacaoBase = await resClass.json();
-      recalcularEAtualizarTabela();
-
-      const resRodadaAtual = await fetch(API_URL + "?acao=rodada_atual");
-      const dadosRodadaAtual = await resRodadaAtual.json();
-      rodadaAtual = parseInt(dadosRodadaAtual.rodada) || 27;
-
+      
       const resRodadas = await fetch(API_URL + "?acao=rodadas");
       todosOsJogos = await resRodadas.json();
+      
+      // Acha a rodada mais recente em andamento (ou usa a 27 de base)
+      rodadaAtual = 27; 
       renderizarRodada();
+      recalcularEAtualizarTabela();
     } catch (erro) {
-      console.error("Erro:", erro);
-      document.getElementById('lista-jogos').innerHTML = `<p class="text-center text-danger py-5">Erro ao carregar dados.</p>`;
+      document.getElementById('lista-jogos').innerHTML = `<p class="text-center text-danger py-5">Erro ao carregar dados. Verifique a API.</p>`;
     }
-  }
-
-  function formatarDataHoraLimpa(dataStr, horaStr) {
-    let d = "A Definir"; let h = "";
-    let dMatch = String(dataStr || "").match(/\d{2}\/\d{2}\/\d{4}/);
-    if (dMatch) d = dMatch[0];
-    let hMatch = String(horaStr || "").match(/\d{2}:\d{2}/);
-    if (hMatch) h = hMatch[0];
-    return `${d} ${h}`.trim();
   }
 
   function alternarModoSimulacao() {
@@ -186,33 +156,38 @@
   function recalcularEAtualizarTabela() {
     let tabela = JSON.parse(JSON.stringify(dadosClassificacaoBase));
     let stats = {};
+    
+    // Agora a base vem certinha da API!
     tabela.forEach(t => {
-      stats[t['Clube']] = { Clube: t['Clube'], Pontos: parseInt(t['Pontos'])||0, Jogos: parseInt(t['Jogos'])||0, Vitorias: parseInt(t['Vitórias'])||0, Empates: parseInt(t['Empates'])||0, Derrotas: parseInt(t['Derrotas'])||0, GP: parseInt(t['Gols Pró'])||0, GC: parseInt(t['Gols Contra'])||0, Saldo: parseInt(t['Saldo'])||0 };
+      stats[t['Clube']] = { 
+        Clube: t['Clube'], Logo: t['Logo'], Pontos: parseInt(t['Pontos'])||0, 
+        Jogos: parseInt(t['Jogos'])||0, Vitorias: parseInt(t['Vitórias'])||0, 
+        Empates: parseInt(t['Empates'])||0, Derrotas: parseInt(t['Derrotas'])||0, 
+        GP: parseInt(t['Gols Pró'])||0, GC: parseInt(t['Gols Contra'])||0, Saldo: parseInt(t['Saldo'])||0 
+      };
     });
 
     todosOsJogos.forEach((jogo, index) => {
       const r = parseInt(jogo['Rodada']); const chave = `${r}-${index}`;
       let gm = ""; let gv = "";
-      if (jogo['Status'] === 'Encerrado' && jogo['GolsMandante'] !== '' && jogo['GolsVisitante'] !== '') {
-        gm = parseInt(jogo['GolsMandante']); gv = parseInt(jogo['GolsVisitante']);
-      } else if (placaresSimulados[chave] && placaresSimulados[chave].mandante !== "" && placaresSimulados[chave].visitante !== "") {
+      
+      if (modoSimulacao && placaresSimulados[chave] && placaresSimulados[chave].mandante !== "" && placaresSimulados[chave].visitante !== "") {
         gm = parseInt(placaresSimulados[chave].mandante); gv = parseInt(placaresSimulados[chave].visitante);
       }
 
-      if (!isNaN(gm) && !isNaN(gv)) {
+      // Se for modo simulação e digitou gols em jogos Não Iniciados, recalcula!
+      if (!isNaN(gm) && !isNaN(gv) && jogo['Status'] !== 'Encerrado' && jogo['Status'] !== 'Ao Vivo') {
         const mandante = jogo['Mandante']; const visitante = jogo['Visitante'];
         if (stats[mandante] && stats[visitante]) {
-          if (jogo['Status'] !== 'Encerrado' && placaresSimulados[chave]) {
-            stats[mandante].Jogos++; stats[visitante].Jogos++;
-            stats[mandante].GP += gm; stats[mandante].GC += gv;
-            stats[visitante].GP += gv; stats[visitante].GC += gm;
+          stats[mandante].Jogos++; stats[visitante].Jogos++;
+          stats[mandante].GP += gm; stats[mandante].GC += gv;
+          stats[visitante].GP += gv; stats[visitante].GC += gm;
 
-            if (gm > gv) { stats[mandante].Pontos += 3; stats[mandante].Vitorias++; stats[visitante].Derrotas++; } 
-            else if (gm < gv) { stats[visitante].Pontos += 3; stats[visitante].Vitorias++; stats[mandante].Derrotas++; } 
-            else { stats[mandante].Pontos += 1; stats[mandante].Empates++; stats[visitante].Pontos += 1; stats[visitante].Empates++; }
-            stats[mandante].Saldo = stats[mandante].GP - stats[mandante].GC;
-            stats[visitante].Saldo = stats[visitante].GP - stats[visitante].GC;
-          }
+          if (gm > gv) { stats[mandante].Pontos += 3; stats[mandante].Vitorias++; stats[visitante].Derrotas++; } 
+          else if (gm < gv) { stats[visitante].Pontos += 3; stats[visitante].Vitorias++; stats[mandante].Derrotas++; } 
+          else { stats[mandante].Pontos += 1; stats[mandante].Empates++; stats[visitante].Pontos += 1; stats[visitante].Empates++; }
+          stats[mandante].Saldo = stats[mandante].GP - stats[mandante].GC;
+          stats[visitante].Saldo = stats[visitante].GP - stats[visitante].GC;
         }
       }
     });
@@ -239,8 +214,9 @@
       else if (pos >= 17) { classeLinha = 'zona-rebaixamento'; corPosicao = 'color: #dc3545; font-weight: bold;'; }
       else { corPosicao = 'color: #6c757d; font-weight: normal;'; }
 
-      const escudoUrl = escudos[time.Clube] || ""; 
-      let imgTag = escudoUrl ? `<img src="${escudoUrl}" class="logo-clube" onerror="this.style.display='none';">` : '';
+      // Escudo vindo oficialmente da API
+      const escudoUrl = time.Logo || ""; 
+      let imgTag = escudoUrl ? `<img src="${escudoUrl}" class="logo-clube">` : '';
 
       const linha = document.createElement('tr');
       linha.className = classeLinha;
@@ -272,12 +248,15 @@
     }
 
     jogosDaRodada.forEach(jogo => {
-      const imgMandante = escudos[jogo['Mandante']] ? `<img src="${escudos[jogo['Mandante']]}" class="logo-clube ms-1">` : '';
-      const imgVisitante = escudos[jogo['Visitante']] ? `<img src="${escudos[jogo['Visitante']]}" class="logo-clube me-1">` : '';
+      // Escudos oficiais da API
+      const imgMandante = jogo['LogoMandante'] ? `<img src="${jogo['LogoMandante']}" class="logo-clube ms-1">` : '';
+      const imgVisitante = jogo['LogoVisitante'] ? `<img src="${jogo['LogoVisitante']}" class="logo-clube me-1">` : '';
       const chave = `${rodadaAtual}-${jogo.originalIndex}`;
       let centralHtml = "";
 
-      if (jogo['Status'] === 'Encerrado' && jogo['GolsMandante'] !== '' && jogo['GolsVisitante'] !== '') {
+      if (jogo['Status'] === 'Ao Vivo') {
+        centralHtml = `<div class="text-center bg-white px-2 py-1 rounded shadow-sm fw-bold status-vivo" style="width: 24%; font-size: 0.78rem;">${jogo['GolsMandante']} x ${jogo['GolsVisitante']}</div>`;
+      } else if (jogo['Status'] === 'Encerrado' || (jogo['GolsMandante'] !== '' && jogo['GolsVisitante'] !== '')) {
         centralHtml = `<div class="text-center bg-white px-2 py-1 rounded shadow-sm fw-bold" style="width: 24%; font-size: 0.78rem;">${jogo['GolsMandante']} x ${jogo['GolsVisitante']}</div>`;
       } else if (modoSimulacao) {
         const valM = (placaresSimulados[chave] ? placaresSimulados[chave].mandante : "");
@@ -287,23 +266,24 @@
         centralHtml = `<div class="text-center bg-white px-2 py-1 rounded shadow-sm fw-bold text-muted" style="width: 24%; font-size: 0.8rem;">x</div>`;
       }
 
-      const estadioNome = jogo['Estadio'] || 'Estádio';
-      const imgPadrao = "https://upload.wikimedia.org/wikipedia/commons/6/62/Maracan%C3%A3_Stadium_Rio_de_Janeiro_2013.jpg";
-      
-      // Busca no nosso dicionário de estádios pela palavra-chave do nome da API
+      // Estádio com busca inteligente
+      const estadioNome = jogo['Estadio'] || 'A definir';
+      const imgPadrao = "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Maracan%C3%A3_Stadium_Rio_de_Janeiro_2013.jpg/320px-Maracan%C3%A3_Stadium_Rio_de_Janeiro_2013.jpg";
       let estadioSrc = imgPadrao;
+      
+      const estadioNomeMin = estadioNome.toLowerCase();
       for (const [chaveEstadio, urlFoto] of Object.entries(estadiosFotos)) {
-        if (estadioNome.includes(chaveEstadio)) { estadioSrc = urlFoto; break; }
+        if (estadioNomeMin.includes(chaveEstadio)) { estadioSrc = urlFoto; break; }
       }
       
       const estadioFoto = `<img src="${estadioSrc}" class="logo-estadio" onerror="this.onerror=null; this.src='${imgPadrao}';">`;
-      const dataHoraFormatada = formatarDataHoraLimpa(jogo['Data'], jogo['Horario']);
+      const statusFinal = jogo['Status'] === 'Adiado' ? '<span class="text-danger"> (Adiado)</span>' : '';
 
       const div = document.createElement('div');
       div.className = 'card-jogo';
       div.innerHTML = `
         <div class="info-partida">
-          📅 ${dataHoraFormatada} | ${estadioFoto} ${estadioNome}
+          📅 ${jogo['Data']} ${jogo['Horario']}${statusFinal} | ${estadioFoto} ${estadioNome}
         </div>
         <div class="d-flex justify-content-between align-items-center">
           <div class="text-end text-truncate" style="width: 36%; font-weight: 600; font-size: 0.78rem;">${jogo['Mandante']} ${imgMandante}</div>

@@ -3,12 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
+  <meta name="referrer" content="no-referrer">
   <title>Brasileirão</title>
-  
-  <!-- A TAÇA AGORA PUXA DIRETO DO SEU GITHUB (Favicon da aba) -->
   <link rel="icon" type="image/png" href="./taca.png">
-  
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body { background-color: #e2eee6; margin: 0; padding: 0; height: 100vh; overflow: hidden; }
@@ -17,22 +14,18 @@
     .painel-classificacao, .painel-jogos { width: 40vw; background-color: rgba(255, 255, 255, 0.96); border-radius: 12px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15); border: 3px solid #FFD700; padding: 12px 15px; height: 87vh; display: flex; flex-direction: column; }
     .painel-jogos { width: 35vw; }
     .logo-clube { width: 20px; height: 20px; object-fit: contain; margin-right: 6px; vertical-align: middle; }
-    
-    /* ESTÁDIOS PEQUENOS E DISCRETOS (Sem poluição visual) */
-    .logo-estadio { width: 28px; height: 18px; object-fit: cover; border-radius: 3px; margin-right: 6px; border: 1px solid #ccc; opacity: 0.9; }
-    
+    .logo-estadio { width: 38px; height: 38px; object-fit: cover; border-radius: 6px; margin-right: 6px; border: 1px solid #dcdcdc; box-shadow: 0 1px 3px rgba(0,0,0,0.15); }
     .zona-libertadores td:first-child { border-left: 4px solid #0d6efd !important; } 
     .zona-pre-liberta td:first-child { border-left: 4px solid #0dcaf0 !important; } 
     .zona-sulamericana td:first-child { border-left: 4px solid #198754 !important; } 
     .zona-rebaixamento td:first-child { border-left: 4px solid #dc3545 !important; } 
     .tabela-alinhada td, .tabela-alinhada th { vertical-align: middle; padding: 3px 6px !important; font-size: 0.8rem; }
     .box-cor { display: inline-block; width: 10px; height: 10px; margin-right: 3px; border-radius: 3px; vertical-align: middle; }
-    .card-jogo { background: #f8f9fa; border-radius: 6px; padding: 8px 10px; margin-bottom: 8px; border-left: 4px solid #007A33; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
-    
-    /* Informação da partida ajustada para casar com o estádio pequeno */
-    .info-partida { font-size: 0.72rem; color: #666; text-align: center; margin-bottom: 6px; font-weight: 500; display: flex; align-items: center; justify-content: center; }
-    
+    .card-jogo { background: #f8f9fa; border-radius: 6px; padding: 8px 10px; margin-bottom: 8px; border-left: 4px solid #007A33; box-shadow: 0 2px 4px rgba(0,0,0,0.06); }
+    .info-partida { font-size: 0.75rem; color: #555; text-align: center; margin-bottom: 6px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
     .input-simulacao { width: 35px; text-align: center; font-weight: bold; border: 1px solid #ced4da; border-radius: 4px; }
+    .link-clube { color: inherit; text-decoration: none; font-weight: bold; }
+    .link-clube:hover { text-decoration: underline; color: #000; }
     @media (max-width: 900px) { .painel-classificacao, .painel-jogos { width: 100%; height: auto; min-height: 40vh; } .d-flex.gap-4 { flex-direction: column; gap: 15px !important; } body { overflow-y: auto; height: auto; } }
   </style>
 </head>
@@ -41,11 +34,16 @@
 <div class="container-fluid px-2 py-1">
   <div class="d-flex justify-content-between align-items-center mb-1 px-3">
     <h4 class="m-0 fw-bold text-dark d-flex align-items-center">
-      <!-- A TAÇA AGORA PUXA DIRETO DO SEU GITHUB (Imagem ao lado do título) -->
-      <img src="./taca.png" style="height: 38px; margin-right: 12px; object-fit: contain; filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.1));" onerror="this.style.display='none';">
+      <img src="./taca.png" style="height: 45px; margin-right: 12px; object-fit: contain; filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.1));" onerror="this.style.display='none';">
       <span><span class="text-brasil">BRASILEIRÃO</span> Série A</span>
     </h4>
-    <button id="btn-simulacao" class="btn btn-warning btn-sm fw-bold shadow-sm" onclick="alternarModoSimulacao()">Modo Simulação: DESLIGADO</button>
+    <div class="d-flex align-items-center gap-2">
+      <!-- BOTÃO DE ÁUDIO (TEMA DO BRASILEIRÃO) -->
+      <button id="btn-audio" class="btn btn-outline-dark btn-sm fw-bold shadow-sm" onclick="tocarTema()">▶ Tocar Tema</button>
+      <div id="player-audio"></div>
+      
+      <button id="btn-simulacao" class="btn btn-warning btn-sm fw-bold shadow-sm" onclick="alternarModoSimulacao()">Modo Simulação: DESLIGADO</button>
+    </div>
   </div>
   
   <div class="d-flex justify-content-center gap-4">
@@ -112,29 +110,12 @@
     "Chapecoense": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/K7JQUKTRsuXfO9YrD5dq5g_500x500.png"
   };
 
-  // APONTA PARA OS ARQUIVOS DO SEU GITHUB
   const estadiosFotos = {
-    "maracan": "./maracana.jpg",
-    "allianz": "./allianz.jpg",
-    "mineir": "./mineirao.jpg",
-    "química": "./quimica.jpg",
-    "morum": "./morumbis.jpg",
-    "beira": "./beirario.jpg",
-    "grêmio": "./gremio.jpg",
-    "nilton": "./niltonsantos.jpg",
-    "januário": "./saojanuario.jpg",
-    "couto": "./couto.jpg",
-    "mrv": "./mrv.jpg",
-    "fonte": "./fontenova.jpg",
-    "barradão": "./barradao.jpg",
-    "belmiro": "./vilabelmiro.jpg",
-    "baixada": "./baixada.jpg",
-    "mangueirão": "./mangueirao.jpg",
-    "bragantino": "./bragantino.jpg",
-    "chedid": "./bragantino.jpg",
-    "campos maia": "./mirassol.jpg",
-    "mirassol": "./mirassol.jpg",
-    "condá": "./conda.jpg"
+    "maracan": "./maracana.jpg", "allianz": "./allianz.jpg", "mineir": "./mineirao.jpg", "química": "./quimica.jpg",
+    "morum": "./morumbis.jpg", "beira": "./beirario.jpg", "grêmio": "./gremio.jpg", "nilton": "./niltonsantos.jpg",
+    "januário": "./saojanuario.jpg", "couto": "./couto.jpg", "mrv": "./mrv.jpg", "fonte": "./fontenova.jpg",
+    "barradão": "./barradao.jpg", "belmiro": "./vilabelmiro.jpg", "baixada": "./baixada.jpg", "mangueirão": "./mangueirao.jpg",
+    "bragantino": "./bragantino.jpg", "chedid": "./bragantino.jpg", "campos maia": "./mirassol.jpg", "mirassol": "./mirassol.jpg", "condá": "./conda.jpg"
   };
 
   let rodadaAtual = 25;
@@ -142,6 +123,23 @@
   let dadosClassificacaoBase = [];
   let modoSimulacao = false;
   let placaresSimulados = {};
+  let musicaTocando = false;
+
+  function tocarTema() {
+    const player = document.getElementById('player-audio');
+    const btn = document.getElementById('btn-audio');
+    if (!musicaTocando) {
+      player.innerHTML = `<iframe width="0" height="0" src="https://www.youtube.com/embed/HAXtVTAyAMU?autoplay=1&loop=1&playlist=HAXtVTAyAMU" frameborder="0" allow="autoplay" style="display:none;"></iframe>`;
+      btn.innerText = "🔇 Parar Tema";
+      btn.classList.replace('btn-outline-dark', 'btn-danger');
+      musicaTocando = true;
+    } else {
+      player.innerHTML = '';
+      btn.innerText = "▶ Tocar Tema";
+      btn.classList.replace('btn-danger', 'btn-outline-dark');
+      musicaTocando = false;
+    }
+  }
 
   async function carregarTudo() {
     try {
@@ -185,27 +183,18 @@
     let stats = {};
     
     tabela.forEach(t => {
-      stats[t['Clube']] = { 
-        Clube: t['Clube'], Pontos: parseInt(t['Pontos'])||0, 
-        Jogos: parseInt(t['Jogos'])||0, Vitorias: parseInt(t['Vitórias'])||0, 
-        Empates: parseInt(t['Empates'])||0, Derrotas: parseInt(t['Derrotas'])||0, 
-        GP: parseInt(t['Gols Pró'])||0, GC: parseInt(t['Gols Contra'])||0, Saldo: parseInt(t['Saldo'])||0 
-      };
+      stats[t['Clube']] = { Clube: t['Clube'], Pontos: parseInt(t['Pontos'])||0, Jogos: parseInt(t['Jogos'])||0, Vitorias: parseInt(t['Vitórias'])||0, Empates: parseInt(t['Empates'])||0, Derrotas: parseInt(t['Derrotas'])||0, GP: parseInt(t['Gols Pró'])||0, GC: parseInt(t['Gols Contra'])||0, Saldo: parseInt(t['Saldo'])||0 };
     });
 
     todosOsJogos.forEach((jogo, index) => {
       const r = parseInt(jogo['Rodada']); const chave = `${r}-${index}`;
-      
       if (modoSimulacao && placaresSimulados[chave] && placaresSimulados[chave].mandante !== "" && placaresSimulados[chave].visitante !== "") {
-        let gm = parseInt(placaresSimulados[chave].mandante); 
-        let gv = parseInt(placaresSimulados[chave].visitante);
+        let gm = parseInt(placaresSimulados[chave].mandante); let gv = parseInt(placaresSimulados[chave].visitante);
         const mandante = jogo['Mandante']; const visitante = jogo['Visitante'];
-
         if (stats[mandante] && stats[visitante] && jogo['Status'] !== 'Encerrado') {
           stats[mandante].Jogos++; stats[visitante].Jogos++;
           stats[mandante].GP += gm; stats[mandante].GC += gv;
           stats[visitante].GP += gv; stats[visitante].GC += gm;
-
           if (gm > gv) { stats[mandante].Pontos += 3; stats[mandante].Vitorias++; stats[visitante].Derrotas++; } 
           else if (gm < gv) { stats[visitante].Pontos += 3; stats[visitante].Vitorias++; stats[mandante].Derrotas++; } 
           else { stats[mandante].Pontos += 1; stats[mandante].Empates++; stats[visitante].Pontos += 1; stats[visitante].Empates++; }
@@ -225,6 +214,13 @@
     montarTabelaDinamica(arrayTabela);
   }
 
+  function formatarNomeClube(nome) {
+    if (nome === "Vasco") {
+      return `<a href="./vasco.html" target="_blank" class="link-clube">Vasco</a>`;
+    }
+    return nome;
+  }
+
   function montarTabelaDinamica(dados) {
     const corpoTabela = document.getElementById('tabela-corpo');
     corpoTabela.innerHTML = ''; 
@@ -239,12 +235,13 @@
 
       const escudoUrl = escudos[time.Clube] || "https://cdn-icons-png.flaticon.com/512/53/53283.png"; 
       let imgTag = `<img src="${escudoUrl}" class="logo-clube">`;
+      let nomeFormatado = formatarNomeClube(time.Clube);
 
       const linha = document.createElement('tr');
       linha.className = classeLinha;
       linha.innerHTML = `
         <td style="${corPosicao}">${pos}</td>
-        <td class="text-start fw-bold text-dark" style="background-color: transparent;">${imgTag}${time.Clube}</td>
+        <td class="text-start text-dark" style="background-color: transparent;">${imgTag}${nomeFormatado}</td>
         <td class="fw-bold" style="background-color: transparent;">${time.Pontos}</td>
         <td style="background-color: transparent;">${time.Jogos}</td>
         <td style="background-color: transparent;">${time.Vitorias}</td>
@@ -274,6 +271,10 @@
 
       const imgMandante = escudos[jogo['Mandante']] ? `<img src="${escudos[jogo['Mandante']]}" class="logo-clube ms-1">` : '';
       const imgVisitante = escudos[jogo['Visitante']] ? `<img src="${escudos[jogo['Visitante']]}" class="logo-clube me-1">` : '';
+      
+      let nomeMandanteFormatado = formatarNomeClube(jogo['Mandante']);
+      let nomeVisitanteFormatado = formatarNomeClube(jogo['Visitante']);
+      
       const chave = `${rodadaAtual}-${jogo.originalIndex}`;
       let centralHtml = "";
 
@@ -288,7 +289,6 @@
       }
 
       const estadioNome = jogo['Estadio'] || 'A Definir';
-      
       let estadioSrc = ""; 
       const estadioNomeMin = estadioNome.toLowerCase();
       for (const [chaveEstadio, urlFoto] of Object.entries(estadiosFotos)) {
@@ -296,33 +296,26 @@
       }
       
       const estadioFoto = estadioSrc ? `<img src="${estadioSrc}" class="logo-estadio" onerror="this.style.display='none';">` : '';
-
-      const dataStr = jogo['Data'] ? jogo['Data'] : "A Definir";
+      const dataStr = jogo['Data'] ? jogo['Data'] : "";
       const horaStr = jogo['Horario'] ? jogo['Horario'] : "";
 
       const div = document.createElement('div');
       div.className = 'card-jogo';
       div.innerHTML = `
         <div class="info-partida">
-          📅 ${dataStr} ${horaStr} | ${estadioFoto} <span style="margin-top: 2px;">${estadioNome}</span>
+          📅 ${dataStr} ${horaStr} | ${estadioFoto} <span style="margin-top: 1px;">${estadioNome}</span>
         </div>
         <div class="d-flex justify-content-between align-items-center">
-          <div class="text-end text-truncate" style="width: 36%; font-weight: 600; font-size: 0.78rem;">${jogo['Mandante']} ${imgMandante}</div>
+          <div class="text-end text-truncate" style="width: 36%; font-size: 0.78rem;">${nomeMandanteFormatado} ${imgMandante}</div>
           ${centralHtml}
-          <div class="text-start text-truncate" style="width: 36%; font-weight: 600; font-size: 0.78rem;">${imgVisitante} ${jogo['Visitante']}</div>
+          <div class="text-start text-truncate" style="width: 36%; font-size: 0.78rem;">${imgVisitante} ${nomeVisitanteFormatado}</div>
         </div>
       `;
       containerJogos.appendChild(div);
     });
   }
 
-  function mudarRodada(direcao) {
-    rodadaAtual += direcao;
-    if (rodadaAtual < 1) rodadaAtual = 1;
-    if (rodadaAtual > 38) rodadaAtual = 38; 
-    renderizarRodada();
-  }
-
+  function mudarRodada(direcao) { rodadaAtual += direcao; if (rodadaAtual < 1) rodadaAtual = 1; if (rodadaAtual > 38) rodadaAtual = 38; renderizarRodada(); }
   window.onload = carregarTudo;
 </script>
 </body>

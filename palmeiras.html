@@ -61,7 +61,8 @@
   function tocarHino() {
     const player = document.getElementById('player-hino'), btn = document.getElementById('btn-hino');
     if (!hinoTocando) {
-      player.innerHTML = `<iframe width="0" height="0" src="https://www.youtube.com/embed/573KGnaRnYg?autoplay=1&loop=1&playlist=573KGnaRnYg" frameborder="0" allow="autoplay" style="display:none;"></iframe>`;
+      // Usando o player 2x2 invisível para não ser bloqueado pelo navegador
+      player.innerHTML = `<iframe width="2" height="2" src="https://www.youtube.com/embed/573KGnaRnYg?autoplay=1&loop=1&playlist=573KGnaRnYg" frameborder="0" allow="autoplay" style="position: absolute; left: -9999px;"></iframe>`;
       btn.innerText = "🔇 Parar Hino"; btn.classList.replace('btn-success', 'btn-danger'); hinoTocando = true;
     } else {
       player.innerHTML = ''; btn.innerText = "▶ Tocar Hino Oficial"; btn.classList.replace('btn-danger', 'btn-success'); hinoTocando = false;

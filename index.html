@@ -3,10 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
   <title>Brasileirão</title>
   
-  <!-- TAÇA OFICIAL TRANSPARENTE NA ABA DO NAVEGADOR -->
-  <link rel="icon" type="image/png" href="https://upload.wikimedia.org/wikipedia/pt/4/42/Campeonato_Brasileiro_S%C3%A9rie_A_logo.png">
+  <!-- A TAÇA AGORA PUXA DIRETO DO SEU GITHUB (Favicon da aba) -->
+  <link rel="icon" type="image/png" href="./taca.png">
   
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
@@ -17,8 +18,8 @@
     .painel-jogos { width: 35vw; }
     .logo-clube { width: 20px; height: 20px; object-fit: contain; margin-right: 6px; vertical-align: middle; }
     
-    /* NOVO VISUAL DOS ESTÁDIOS: Mais limpo, retangular e suave */
-    .logo-estadio { width: 45px; height: 28px; object-fit: cover; border-radius: 4px; margin-right: 8px; border: 1px solid #e0e0e0; opacity: 0.95; }
+    /* ESTÁDIOS PEQUENOS E DISCRETOS (Sem poluição visual) */
+    .logo-estadio { width: 28px; height: 18px; object-fit: cover; border-radius: 3px; margin-right: 6px; border: 1px solid #ccc; opacity: 0.9; }
     
     .zona-libertadores td:first-child { border-left: 4px solid #0d6efd !important; } 
     .zona-pre-liberta td:first-child { border-left: 4px solid #0dcaf0 !important; } 
@@ -27,7 +28,10 @@
     .tabela-alinhada td, .tabela-alinhada th { vertical-align: middle; padding: 3px 6px !important; font-size: 0.8rem; }
     .box-cor { display: inline-block; width: 10px; height: 10px; margin-right: 3px; border-radius: 3px; vertical-align: middle; }
     .card-jogo { background: #f8f9fa; border-radius: 6px; padding: 8px 10px; margin-bottom: 8px; border-left: 4px solid #007A33; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+    
+    /* Informação da partida ajustada para casar com o estádio pequeno */
     .info-partida { font-size: 0.72rem; color: #666; text-align: center; margin-bottom: 6px; font-weight: 500; display: flex; align-items: center; justify-content: center; }
+    
     .input-simulacao { width: 35px; text-align: center; font-weight: bold; border: 1px solid #ced4da; border-radius: 4px; }
     @media (max-width: 900px) { .painel-classificacao, .painel-jogos { width: 100%; height: auto; min-height: 40vh; } .d-flex.gap-4 { flex-direction: column; gap: 15px !important; } body { overflow-y: auto; height: auto; } }
   </style>
@@ -36,9 +40,9 @@
 
 <div class="container-fluid px-2 py-1">
   <div class="d-flex justify-content-between align-items-center mb-1 px-3">
-    <!-- TAÇA OFICIAL TRANSPARENTE E SOMBREADA -->
     <h4 class="m-0 fw-bold text-dark d-flex align-items-center">
-      <img src="https://upload.wikimedia.org/wikipedia/pt/4/42/Campeonato_Brasileiro_S%C3%A9rie_A_logo.png" style="height: 40px; margin-right: 12px; object-fit: contain; filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.1));">
+      <!-- A TAÇA AGORA PUXA DIRETO DO SEU GITHUB (Imagem ao lado do título) -->
+      <img src="./taca.png" style="height: 38px; margin-right: 12px; object-fit: contain; filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.1));" onerror="this.style.display='none';">
       <span><span class="text-brasil">BRASILEIRÃO</span> Série A</span>
     </h4>
     <button id="btn-simulacao" class="btn btn-warning btn-sm fw-bold shadow-sm" onclick="alternarModoSimulacao()">Modo Simulação: DESLIGADO</button>
@@ -108,6 +112,7 @@
     "Chapecoense": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/K7JQUKTRsuXfO9YrD5dq5g_500x500.png"
   };
 
+  // APONTA PARA OS ARQUIVOS DO SEU GITHUB
   const estadiosFotos = {
     "maracan": "./maracana.jpg",
     "allianz": "./allianz.jpg",
@@ -283,13 +288,13 @@
 
       const estadioNome = jogo['Estadio'] || 'A Definir';
       
-      let estadioSrc = "https://cdn-icons-png.flaticon.com/512/2809/2809840.png";
+      let estadioSrc = ""; 
       const estadioNomeMin = estadioNome.toLowerCase();
       for (const [chaveEstadio, urlFoto] of Object.entries(estadiosFotos)) {
         if (estadioNomeMin.includes(chaveEstadio)) { estadioSrc = urlFoto; break; }
       }
       
-      const estadioFoto = `<img src="${estadioSrc}" class="logo-estadio" onerror="this.style.display='none';">`;
+      const estadioFoto = estadioSrc ? `<img src="${estadioSrc}" class="logo-estadio" onerror="this.style.display='none';">` : '';
 
       const dataStr = jogo['Data'] ? jogo['Data'] : "A Definir";
       const horaStr = jogo['Horario'] ? jogo['Horario'] : "";

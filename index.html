@@ -33,17 +33,17 @@
 
 <div class="container-fluid px-2 py-1">
   <div class="d-flex justify-content-between align-items-center mb-1 px-3">
-    <h4 class="m-0 fw-bold text-dark d-flex align-items-center">
+    <!-- TÍTULO E BOTÃO DE MÚSICA JUNTOS -->
+    <div class="d-flex align-items-center">
       <img src="./taca.png" style="height: 45px; margin-right: 12px; object-fit: contain; filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.1));" onerror="this.style.display='none';">
-      <span><span class="text-brasil">BRASILEIRÃO</span> Série A</span>
-    </h4>
-    <div class="d-flex align-items-center gap-2">
-      <!-- BOTÃO DE ÁUDIO (TEMA DO BRASILEIRÃO) -->
+      <h4 class="m-0 fw-bold text-dark me-3">
+        <span class="text-brasil">BRASILEIRÃO</span> Série A
+      </h4>
       <button id="btn-audio" class="btn btn-outline-dark btn-sm fw-bold shadow-sm" onclick="tocarTema()">▶ Tocar Tema</button>
       <div id="player-audio"></div>
-      
-      <button id="btn-simulacao" class="btn btn-warning btn-sm fw-bold shadow-sm" onclick="alternarModoSimulacao()">Modo Simulação: DESLIGADO</button>
     </div>
+    
+    <button id="btn-simulacao" class="btn btn-warning btn-sm fw-bold shadow-sm" onclick="alternarModoSimulacao()">Modo Simulação: DESLIGADO</button>
   </div>
   
   <div class="d-flex justify-content-center gap-4">
@@ -60,12 +60,6 @@
             </tbody>
           </table>
         </div>
-      </div>
-      <div class="mt-1 d-flex flex-wrap justify-content-center gap-3 fw-bold" style="font-size: 0.7rem; color: #333;">
-        <div><span class="box-cor" style="background-color: #0d6efd;"></span>Libertadores</div>
-        <div><span class="box-cor" style="background-color: #0dcaf0;"></span>Pré-Libertadores</div>
-        <div><span class="box-cor" style="background-color: #198754;"></span>Sul-Americana</div>
-        <div><span class="box-cor" style="background-color: #dc3545;"></span>Rebaixamento</div>
       </div>
     </div>
 
@@ -145,10 +139,8 @@
     try {
       const resClass = await fetch(API_URL + "?acao=classificacao");
       dadosClassificacaoBase = await resClass.json();
-      
       const resRodadas = await fetch(API_URL + "?acao=rodadas");
       todosOsJogos = await resRodadas.json();
-      
       rodadaAtual = 25; 
       renderizarRodada();
       recalcularEAtualizarTabela();
@@ -181,11 +173,9 @@
   function recalcularEAtualizarTabela() {
     let tabela = JSON.parse(JSON.stringify(dadosClassificacaoBase));
     let stats = {};
-    
     tabela.forEach(t => {
       stats[t['Clube']] = { Clube: t['Clube'], Pontos: parseInt(t['Pontos'])||0, Jogos: parseInt(t['Jogos'])||0, Vitorias: parseInt(t['Vitórias'])||0, Empates: parseInt(t['Empates'])||0, Derrotas: parseInt(t['Derrotas'])||0, GP: parseInt(t['Gols Pró'])||0, GC: parseInt(t['Gols Contra'])||0, Saldo: parseInt(t['Saldo'])||0 };
     });
-
     todosOsJogos.forEach((jogo, index) => {
       const r = parseInt(jogo['Rodada']); const chave = `${r}-${index}`;
       if (modoSimulacao && placaresSimulados[chave] && placaresSimulados[chave].mandante !== "" && placaresSimulados[chave].visitante !== "") {
@@ -203,7 +193,6 @@
         }
       }
     });
-
     let arrayTabela = Object.values(stats);
     arrayTabela.sort((a, b) => {
       if (b.Pontos !== a.Pontos) return b.Pontos - a.Pontos;
@@ -214,10 +203,17 @@
     montarTabelaDinamica(arrayTabela);
   }
 
+  // OS LINKS PARA AS PÁGINAS NOVAS DOS CLUBES
   function formatarNomeClube(nome) {
-    if (nome === "Vasco") {
-      return `<a href="./vasco.html" target="_blank" class="link-clube">Vasco</a>`;
-    }
+    const urls = {
+      "Vasco": "./vasco.html",
+      "Cruzeiro": "./cruzeiro.html",
+      "Flamengo": "./flamengo.html",
+      "Grêmio": "./gremio.html",
+      "Internacional": "./internacional.html",
+      "Palmeiras": "./palmeiras.html"
+    };
+    if (urls[nome]) return `<a href="${urls[nome]}" target="_blank" class="link-clube">${nome}</a>`;
     return nome;
   }
 
@@ -271,7 +267,6 @@
 
       const imgMandante = escudos[jogo['Mandante']] ? `<img src="${escudos[jogo['Mandante']]}" class="logo-clube ms-1">` : '';
       const imgVisitante = escudos[jogo['Visitante']] ? `<img src="${escudos[jogo['Visitante']]}" class="logo-clube me-1">` : '';
-      
       let nomeMandanteFormatado = formatarNomeClube(jogo['Mandante']);
       let nomeVisitanteFormatado = formatarNomeClube(jogo['Visitante']);
       
@@ -294,7 +289,6 @@
       for (const [chaveEstadio, urlFoto] of Object.entries(estadiosFotos)) {
         if (estadioNomeMin.includes(chaveEstadio)) { estadioSrc = urlFoto; break; }
       }
-      
       const estadioFoto = estadioSrc ? `<img src="${estadioSrc}" class="logo-estadio" onerror="this.style.display='none';">` : '';
       const dataStr = jogo['Data'] ? jogo['Data'] : "";
       const horaStr = jogo['Horario'] ? jogo['Horario'] : "";

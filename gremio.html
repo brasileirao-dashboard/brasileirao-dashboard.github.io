@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Grêmio Foot-Ball Porto Alegrense</title>
+  <link rel="icon" type="image/png" href="./escudogremio.png">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background-color: #fafafa; position: relative; min-height: 100vh; }
+    body::before { content: ""; background: url('./escudogremio.png') no-repeat center center fixed; background-size: 50%; opacity: 0.08; top: 0; left: 0; bottom: 0; right: 0; position: absolute; z-index: -1; }
+    .conteudo-box { background-color: rgba(255, 255, 255, 0.85); border-radius: 12px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1px solid #ddd; }
+    .titulo-clube { color: #0d83cc; font-weight: 900; text-transform: uppercase; border-bottom: 3px solid #0d83cc; padding-bottom: 5px; }
+    .hino-letra { font-style: italic; line-height: 1.6; color: #333; white-space: pre-line; text-align: center; }
+  </style>
+</head>
+<body>
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="titulo-clube m-0">Grêmio</h1>
+    <div>
+      <button id="btn-hino" class="btn btn-primary shadow-sm fw-bold" style="background-color: #0d83cc; border:none;" onclick="tocarHino()">▶ Tocar Hino Oficial</button>
+      <div id="player-hino"></div>
+    </div>
+  </div>
+  <div class="row g-4">
+    <div class="col-md-7">
+      <div class="conteudo-box h-100">
+        <h4 class="fw-bold mb-3">História e Glórias</h4>
+        <p class="text-justify">O Grêmio Foot-Ball Porto Alegrense foi fundado em 15 de setembro de 1903. Conhecido como "Imortal Tricolor" por sua alma copeira e vitórias épicas, é um dos clubes de maior tradição na América do Sul.</p>
+        <h5 class="fw-bold mt-4 mb-3">Principais Títulos 🏆</h5>
+        <ul class="list-group list-group-flush" style="background: transparent;">
+          <li class="list-group-item" style="background: transparent;"><strong>Mundial Interclubes:</strong> 1 (1983)</li>
+          <li class="list-group-item" style="background: transparent;"><strong>Copa Libertadores:</strong> 3 (1983, 1995, 2017)</li>
+          <li class="list-group-item" style="background: transparent;"><strong>Campeonato Brasileiro:</strong> 2 (1981, 1996)</li>
+          <li class="list-group-item" style="background: transparent;"><strong>Copa do Brasil:</strong> 5 Vezes</li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-md-5">
+      <div class="conteudo-box h-100 d-flex flex-column align-items-center">
+        <h4 class="fw-bold mb-3">Hino do Clube</h4>
+        <div class="hino-letra">
+          Até a pé nós iremos
+          Para o que der e vier
+          Mas o certo é que nós estaremos
+          Com o Grêmio onde o Grêmio estiver
+          Cinquenta anos de glória
+          Tens imortal tricolor
+          Os feitos da tua história
+          Canta o Rio Grande com amor
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  let hinoTocando = false;
+  function tocarHino() {
+    const player = document.getElementById('player-hino'), btn = document.getElementById('btn-hino');
+    if (!hinoTocando) {
+      player.innerHTML = `<iframe width="0" height="0" src="https://www.youtube.com/embed/pupMjE5lN_Y?autoplay=1&loop=1&playlist=pupMjE5lN_Y" frameborder="0" allow="autoplay" style="display:none;"></iframe>`;
+      btn.innerText = "🔇 Parar Hino"; btn.classList.replace('btn-primary', 'btn-danger'); hinoTocando = true;
+    } else {
+      player.innerHTML = ''; btn.innerText = "▶ Tocar Hino Oficial"; btn.classList.replace('btn-danger', 'btn-primary'); hinoTocando = false;
+    }
+  }
+</script>
+</body>
+</html>

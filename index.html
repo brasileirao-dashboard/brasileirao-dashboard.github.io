@@ -7,7 +7,7 @@
   
   <title>Brasileirão</title>
   
-  <!-- A TAÇA OFICIAL DO BRASILEIRÃO -->
+  <!-- ÍCONE OFICIAL DO BRASILEIRÃO NA ABA -->
   <link rel="icon" type="image/png" href="https://upload.wikimedia.org/wikipedia/pt/4/42/Campeonato_Brasileiro_S%C3%A9rie_A_logo.png">
   
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -15,18 +15,21 @@
     body { background-color: #e2eee6; margin: 0; padding: 0; height: 100vh; overflow: hidden; }
     body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: url('https://flagcdn.com/w2560/br.png'); background-size: cover; background-position: center; opacity: 0.12; z-index: -1; }
     .text-brasil { background: linear-gradient(to right, #007A33 0%, #D6A800 50%, #001E60 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; text-transform: uppercase; }
-    .painel-classificacao { width: 40vw; background-color: rgba(255, 255, 255, 0.96); border-radius: 12px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15); border: 3px solid #FFD700; padding: 12px 15px; height: 87vh; display: flex; flex-direction: column; }
-    .painel-jogos { width: 35vw; background-color: rgba(255, 255, 255, 0.96); border-radius: 12px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15); border: 3px solid #FFD700; padding: 12px 15px; height: 87vh; display: flex; flex-direction: column; }
+    .painel-classificacao, .painel-jogos { width: 40vw; background-color: rgba(255, 255, 255, 0.96); border-radius: 12px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15); border: 3px solid #FFD700; padding: 12px 15px; height: 87vh; display: flex; flex-direction: column; }
+    .painel-jogos { width: 35vw; }
     .logo-clube { width: 20px; height: 20px; object-fit: contain; margin-right: 6px; vertical-align: middle; }
-    .logo-estadio { width: 18px; height: 18px; object-fit: cover; border-radius: 50%; margin-right: 4px; vertical-align: middle; border: 1px solid #ccc; }
+    
+    /* ESTÁDIOS MAIORES E DESTACADOS */
+    .logo-estadio { width: 35px; height: 35px; object-fit: cover; border-radius: 6px; margin-right: 8px; border: 1px solid #c0c0c0; }
+    
     .zona-libertadores td:first-child { border-left: 4px solid #0d6efd !important; } 
     .zona-pre-liberta td:first-child { border-left: 4px solid #0dcaf0 !important; } 
     .zona-sulamericana td:first-child { border-left: 4px solid #198754 !important; } 
     .zona-rebaixamento td:first-child { border-left: 4px solid #dc3545 !important; } 
     .tabela-alinhada td, .tabela-alinhada th { vertical-align: middle; padding: 3px 6px !important; font-size: 0.8rem; }
     .box-cor { display: inline-block; width: 10px; height: 10px; margin-right: 3px; border-radius: 3px; vertical-align: middle; }
-    .card-jogo { background: #f8f9fa; border-radius: 6px; padding: 6px 10px; margin-bottom: 6px; border-left: 4px solid #007A33; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
-    .info-partida { font-size: 0.68rem; color: #555; text-align: center; margin-bottom: 2px; font-weight: 600; }
+    .card-jogo { background: #f8f9fa; border-radius: 6px; padding: 8px 10px; margin-bottom: 8px; border-left: 4px solid #007A33; box-shadow: 0 2px 4px rgba(0,0,0,0.06); }
+    .info-partida { font-size: 0.72rem; color: #555; text-align: center; margin-bottom: 6px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
     .input-simulacao { width: 35px; text-align: center; font-weight: bold; border: 1px solid #ced4da; border-radius: 4px; }
     @media (max-width: 900px) { .painel-classificacao, .painel-jogos { width: 100%; height: auto; min-height: 40vh; } .d-flex.gap-4 { flex-direction: column; gap: 15px !important; } body { overflow-y: auto; height: auto; } }
   </style>
@@ -35,7 +38,11 @@
 
 <div class="container-fluid px-2 py-1">
   <div class="d-flex justify-content-between align-items-center mb-1 px-3">
-    <h4 class="m-0 fw-bold text-dark"><span class="text-brasil">BRASILEIRÃO</span> Série A</h4>
+    <!-- IMAGEM DA TAÇA OFICIAL AO LADO DO TÍTULO -->
+    <h4 class="m-0 fw-bold text-dark d-flex align-items-center">
+      <img src="https://upload.wikimedia.org/wikipedia/pt/4/42/Campeonato_Brasileiro_S%C3%A9rie_A_logo.png" style="height: 35px; margin-right: 10px; object-fit: contain;">
+      <span><span class="text-brasil">BRASILEIRÃO</span> Série A</span>
+    </h4>
     <button id="btn-simulacao" class="btn btn-warning btn-sm fw-bold shadow-sm" onclick="alternarModoSimulacao()">Modo Simulação: DESLIGADO</button>
   </div>
   
@@ -49,7 +56,7 @@
               <tr><th style="width: 6%;">Pos</th><th class="text-start">Clube</th><th>P</th><th>J</th><th>V</th><th>E</th><th>D</th><th>GP</th><th>GC</th><th>SG</th></tr>
             </thead>
             <tbody id="tabela-corpo" class="text-center border-top-0">
-              <tr><td colspan="10" class="py-3 text-muted">Carregando dados oficiais...</td></tr>
+              <tr><td colspan="10" class="py-3 text-muted">Carregando dados...</td></tr>
             </tbody>
           </table>
         </div>
@@ -78,7 +85,7 @@
 </div>
 
 <script>
-  // URL DO SEU APPS SCRIPT
+  // O link do seu Apps Script
   const API_URL = 'https://script.google.com/macros/s/AKfycby2W_byRD0m1qHTSs_W20VynlNc2zcFPW6j01U9YWJnGNM4eqLrwmfWF_gp_20DTgdDWA/exec';
 
   const escudos = {
@@ -104,7 +111,7 @@
     "Chapecoense": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/K7JQUKTRsuXfO9YrD5dq5g_500x500.png"
   };
 
-  // IMAGENS DIRETAS SEM THUMBNAIL PARA EVITAR QUEBRA
+  // LINKS DIRETOS DOS ESTÁDIOS (Tamanho Original, Impossível de Quebrar)
   const estadiosFotos = {
     "maracan": "https://upload.wikimedia.org/wikipedia/commons/6/62/Maracan%C3%A3_Stadium_Rio_de_Janeiro_2013.jpg",
     "allianz": "https://upload.wikimedia.org/wikipedia/commons/a/a2/Allianz_Parque_geral.jpg",
@@ -113,7 +120,7 @@
     "morum": "https://upload.wikimedia.org/wikipedia/commons/5/52/Est%C3%A1dio_C%C3%ADcero_Pompeu_de_Toledo_2023.jpg",
     "beira": "https://upload.wikimedia.org/wikipedia/commons/2/23/Beira-Rio_2014.jpg",
     "grêmio": "https://upload.wikimedia.org/wikipedia/commons/e/e1/Arena_do_Gr%C3%AAmio_geral.jpg",
-    "nilton": "https://upload.wikimedia.org/wikipedia/commons/4/4b/Engenhão_panorâmica.jpg",
+    "nilton": "https://upload.wikimedia.org/wikipedia/commons/4/4b/Engenh%C3%A3o_panor%C3%A2mica.jpg",
     "januário": "https://upload.wikimedia.org/wikipedia/commons/8/8c/Est%C3%A1dio_Vasco_da_Gama_2020.jpg",
     "couto": "https://upload.wikimedia.org/wikipedia/commons/1/1a/Est%C3%A1dio_Major_Ant%C3%B4nio_Couto_Pereira.jpg",
     "mrv": "https://upload.wikimedia.org/wikipedia/commons/1/18/Arena_MRV_in_2023.jpg",
@@ -148,13 +155,6 @@
     } catch (erro) {
       document.getElementById('lista-jogos').innerHTML = `<p class="text-center text-danger py-5">Erro ao carregar dados.</p>`;
     }
-  }
-
-  // Não converte mais nada. Lê EXATAMENTE o que está na Planilha.
-  function formatarDataHoraLimpa(dataStr, horaStr) {
-    let d = dataStr ? dataStr : "A Definir";
-    let h = horaStr ? horaStr : "";
-    return `${d} ${h}`.trim();
   }
 
   function alternarModoSimulacao() {
@@ -263,7 +263,7 @@
     const jogosDaRodada = todosOsJogos.map((j, idx) => ({ ...j, originalIndex: idx })).filter(j => parseInt(j['Rodada']) === rodadaAtual);
 
     if (jogosDaRodada.length === 0) {
-      containerJogos.innerHTML = `<p class="text-center text-muted py-5">Preencha os jogos desta rodada na planilha.</p>`;
+      containerJogos.innerHTML = `<p class="text-center text-muted py-5">Nenhum jogo cadastrado para esta rodada.</p>`;
       return;
     }
 
@@ -283,6 +283,10 @@
         centralHtml = `<div class="text-center bg-white px-2 py-1 rounded shadow-sm fw-bold text-muted" style="width: 24%; font-size: 0.8rem;">x</div>`;
       }
 
+      // Lê a data EXATAMENTE como você digitou
+      const dataStr = jogo['Data'] ? jogo['Data'] : "A definir";
+      const horaStr = jogo['Horario'] ? jogo['Horario'] : "";
+
       const estadioNome = jogo['Estadio'] || 'A Definir';
       const imgPadrao = "https://upload.wikimedia.org/wikipedia/commons/6/62/Maracan%C3%A3_Stadium_Rio_de_Janeiro_2013.jpg";
       let estadioSrc = imgPadrao;
@@ -292,14 +296,14 @@
         if (estadioNomeMin.includes(chaveEstadio)) { estadioSrc = urlFoto; break; }
       }
       
+      // Imagem maior, quadrada, e elegante
       const estadioFoto = `<img src="${estadioSrc}" class="logo-estadio" onerror="this.onerror=null; this.src='${imgPadrao}';">`;
-      const dataHoraFormatada = formatarDataHoraLimpa(jogo['Data'], jogo['Horario']);
 
       const div = document.createElement('div');
       div.className = 'card-jogo';
       div.innerHTML = `
         <div class="info-partida">
-          📅 ${dataHoraFormatada} | ${estadioFoto} ${estadioNome}
+          📅 ${dataStr} ${horaStr} | ${estadioFoto} <span style="margin-top: 2px;">${estadioNome}</span>
         </div>
         <div class="d-flex justify-content-between align-items-center">
           <div class="text-end text-truncate" style="width: 36%; font-weight: 600; font-size: 0.78rem;">${jogo['Mandante']} ${imgMandante}</div>

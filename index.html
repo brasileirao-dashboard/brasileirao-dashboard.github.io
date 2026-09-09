@@ -119,11 +119,12 @@
   let placaresSimulados = {};
   let musicaTocando = false;
 
+  // CÓDIGO CORRIGIDO PARA ENGANAR O YOUTUBE
   function tocarTema() {
     const player = document.getElementById('player-audio');
     const btn = document.getElementById('btn-audio');
     if (!musicaTocando) {
-      player.innerHTML = `<iframe width="0" height="0" src="https://www.youtube.com/embed/HAXtVTAyAMU?autoplay=1&loop=1&playlist=HAXtVTAyAMU" frameborder="0" allow="autoplay" style="display:none;"></iframe>`;
+      player.innerHTML = `<iframe width="2" height="2" src="https://www.youtube.com/embed/HAXtVTAyAMU?autoplay=1&loop=1&playlist=HAXtVTAyAMU" frameborder="0" allow="autoplay" style="position: absolute; left: -9999px;"></iframe>`;
       btn.innerText = "🔇 Parar Tema";
       btn.classList.replace('btn-outline-dark', 'btn-danger');
       musicaTocando = true;
@@ -203,7 +204,6 @@
     montarTabelaDinamica(arrayTabela);
   }
 
-  // OS LINKS PARA AS PÁGINAS NOVAS DOS CLUBES
   function formatarNomeClube(nome) {
     const urls = {
       "Vasco": "./vasco.html",

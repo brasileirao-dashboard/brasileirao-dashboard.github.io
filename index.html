@@ -30,7 +30,6 @@
   </style>
 </head>
 <body>
-
 <div class="container-fluid px-2 py-1">
   <div class="d-flex justify-content-between align-items-center mb-1 px-3">
     <div class="d-flex align-items-center">
@@ -60,7 +59,6 @@
         </div>
       </div>
     </div>
-
     <div>
       <div class="painel-jogos">
         <div class="d-flex justify-content-between align-items-center mb-2">
@@ -117,12 +115,12 @@
   let placaresSimulados = {};
   let musicaTocando = false;
 
-  // CORREÇÃO: Player tamanho 300x200 para o YouTube aprovar, mas escondido e invisível na tela
+  // LINK NOVO DO YOUTUBE
   function tocarTema() {
     const player = document.getElementById('player-audio');
     const btn = document.getElementById('btn-audio');
     if (!musicaTocando) {
-      player.innerHTML = `<div style="position: absolute; top: 0; left: 0; width: 300px; height: 200px; opacity: 0.01; z-index: -9999; pointer-events: none;"><iframe width="300" height="200" src="https://www.youtube.com/embed/HAXtVTAyAMU?autoplay=1&loop=1&playlist=HAXtVTAyAMU" frameborder="0" allow="autoplay"></iframe></div>`;
+      player.innerHTML = `<div style="position: absolute; top: 0; left: 0; width: 300px; height: 200px; opacity: 0.01; z-index: -9999; pointer-events: none;"><iframe width="300" height="200" src="https://www.youtube.com/embed/XUAj8zRBWMM?autoplay=1&loop=1&playlist=XUAj8zRBWMM" frameborder="0" allow="autoplay"></iframe></div>`;
       btn.innerText = "🔇 Parar Tema";
       btn.classList.replace('btn-outline-dark', 'btn-danger');
       musicaTocando = true;
@@ -202,14 +200,29 @@
     montarTabelaDinamica(arrayTabela);
   }
 
+  // TODOS OS CLUBES MAPEADOS
   function formatarNomeClube(nome) {
     const urls = {
-      "Vasco": "./vasco.html",
+      "Athletico-PR": "./athletico.html",
+      "Atlético-MG": "./atletico.html",
+      "Bahia": "./bahia.html",
+      "Botafogo": "./botafogo.html",
+      "Bragantino": "./bragantino.html",
+      "Chapecoense": "./chapecoense.html",
+      "Corinthians": "./corinthians.html",
+      "Coritiba": "./coritiba.html",
       "Cruzeiro": "./cruzeiro.html",
       "Flamengo": "./flamengo.html",
+      "Fluminense": "./fluminense.html",
       "Grêmio": "./gremio.html",
       "Internacional": "./internacional.html",
-      "Palmeiras": "./palmeiras.html"
+      "Mirassol": "./mirassol.html",
+      "Palmeiras": "./palmeiras.html",
+      "Remo": "./remo.html",
+      "Santos": "./santos.html",
+      "São Paulo": "./saopaulo.html",
+      "Vasco": "./vasco.html",
+      "Vitória": "./vitoria.html"
     };
     if (urls[nome]) return `<a href="${urls[nome]}" target="_blank" class="link-clube">${nome}</a>`;
     return nome;
@@ -272,11 +285,11 @@
       let centralHtml = "";
 
       if (jogo['Status'] === 'Encerrado' && jogo['GolsMandante'] !== '' && jogo['GolsVisitante'] !== '') {
-        centralHtml = `<div class="text-center bg-white px-2 py-1 rounded shadow-sm fw-bold" style="width: 24%; font-size: 0.78rem;">${jogo['GolsMandante']} x ${jogo['GolsVisitante']}</div>`;
+        centralHtml = `<div class="text-center bg-white px-2 py-1 rounded shadow-sm fw-bold" style="width: 24%; font-size: 0.78rem;">${jogo['GolsMandante']} x${jogo['GolsVisitante']}</div>`;
       } else if (modoSimulacao) {
         const valM = (placaresSimulados[chave] ? placaresSimulados[chave].mandante : "");
         const valV = (placaresSimulados[chave] ? placaresSimulados[chave].visitante : "");
-        centralHtml = `<div class="text-center d-flex justify-content-center align-items-center gap-1" style="width: 32%;"><input type="number" class="input-simulacao" value="${valM}" oninput="atualizarSimulacao(${rodadaAtual}, ${jogo.originalIndex}, 'mandante', this.value)"><span>x</span><input type="number" class="input-simulacao" value="${valV}" oninput="atualizarSimulacao(${rodadaAtual}, ${jogo.originalIndex}, 'visitante', this.value)"></div>`;
+        centralHtml = `<div class="text-center d-flex justify-content-center align-items-center gap-1" style="width: 32%;"><input type="number" class="input-simulacao" value="${valM}" oninput="atualizarSimulacao(${rodadaAtual}, ${jogo.originalIndex}, 'mandante', this.value)"><span>x</span><input type="number" class="input-simulacao" value="${valV}" oninput="atualizarSimulacao(${rodadaAtual},${jogo.originalIndex}, 'visitante', this.value)"></div>`;
       } else {
         centralHtml = `<div class="text-center bg-white px-2 py-1 rounded shadow-sm fw-bold text-muted" style="width: 24%; font-size: 0.8rem;">x</div>`;
       }
@@ -295,12 +308,11 @@
       div.className = 'card-jogo';
       div.innerHTML = `
         <div class="info-partida">
-          📅 ${dataStr} ${horaStr} | ${estadioFoto} <span style="margin-top: 1px;">${estadioNome}</span>
+          📅 ${dataStr}${horaStr} | ${estadioFoto} <span style="margin-top: 1px;">${estadioNome}</span>
         </div>
         <div class="d-flex justify-content-between align-items-center">
-          <div class="text-end text-truncate" style="width: 36%; font-size: 0.78rem;">${nomeMandanteFormatado} ${imgMandante}</div>
-          ${centralHtml}
-          <div class="text-start text-truncate" style="width: 36%; font-size: 0.78rem;">${imgVisitante} ${nomeVisitanteFormatado}</div>
+          <div class="text-end text-truncate" style="width: 36%; font-size: 0.78rem;">${nomeMandanteFormatado} ${imgMandante}</div>${centralHtml}
+          <div class="text-start text-truncate" style="width: 36%; font-size: 0.78rem;">${imgVisitante}${nomeVisitanteFormatado}</div>
         </div>
       `;
       containerJogos.appendChild(div);

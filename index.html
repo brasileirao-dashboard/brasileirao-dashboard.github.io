@@ -7,12 +7,12 @@
   <link rel="icon" type="image/png" href="./taca.png">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    body { background-color: #e2eee6; margin: 0; padding: 0; height: 100vh; overflow: hidden; }
+    body { background-color: #e2eee6; margin: 0; padding: 0; min-height: 100vh; overflow-x: hidden; }
     body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: url('https://flagcdn.com/w2560/br.png'); background-size: cover; background-position: center; opacity: 0.12; z-index: -1; }
     .text-brasil { background: linear-gradient(to right, #007A33 0%, #D6A800 50%, #001E60 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; text-transform: uppercase; }
-    .painel-classificacao, .painel-jogos { background-color: rgba(255, 255, 255, 0.96); border-radius: 12px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15); border: 3px solid #FFD700; padding: 12px 15px; height: 87vh; display: flex; flex-direction: column; }
-    .painel-classificacao { width: 40vw; }
-    .painel-jogos { width: 35vw; }
+    .painel-classificacao, .painel-jogos { background-color: rgba(255, 255, 255, 0.96); border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12); border: 3px solid #FFD700; padding: 12px 15px; height: 82vh; display: flex; flex-direction: column; }
+    .painel-classificacao { width: 42vw; }
+    .painel-jogos { width: 36vw; }
     .logo-clube { width: 20px; height: 20px; object-fit: contain; margin-right: 6px; vertical-align: middle; }
     .logo-estadio { width: 38px; height: 38px; object-fit: cover; border-radius: 6px; margin-right: 6px; border: 1px solid #dcdcdc; box-shadow: 0 1px 3px rgba(0,0,0,0.15); }
     .zona-libertadores td:first-child { border-left: 4px solid #0d6efd !important; } 
@@ -22,18 +22,25 @@
     .tabela-alinhada td, .tabela-alinhada th { vertical-align: middle; padding: 3px 6px !important; font-size: 0.8rem; }
     .box-cor { display: inline-block; width: 10px; height: 10px; margin-right: 3px; border-radius: 3px; vertical-align: middle; }
     .card-jogo { background: #f8f9fa; border-radius: 6px; padding: 8px 10px; margin-bottom: 8px; border-left: 4px solid #007A33; box-shadow: 0 2px 4px rgba(0,0,0,0.06); }
-    .info-partida { font-size: 0.75rem; color: #555; text-align: center; margin-bottom: 6px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+    .info-partida { font-size: 0.73rem; color: #555; text-align: center; margin-bottom: 6px; font-weight: 600; display: flex; align-items: center; justify-content: space-between; }
     .input-simulacao { width: 35px; text-align: center; font-weight: bold; border: 1px solid #ced4da; border-radius: 4px; }
     .link-clube { color: inherit; text-decoration: none; font-weight: bold; }
     .link-clube:hover { text-decoration: underline; color: #000; }
-    @media (max-width: 900px) { .painel-classificacao, .painel-jogos { width: 100%; height: auto; min-height: 40vh; } .d-flex.gap-4 { flex-direction: column; gap: 15px !important; } body { overflow-y: auto; height: auto; } }
+    
+    /* Bolinha piscando AO VIVO */
+    .live-dot { height: 8px; width: 8px; background-color: #dc3545; border-radius: 50%; display: inline-block; animation: blink 1s infinite; margin-right: 4px; }
+    @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.2; } 100% { opacity: 1; } }
+
+    /* Seção Inferior: Artilharia e Assistências */
+    .painel-inferior { background-color: rgba(255, 255, 255, 0.96); border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12); border: 3px solid #FFD700; padding: 15px 20px; width: 80vw; margin: 20px auto; }
+    
+    @media (max-width: 900px) { .painel-classificacao, .painel-jogos, .painel-inferior { width: 100%; height: auto; min-height: 40vh; } .d-flex.gap-4 { flex-direction: column; gap: 15px !important; } }
   </style>
 </head>
 <body>
 
-<div class="container-fluid px-2 py-1">
-  <div class="d-flex justify-content-between align-items-center mb-1 px-3">
-    
+<div class="container-fluid px-2 py-2">
+  <div class="d-flex justify-content-between align-items-center mb-2 px-3">
     <div class="d-flex flex-column">
       <div class="d-flex align-items-center">
         <img src="./taca.png" style="height: 45px; margin-right: 12px; object-fit: contain; filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.1));" onerror="this.style.display='none';">
@@ -48,11 +55,10 @@
         </button>
       </div>
     </div>
-
-    <button id="btn-simulacao" class="btn btn-warning btn-sm fw-bold shadow-sm align-self-start mt-2" onclick="alternarModoSimulacao()">Modo Simulação: DESLIGADO</button>
-  
+    <button id="btn-simulacao" class="btn btn-warning btn-sm fw-bold shadow-sm" onclick="alternarModoSimulacao()">Modo Simulação: DESLIGADO</button>
   </div>
 
+  <!-- PAINÉIS PRINCIPAIS -->
   <div class="d-flex justify-content-center gap-4 mt-2">
     <div>
       <div class="painel-classificacao">
@@ -90,8 +96,41 @@
       </div>
     </div>
   </div>
+
+  <!-- SEÇÃO INFERIOR: ARTILHARIA E ASSISTÊNCIAS -->
+  <div class="painel-inferior">
+    <div class="row">
+      <div class="col-md-6 mb-3 mb-md-0">
+        <h6 class="fw-bold text-success mb-2">⚽ Artilharia (Gols)</h6>
+        <div class="table-responsive" style="max-height: 200px; overflow-y: auto;">
+          <table class="table table-sm table-striped align-middle mb-0" style="font-size: 0.8rem;">
+            <thead class="table-light sticky-top">
+              <tr><th>#</th><th class="text-start">Jogador</th><th class="text-start">Clube</th><th class="text-center">Gols</th></tr>
+            </thead>
+            <tbody id="corpo-artilharia">
+              <tr><td colspan="4" class="text-muted text-center py-2">Carregando artilheiros...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <h6 class="fw-bold text-primary mb-2">🎯 Assistências (Passes para Gol)</h6>
+        <div class="table-responsive" style="max-height: 200px; overflow-y: auto;">
+          <table class="table table-sm table-striped align-middle mb-0" style="font-size: 0.8rem;">
+            <thead class="table-light sticky-top">
+              <tr><th>#</th><th class="text-start">Jogador</th><th class="text-start">Clube</th><th class="text-center">Assist.</th></tr>
+            </thead>
+            <tbody id="corpo-assistencias">
+              <tr><td colspan="4" class="text-muted text-center py-2">Carregando assistências...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
+<!-- MODAL FLUTUANTE DAS PROBABILIDADES -->
 <div class="modal fade" id="modalProbabilidades" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content" style="border-radius: 12px; border: 3px solid #FFD700; overflow: hidden;">
@@ -102,13 +141,7 @@
       <div class="modal-body bg-light p-0">
         <table class="table table-hover text-center align-middle mb-0" style="font-size: 0.85rem;">
           <thead class="table-dark sticky-top">
-            <tr>
-              <th class="text-start ps-3">Clube</th>
-              <th>Campeão</th>
-              <th>Libertadores</th>
-              <th>Sul-Americana</th>
-              <th>Rebaixamento</th>
-            </tr>
+            <tr><th class="text-start ps-3">Clube</th><th>Campeão</th><th>Libertadores</th><th>Sul-Americana</th><th>Rebaixamento</th></tr>
           </thead>
           <tbody id="corpo-probabilidades">
             <tr><td colspan="5" class="py-4 text-muted">Carregando dados da UFMG...</td></tr>
@@ -117,6 +150,21 @@
       </div>
       <div class="modal-footer py-1 px-3" style="background: #f1f1f1;">
         <span class="text-muted w-100 text-end" style="font-size: 0.65rem;">*Fonte dos cálculos matemáticos: Depto. Matemática UFMG</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DETALHAR PARTIDA -->
+<div class="modal fade" id="modalDetalhesPartida" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius: 12px; border: 2px solid #007A33;">
+      <div class="modal-header bg-success text-white py-2">
+        <h6 class="modal-title fw-bold" id="detalhe-titulo-modal">Detalhes da Partida</h6>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center p-3" id="detalhe-corpo-modal">
+        <!-- Conteúdo dinâmico preenchido via JS -->
       </div>
     </div>
   </div>
@@ -171,6 +219,7 @@
   let rodadaAtual = 27;
   let todosOsJogos = [];
   let dadosClassificacaoBase = [];
+  let dadosArtilharia = [];
   let dadosProbabilidades = [];
   let modoSimulacao = false;
   let placaresSimulados = {};
@@ -222,30 +271,68 @@
 
   async function carregarTudo() {
     try {
-      const [resClass, resRodadas, resRodadaAtual] = await Promise.all([
+      const [resClass, resRodadas, resRodadaAtual, resArt, resProb] = await Promise.all([
         fetch(API_URL + "?acao=classificacao").then(r => r.json()),
         fetch(API_URL + "?acao=rodadas").then(r => r.json()),
-        fetch(API_URL + "?acao=rodada_atual").then(r => r.json())
+        fetch(API_URL + "?acao=rodada_atual").then(r => r.json()),
+        fetch(API_URL + "?acao=artilharia").then(r => r.json()).catch(() => []),
+        fetch(API_URL + "?acao=probabilidades").then(r => r.json()).catch(() => [])
       ]);
 
       dadosClassificacaoBase = resClass;
       todosOsJogos = resRodadas;
       rodadaAtual = parseInt(resRodadaAtual.rodada) || 1;
+      dadosArtilharia = resArt;
+      dadosProbabilidades = resProb;
       
       recalcularEAtualizarTabela();
       renderizarRodada();
-
-      fetch(API_URL + "?acao=probabilidades")
-        .then(r => r.json())
-        .then(resProb => {
-          dadosProbabilidades = resProb;
-          renderizarProbabilidades();
-        }).catch(e => console.log("Probabilidades em segundo plano..."));
+      renderizarArtilhariaAssistencias();
+      if(dadosProbabilidades.length > 0) renderizarProbabilidades();
 
     } catch (erro) {
       console.error("Erro ao carregar dados:", erro);
       document.getElementById('lista-jogos').innerHTML = `<p class="text-center text-danger py-5">Erro ao carregar os dados. Verifique a API.</p>`;
     }
+  }
+
+  function renderizarArtilhariaAssistencias() {
+    const corpoArt = document.getElementById('corpo-artilharia');
+    const corpoAst = document.getElementById('corpo-assistencias');
+    corpoArt.innerHTML = ''; corpoAst.innerHTML = '';
+
+    if (!dadosArtilharia || dadosArtilharia.length === 0) {
+      corpoArt.innerHTML = '<tr><td colspan="4" class="text-muted text-center py-2">Sem dados de artilharia.</td></tr>';
+      corpoAst.innerHTML = '<tr><td colspan="4" class="text-muted text-center py-2">Sem dados de assistências.</td></tr>';
+      return;
+    }
+
+    // Ordenar por Gols (decrescente)
+    let artilheiros = [...dadosArtilharia].sort((a, b) => (parseInt(b.Gols) || 0) - (parseInt(a.Gols) || 0));
+    artilheiros.slice(0, 10).forEach((art, idx) => {
+      const esc = pegarEscudo(art.Clube);
+      corpoArt.innerHTML += `
+        <tr>
+          <td class="fw-bold">${idx + 1}</td>
+          <td class="text-start">${art.Jogador}</td>
+          <td class="text-start"><img src="${esc}" class="logo-clube">${art.Clube}</td>
+          <td class="text-center fw-bold text-success">${art.Gols || 0}</td>
+        </tr>`;
+    });
+
+    // Ordenar por Assistências (decrescente)
+    let assistentes = [...dadosArtilharia].sort((a, b) => (parseInt(b.Assistencias || b['Assistências']) || 0) - (parseInt(a.Assistencias || a['Assistências']) || 0));
+    assistentes.slice(0, 10).forEach((ast, idx) => {
+      const esc = pegarEscudo(ast.Clube);
+      const numAst = ast.Assistencias || ast['Assistências'] || 0;
+      corpoAst.innerHTML += `
+        <tr>
+          <td class="fw-bold">${idx + 1}</td>
+          <td class="text-start">${ast.Jogador}</td>
+          <td class="text-start"><img src="${esc}" class="logo-clube">${ast.Clube}</td>
+          <td class="text-center fw-bold text-primary">${numAst}</td>
+        </tr>`;
+    });
   }
 
   function formatarDataHoraLimpa(dataStr, horaStr) {
@@ -262,10 +349,10 @@
     const btn = document.getElementById('btn-simulacao');
     if (modoSimulacao) {
       btn.innerText = "Modo Simulação: LIGADO";
-      btn.className = "btn btn-danger btn-sm fw-bold shadow-sm align-self-start mt-2";
+      btn.className = "btn btn-danger btn-sm fw-bold shadow-sm";
     } else {
       btn.innerText = "Modo Simulação: DESLIGADO";
-      btn.className = "btn btn-warning btn-sm fw-bold shadow-sm align-self-start mt-2";
+      btn.className = "btn btn-warning btn-sm fw-bold shadow-sm";
     }
     renderizarRodada();
     recalcularEAtualizarTabela();
@@ -294,7 +381,8 @@
       const chave = `${r}-${index}`;
       let gm = ""; let gv = "";
 
-      if (jogo['Status'] === 'Encerrado' && jogo['GolsMandante'] !== '' && jogo['GolsVisitante'] !== '') {
+      // Partidas Encerradas ou Ao Vivo computam na tabela automaticamente
+      if ((jogo['Status'] === 'Encerrado' || jogo['Status'] === 'Ao Vivo' || jogo['Status'] === 'Intervalo') && jogo['GolsMandante'] !== '' && jogo['GolsVisitante'] !== '') {
         gm = parseInt(jogo['GolsMandante']); gv = parseInt(jogo['GolsVisitante']);
       } else if (placaresSimulados[chave] && placaresSimulados[chave].mandante !== "" && placaresSimulados[chave].visitante !== "") {
         gm = parseInt(placaresSimulados[chave].mandante); gv = parseInt(placaresSimulados[chave].visitante);
@@ -392,9 +480,22 @@
 
       const chave = `${rodadaAtual}-${jogo.originalIndex}`;
       let centralHtml = "";
+      let statusBadge = "";
+      let btnDetalhar = "";
 
-      if (jogo['Status'] === 'Encerrado' && jogo['GolsMandante'] !== '' && jogo['GolsVisitante'] !== '') {
+      // Verifica status Ao Vivo, Intervalo ou Encerrado
+      const statusJogo = String(jogo['Status'] || '').trim();
+      if (statusJogo === 'Ao Vivo') {
+        statusBadge = `<span class="badge bg-danger text-white"><span class="live-dot"></span>AO VIVO</span>`;
+      } else if (statusJogo === 'Intervalo') {
+        statusBadge = `<span class="badge bg-warning text-dark">Intervalo</span>`;
+      } else if (statusJogo === 'Encerrado') {
+        statusBadge = `<span class="text-muted" style="font-size: 0.68rem;">Encerrado</span>`;
+      }
+
+      if ((statusJogo === 'Encerrado' || statusJogo === 'Ao Vivo' || statusJogo === 'Intervalo') && jogo['GolsMandante'] !== '' && jogo['GolsVisitante'] !== '') {
         centralHtml = `<div class="text-center bg-white px-2 py-1 rounded shadow-sm fw-bold" style="width: 24%; font-size: 0.78rem;">${jogo['GolsMandante']} x ${jogo['GolsVisitante']}</div>`;
+        btnDetalhar = `<a href="javascript:void(0);" onclick='abrirDetalhes(${JSON.stringify(jogo)})' class="text-success fw-bold text-decoration-none" style="font-size: 0.68rem; margin-left: 4px;">Detalhar</a>`;
       } else if (modoSimulacao) {
         const valM = (placaresSimulados[chave] ? placaresSimulados[chave].mandante : "");
         const valV = (placaresSimulados[chave] ? placaresSimulados[chave].visitante : "");
@@ -422,15 +523,16 @@
       div.className = 'card-jogo';
       div.innerHTML = `
         <div class="info-partida">
-          📅 ${dataHoraFormatada} | ${estadioFoto} <span style="margin-top: 1px;">${estadioNome}</span>
+          <span>📅 ${dataHoraFormatada} | ${estadioFoto} ${estadioNome}</span>
+          <span>${statusBadge}</span>
         </div>
         <div class="d-flex justify-content-between align-items-center">
-          <div class="text-end text-truncate" style="width: 36%; font-size: 0.78rem;">
+          <div class="text-end text-truncate" style="width: 35%; font-size: 0.78rem;">
             ${nomeMandanteFormatado} ${imgMandante}
           </div>
           ${centralHtml}
-          <div class="text-start text-truncate" style="width: 36%; font-size: 0.78rem;">
-            ${imgVisitante} ${nomeVisitanteFormatado}
+          <div class="text-start text-truncate d-flex align-items-center justify-content-start" style="width: 35%; font-size: 0.78rem;">
+            ${imgVisitante} ${nomeVisitanteFormatado} ${btnDetalhar}
           </div>
         </div>
       `;
@@ -438,15 +540,39 @@
     });
   }
 
+  function abrirDetalhes(jogo) {
+    document.getElementById('detalhe-titulo-modal').innerText = `${jogo['Mandante']} ${jogo['GolsMandante']} x ${jogo['GolsVisitante']} ${jogo['Visitante']}`;
+    
+    let detalhesTexto = jogo['Detalhes'] || "Nenhum detalhe de gols cadastrado na planilha para esta partida.";
+    
+    // Formatação elegante estilo Google se houver dados
+    let htmlCorpo = `
+      <div class="mb-3">
+        <img src="${pegarEscudo(jogo['Mandante'])}" style="width: 35px; height: 35px; object-fit: contain; margin-right: 8px;">
+        <span class="fw-bold fs-5">${jogo['Mandante']}</span>
+        <span class="fs-5 fw-bold ms-2">${jogo['GolsMandante']}</span>
+      </div>
+      <div class="my-2"><hr class="text-muted">⚽ <strong>Gols e Acontecimentos</strong><hr class="text-muted"></div>
+      <div class="mb-3">
+        <img src="${pegarEscudo(jogo['Visitante'])}" style="width: 35px; height: 35px; object-fit: contain; margin-right: 8px;">
+        <span class="fw-bold fs-5">${jogo['Visitante']}</span>
+        <span class="fs-5 fw-bold ms-2">${jogo['GolsVisitante']}</span>
+      </div>
+      <div class="p-2 bg-light rounded text-start" style="font-size: 0.85rem; white-space: pre-line;">
+        ${detalhesTexto}
+      </div>
+    `;
+
+    document.getElementById('detalhe-corpo-modal').innerHTML = htmlCorpo;
+    
+    var meuModal = new bootstrap.Modal(document.getElementById('modalDetalhesPartida'));
+    meuModal.show();
+  }
+
   function renderizarProbabilidades() {
     const corpo = document.getElementById('corpo-probabilidades');
     corpo.innerHTML = '';
     
-    if (!dadosProbabilidades || dadosProbabilidades.length === 0) {
-      corpo.innerHTML = '<tr><td colspan="5" class="py-4 text-muted">Ainda não há dados coletados na planilha Probabilidades.</td></tr>';
-      return;
-    }
-
     dadosProbabilidades.sort((a, b) => {
       let posA = ordemClassificacao.indexOf(normalizar(a.Clube));
       let posB = ordemClassificacao.indexOf(normalizar(b.Clube));

@@ -1,1 +1,36 @@
-<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Bahia</title><link rel="icon" type="image/png" href="./escudobahia.png"><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"><style>body{background:linear-gradient(135deg,#0033a0 0%,#c8102e 100%);position:relative;min-height:100vh;}body::before{content:"";background:url('./escudobahia.png') no-repeat center center fixed;background-size:50%;opacity:0.15;top:0;left:0;bottom:0;right:0;position:absolute;z-index:-1;}.conteudo-box{background-color:rgba(255,255,255,0.92);border-radius:12px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,0.3);}.titulo-clube{color:#0033a0;font-weight:900;text-transform:uppercase;border-bottom:3px solid #0033a0;padding-bottom:5px;}.hino-letra{font-style:italic;line-height:1.8;color:#222;text-align:center;font-size:1.05rem;}.mascote{max-width:140px;float:right;margin-left:15px;border-radius:8px;}</style></head><body><div class="container py-4"><div class="d-flex justify-content-between align-items-center mb-4 conteudo-box"><h1 class="titulo-clube m-0 border-0">Esporte Clube Bahia</h1><div><button id="btn-hino" class="btn btn-dark shadow-sm fw-bold" style="background-color:#0033a0;border:none;" onclick="tocarHino()">▶ Tocar Hino Oficial</button></div></div><div class="row g-4"><div class="col-md-7"><div class="conteudo-box h-100"><h4 class="fw-bold mb-3">História e Glórias</h4><img src="./mascote-bahia.png" class="mascote" onerror="this.style.display='none';"><p class="text-justify">O Tricolor de Aço foi o primeiro Campeão Brasileiro da história (1959). Dono da maior torcida do Nordeste, o clube respira tradição e paixão.</p><h5 class="fw-bold mt-4 mb-3">Principais Títulos 🏆</h5><ul class="list-group list-group-flush" style="background:transparent;"><li class="list-group-item" style="background:transparent;"><strong>Campeonato Brasileiro:</strong> 2 (1959, 1988)</li><li class="list-group-item" style="background:transparent;"><strong>Copa do Nordeste:</strong> 4 Vezes</li><li class="list-group-item" style="background:transparent;"><strong>Campeonato Baiano:</strong> 50 Vezes</li></ul></div></div><div class="col-md-5"><div class="conteudo-box h-100 d-flex flex-column align-items-center"><h4 class="fw-bold mb-3">Hino do Clube</h4><div class="hino-letra">Somos a turma tricolor<br>Somos a voz do campeão<br>Somos do povo um clamor<br>Ninguém nos vence em vibração!<br><br>Vamos, avante esquadrão!<br>Vamos, serás um vencedor!<br>Vamos, conquistar mais um tento!<br>Bahia, Bahia, Bahia!</div></div></div></div></div><script>let audio=new Audio('./hino-bahia.mp3');let hinoTocando=false;function tocarHino(){const b=document.getElementById('btn-hino');if(!hinoTocando){audio.play();b.innerText="🔇 Parar Hino";b.classList.replace('btn-dark','btn-secondary');hinoTocando=true;}else{audio.pause();audio.currentTime=0;b.innerText="▶ Tocar Hino Oficial";b.classList.replace('btn-secondary','btn-dark');b.style.backgroundColor='#0033a0';hinoTocando=false;}}</script></body></html>
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Bahia</title><link rel="icon" type="image/png" href="./escudobahia.png"><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"><style>body{background:linear-gradient(135deg,#0033a0 0%,#c8102e 100%);position:relative;min-height:100vh;}body::before{content:"";background:url('./escudobahia.png') no-repeat center center fixed;background-size:50%;opacity:0.15;top:0;left:0;bottom:0;right:0;position:absolute;z-index:-1;}.conteudo-box{background-color:rgba(255,255,255,0.92);border-radius:12px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,0.3);}.titulo-clube{color:#0033a0;font-weight:900;text-transform:uppercase;border-bottom:3px solid #0033a0;padding-bottom:5px;}.hino-letra{font-style:italic;line-height:1.8;color:#222;text-align:center;font-size:1.05rem;}.mascote{max-width:140px;float:right;margin-left:15px;border-radius:8px;}</style></head><body><div class="container py-4">
+
+  <!-- CABEÇALHO ATUALIZADO: Nome Completo + Escudo + Botão -->
+  <div class="d-flex justify-content-between align-items-center mb-4 conteudo-box">
+    <h1 class="titulo-clube m-0 border-0">Esporte Clube Bahia</h1>
+    <div class="d-flex align-items-center">
+      <img src="./escudobahia.png" style="height: 50px; margin-right: 15px; object-fit: contain;">
+      <button id="btn-hino" class="btn btn-dark shadow-sm fw-bold" style="background-color:#0033a0;border:none;" onclick="tocarHino()">▶ Tocar Hino Oficial</button>
+    </div>
+  </div>
+
+  <div class="row g-4"><div class="col-md-7"><div class="conteudo-box h-100">
+    <h4 class="fw-bold mb-3">História e Glórias</h4>
+    <img src="./mascote-bahia.png" class="mascote" onerror="this.style.display='none';">
+    
+    <p class="text-justify mb-2"><strong>Fundação:</strong> 1 de janeiro de 1931</p>
+    <p class="text-justify">O Esporte Clube Bahia "nasceu para vencer", frase eternizada por seus fundadores, jogadores de clubes que haviam acabado de encerrar as atividades em Salvador. Logo em seu primeiro ano de vida, conquistou o Campeonato Baiano, mostrando seu DNA vitorioso.</p>
+    <p class="text-justify">Dono da maior torcida do Nordeste, o "Esquadrão de Aço" carrega o imenso orgulho de ter sido o Primeiro Campeão Brasileiro da história (na Taça Brasil de 1959), vencendo o esquadrão do Santos que contava com o Rei Pelé. Em 1988, voltou a surpreender o país ao conquistar o seu segundo Campeonato Brasileiro, eternizando craques como Bobô sob o comando de Evaristo de Macedo.</p>
+    
+    <h5 class="fw-bold mt-4 mb-3">Principais Títulos 🏆</h5>
+    <ul class="list-group list-group-flush" style="background:transparent;">
+      <li class="list-group-item" style="background:transparent;"><strong>Campeonato Brasileiro:</strong> 2 (1959, 1988)</li>
+      <li class="list-group-item" style="background:transparent;"><strong>Copa do Nordeste:</strong> 4 Vezes</li>
+      <li class="list-group-item" style="background:transparent;"><strong>Campeonato Baiano:</strong> 50 Vezes</li>
+    </ul>
+  </div></div>
+  <div class="col-md-5"><div class="conteudo-box h-100 d-flex flex-column align-items-center">
+    <h4 class="fw-bold mb-3">Hino do Clube</h4>
+    <div class="hino-letra">
+      Somos a turma tricolor<br>Somos a voz do campeão<br>Somos do povo um clamor<br>Ninguém nos vence em vibração!<br><br>
+      Vamos, avante, Esquadrão!<br>Vamos, serás um vencedor!<br>Vamos, conquistar mais um tento!<br>Bahia, Bahia, Bahia!<br><br>
+      O alvi-azul-rubro pendão<br>Tremula sempre a nos guiar<br>É de bravura o galardão<br>É de coragem a nos provar!<br><br>
+      Vamos, avante, Esquadrão!<br>Vamos, serás um vencedor!<br>Vamos, conquistar mais um tento!<br>Bahia, Bahia, Bahia!
+    </div>
+  </div></div></div></div>
+<script>let audio=new Audio('./hino-bahia.mp3');let hinoTocando=false;function tocarHino(){const b=document.getElementById('btn-hino');if(!hinoTocando){audio.play();b.innerText="🔇 Parar Hino";b.classList.replace('btn-dark','btn-secondary');hinoTocando=true;}else{audio.pause();audio.currentTime=0;b.innerText="▶ Tocar Hino Oficial";b.classList.replace('btn-secondary','btn-dark');b.style.backgroundColor='#0033a0';hinoTocando=false;}}</script></body></html>

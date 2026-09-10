@@ -2,37 +2,43 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Clube de Regatas do Flamengo</title>
+  <title>Flamengo</title>
   <link rel="icon" type="image/png" href="./escudoflamengo.png">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    body { background-color: #fafafa; position: relative; min-height: 100vh; }
-    body::before { content: ""; background: url('./escudoflamengo.png') no-repeat center center fixed; background-size: 50%; opacity: 0.08; top: 0; left: 0; bottom: 0; right: 0; position: absolute; z-index: -1; }
-    .conteudo-box { background-color: rgba(255, 255, 255, 0.85); border-radius: 12px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1px solid #ddd; }
+    /* FUNDO DEGRADÊ NAS CORES DO FLAMENGO */
+    body { background: linear-gradient(135deg, #c8102e 0%, #000000 100%); position: relative; min-height: 100vh; }
+    body::before { content: ""; background: url('./escudoflamengo.png') no-repeat center center fixed; background-size: 50%; opacity: 0.15; top: 0; left: 0; bottom: 0; right: 0; position: absolute; z-index: -1; }
+    .conteudo-box { background-color: rgba(255, 255, 255, 0.92); border-radius: 12px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
     .titulo-clube { color: #c8102e; font-weight: 900; text-transform: uppercase; border-bottom: 3px solid #c8102e; padding-bottom: 5px; }
-    .hino-letra { font-style: italic; line-height: 1.6; color: #333; white-space: pre-line; text-align: center; }
+    .hino-letra { font-style: italic; line-height: 1.8; color: #222; text-align: center; font-size: 1.05rem; }
+    .mascote { max-width: 140px; float: right; margin-left: 15px; border-radius: 8px; }
   </style>
 </head>
 <body>
 <div class="container py-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="titulo-clube m-0">Flamengo</h1>
+  <div class="d-flex justify-content-between align-items-center mb-4 conteudo-box">
+    <h1 class="titulo-clube m-0 border-0">Flamengo</h1>
     <div>
-      <button id="btn-hino" class="btn btn-danger shadow-sm fw-bold" onclick="tocarHino()">▶ Tocar Hino Oficial</button>
-      <div id="player-hino"></div>
+      <button id="btn-hino" class="btn btn-dark shadow-sm fw-bold" style="background-color:#c8102e;border:none;" onclick="tocarHino()">▶ Tocar Hino Oficial</button>
     </div>
   </div>
+
   <div class="row g-4">
     <div class="col-md-7">
       <div class="conteudo-box h-100">
         <h4 class="fw-bold mb-3">História e Glórias</h4>
+        
+        <img src="./mascote-flamengo.png" class="mascote" alt="Mascote" onerror="this.style.display='none';">
+        
         <p class="text-justify">Fundado no fim do século XIX como um clube de regatas, o Flamengo tornou-se o time com a maior torcida do Brasil. É sinônimo de raça, amor e paixão para milhões de rubro-negros.</p>
+        
         <h5 class="fw-bold mt-4 mb-3">Principais Títulos 🏆</h5>
-        <ul class="list-group list-group-flush" style="background: transparent;">
-          <li class="list-group-item" style="background: transparent;"><strong>Mundial Interclubes:</strong> 1 (1981)</li>
-          <li class="list-group-item" style="background: transparent;"><strong>Copa Libertadores:</strong> 3 (1981, 2019, 2022)</li>
-          <li class="list-group-item" style="background: transparent;"><strong>Campeonato Brasileiro:</strong> 8 Vezes</li>
-          <li class="list-group-item" style="background: transparent;"><strong>Copa do Brasil:</strong> 4 Vezes</li>
+        <ul class="list-group list-group-flush" style="background:transparent;">
+          <li class="list-group-item" style="background:transparent;"><strong>Mundial Interclubes:</strong> 1 (1981)</li>
+          <li class="list-group-item" style="background:transparent;"><strong>Copa Libertadores:</strong> 3 (1981, 2019, 2022)</li>
+          <li class="list-group-item" style="background:transparent;"><strong>Campeonato Brasileiro:</strong> 8 Vezes</li>
+          <li class="list-group-item" style="background:transparent;"><strong>Copa do Brasil:</strong> 4 Vezes</li>
         </ul>
       </div>
     </div>
@@ -40,26 +46,36 @@
       <div class="conteudo-box h-100 d-flex flex-column align-items-center">
         <h4 class="fw-bold mb-3">Hino do Clube</h4>
         <div class="hino-letra">
-          Uma vez Flamengo, sempre Flamengo
-          Flamengo sempre eu hei de ser
-          É o meu maior prazer vê-lo brilhar
-          Seja na terra, seja no mar
-          Vencer, vencer, vencer!
+          Uma vez Flamengo, sempre Flamengo<br>
+          Flamengo sempre eu hei de ser<br>
+          É o meu maior prazer vê-lo brilhar<br>
+          Seja na terra, seja no mar<br>
+          Vencer, vencer, vencer!<br><br>
           Uma vez Flamengo, Flamengo até morrer!
         </div>
       </div>
     </div>
   </div>
 </div>
+
 <script>
+  let audio = new Audio('./hino-flamengo.mp3');
   let hinoTocando = false;
+
   function tocarHino() {
-    const player = document.getElementById('player-hino'), btn = document.getElementById('btn-hino');
+    const btn = document.getElementById('btn-hino');
     if (!hinoTocando) {
-      player.innerHTML = `<iframe width="0" height="0" src="https://www.youtube.com/embed/BaOjuEhxJAI?autoplay=1&loop=1&playlist=BaOjuEhxJAI" frameborder="0" allow="autoplay" style="display:none;"></iframe>`;
-      btn.innerText = "🔇 Parar Hino"; btn.classList.replace('btn-danger', 'btn-dark'); hinoTocando = true;
+      audio.play();
+      btn.innerText = "🔇 Parar Hino"; 
+      btn.classList.replace('btn-dark', 'btn-secondary'); 
+      hinoTocando = true;
     } else {
-      player.innerHTML = ''; btn.innerText = "▶ Tocar Hino Oficial"; btn.classList.replace('btn-dark', 'btn-danger'); hinoTocando = false;
+      audio.pause();
+      audio.currentTime = 0; 
+      btn.innerText = "▶ Tocar Hino Oficial"; 
+      btn.classList.replace('btn-secondary', 'btn-dark');
+      btn.style.backgroundColor = '#c8102e'; 
+      hinoTocando = false;
     }
   }
 </script>

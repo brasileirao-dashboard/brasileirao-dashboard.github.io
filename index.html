@@ -31,7 +31,7 @@
 <div class="container-fluid px-2 py-1">
   <div class="d-flex justify-content-between align-items-center mb-1 px-3">
     
-    <!-- COLUNA ESQUERDA: TÍTULO + BOTÃO PROBABILIDADES -->
+    <!-- COLUNA ESQUERDA: TÍTULO + BOTÕES -->
     <div class="d-flex flex-column">
       <div class="d-flex align-items-center">
         <img src="./taca.png" style="height: 45px; margin-right: 12px; object-fit: contain; filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.1));" onerror="this.style.display='none';">
@@ -40,7 +40,6 @@
         </h4>
         <button id="btn-audio" class="btn btn-outline-dark btn-sm fw-bold shadow-sm" onclick="tocarTema()">▶ Tocar Tema</button>
       </div>
-      <!-- BOTÃO INSERIDO EXATAMENTE NA ÁREA VERMELHA -->
       <div class="mt-2 ms-5 ps-1">
         <button class="btn btn-sm fw-bold shadow-sm text-white" data-bs-toggle="modal" data-bs-target="#modalProbabilidades" style="background-color: #001E60; border: none; font-size: 0.75rem;">
           📊 Ver Probabilidades (UFMG)
@@ -123,11 +122,9 @@
   </div>
 </div>
 
-<!-- BIBLIOTECA DO BOOTSTRAP NECESSÁRIA PARA O MODAL FUNCIONAR -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-  // ATENÇÃO: Verifique se este é o link da sua nova implantação da API!
   const API_URL = 'https://script.google.com/macros/s/AKfycby2W_byRD0m1qHTSs_W20VynlNc2zcFPW6j01U9YWJnGNM4eqLrwmfWF_gp_20DTgdDWA/exec';
 
   const escudos = {
@@ -181,6 +178,30 @@
   let dadosProbabilidades = [];
   let modoSimulacao = false;
   let placaresSimulados = {};
+  
+  // Variável nova que armazena a ordem exata da tabela
+  let ordemClassificacao = []; 
+
+  // --- ÁUDIO DO TEMA PRINCIPAL ---
+  let audioTema = new Audio('./hino-brasileirao.mp3');
+  audioTema.loop = true;
+  let musicaTocando = false;
+
+  function tocarTema() {
+    const btn = document.getElementById('btn-audio');
+    if (!musicaTocando) {
+      audioTema.play();
+      btn.innerText = "🔇 Parar Tema";
+      btn.classList.replace('btn-outline-dark', 'btn-danger');
+      musicaTocando = true;
+    } else {
+      audioTema.pause();
+      audioTema.currentTime = 0;
+      btn.innerText = "▶ Tocar Tema";
+      btn.classList.replace('btn-danger', 'btn-outline-dark');
+      musicaTocando = false;
+    }
+  }
 
   async function carregarTudo() {
     try {
@@ -197,7 +218,6 @@
       recalcularEAtualizarTabela();
       renderizarRodada();
 
-      // Busca as probabilidades invisivelmente
       const resProb = await fetch(API_URL + "?acao=probabilidades");
       dadosProbabilidades = await resProb.json();
       renderizarProbabilidades();
@@ -288,7 +308,12 @@
       if (b.Saldo !== a.Saldo) return b.Saldo - a.Saldo;
       return b.GP - a.GP;
     });
+    
+    // A REGRA DA ORDEM: Grava a ordem oficial da tabela
+    ordemClassificacao = arrayTabela.map(t => String(t.Clube).toLowerCase());
+
     montarTabelaDinamica(arrayTabela);
+    if(dadosProbabilidades.length > 0) renderizarProbabilidades();
   }
 
   function montarTabelaDinamica(dados) {
@@ -392,14 +417,13 @@
       return;
     }
 
-    // Organiza a tabela pela chance de Título, depois Libertadores
+    // A MÁGICA DA ORDEM: Agora ele acompanha exatamente a classificação real do campeonato
     dadosProbabilidades.sort((a, b) => {
-      let tA = parseFloat(String(a.Titulo).replace(',','.').replace('<','').replace('>','')) || 0;
-      let tB = parseFloat(String(b.Titulo).replace(',','.').replace('<','').replace('>','')) || 0;
-      if (tB !== tA) return tB - tA;
-      let lA = parseFloat(String(a.Libertadores).replace(',','.').replace('<','').replace('>','')) || 0;
-      let lB = parseFloat(String(b.Libertadores).replace(',','.').replace('<','').replace('>','')) || 0;
-      return lB - lA;
+      let posA = ordemClassificacao.indexOf(String(a.Clube).toLowerCase());
+      let posB = ordemClassificacao.indexOf(String(b.Clube).toLowerCase());
+      if (posA === -1) posA = 99;
+      if (posB === -1) posB = 99;
+      return posA - posB;
     });
 
     const criarBarra = (valorRaw, cor) => {
@@ -416,11 +440,20 @@
       `;
     };
 
+    // A MÁGICA DOS ESCUDOS: Agora é a prova de falhas com letras minúsculas e maiúsculas
+    const pegarEscudo = (nome) => {
+      const chaves = Object.keys(escudos);
+      const chaveEncontrada = chaves.find(c => c.toLowerCase() === String(nome).toLowerCase());
+      return chaveEncontrada ? escudos[chaveEncontrada] : "https://cdn-icons-png.flaticon.com/512/53/53283.png";
+    };
+
     dadosProbabilidades.forEach(dado => {
-      const esc = escudos[dado.Clube] || "https://cdn-icons-png.flaticon.com/512/53/53283.png";
+      const esc = pegarEscudo(dado.Clube);
+      const nomeCorrigido = String(dado.Clube).charAt(0).toUpperCase() + String(dado.Clube).slice(1);
+
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td class="text-start fw-bold ps-3"><img src="${esc}" class="logo-clube">${dado.Clube}</td>
+        <td class="text-start fw-bold ps-3"><img src="${esc}" class="logo-clube">${nomeCorrigido}</td>
         <td>${criarBarra(dado.Titulo, 'bg-success')}</td>
         <td>${criarBarra(dado.Libertadores, 'bg-primary')}</td>
         <td>${criarBarra(dado.SulAmericana, 'bg-warning')}</td>

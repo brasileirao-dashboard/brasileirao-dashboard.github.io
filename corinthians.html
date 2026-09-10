@@ -1,1 +1,37 @@
-<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Corinthians</title><link rel="icon" type="image/png" href="./escudocorinthians.png"><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"><style>body{background:linear-gradient(135deg,#000 0%,#fff 100%);position:relative;min-height:100vh;}body::before{content:"";background:url('./escudocorinthians.png') no-repeat center center fixed;background-size:50%;opacity:0.15;top:0;left:0;bottom:0;right:0;position:absolute;z-index:-1;}.conteudo-box{background-color:rgba(255,255,255,0.95);border-radius:12px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,0.3);}.titulo-clube{color:#000;font-weight:900;text-transform:uppercase;border-bottom:3px solid #000;padding-bottom:5px;}.hino-letra{font-style:italic;line-height:1.8;color:#222;text-align:center;font-size:1.05rem;}.mascote{max-width:140px;float:right;margin-left:15px;border-radius:8px;}</style></head><body><div class="container py-4"><div class="d-flex justify-content-between align-items-center mb-4 conteudo-box"><h1 class="titulo-clube m-0 border-0">Corinthians</h1><div><button id="btn-hino" class="btn btn-dark shadow-sm fw-bold" style="background-color:#000;border:none;" onclick="tocarHino()">▶ Tocar Hino Oficial</button></div></div><div class="row g-4"><div class="col-md-7"><div class="conteudo-box h-100"><h4 class="fw-bold mb-3">História e Glórias</h4><img src="./mascote-corinthians.png" class="mascote" onerror="this.style.display='none';"><p class="text-justify">O Campeão dos Campeões, fundado em 1910. O Timão conquistou o mundo duas vezes e conta com a força inabalável de sua Fiel Torcida em cada jogo.</p><h5 class="fw-bold mt-4 mb-3">Principais Títulos 🏆</h5><ul class="list-group list-group-flush" style="background:transparent;"><li class="list-group-item" style="background:transparent;"><strong>Mundial de Clubes FIFA:</strong> 2 (2000, 2012)</li><li class="list-group-item" style="background:transparent;"><strong>Copa Libertadores:</strong> 1 (2012)</li><li class="list-group-item" style="background:transparent;"><strong>Campeonato Brasileiro:</strong> 7 Vezes</li></ul></div></div><div class="col-md-5"><div class="conteudo-box h-100 d-flex flex-column align-items-center"><h4 class="fw-bold mb-3">Hino do Clube</h4><div class="hino-letra">Salve o Corinthians<br>O campeão dos campeões<br>Eternamente dentro dos nossos corações<br><br>Salve o Corinthians de tradição e glórias mil<br>Tu és o orgulho dos desportistas do Brasil!</div></div></div></div></div><script>let audio=new Audio('./hino-corinthians.mp3');let hinoTocando=false;function tocarHino(){const b=document.getElementById('btn-hino');if(!hinoTocando){audio.play();b.innerText="🔇 Parar Hino";b.classList.replace('btn-dark','btn-secondary');hinoTocando=true;}else{audio.pause();audio.currentTime=0;b.innerText="▶ Tocar Hino Oficial";b.classList.replace('btn-secondary','btn-dark');b.style.backgroundColor='#000';hinoTocando=false;}}</script></body></html>
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Corinthians</title><link rel="icon" type="image/png" href="./escudocorinthians.png"><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"><style>body{background:linear-gradient(135deg,#000 0%,#777 100%);position:relative;min-height:100vh;}body::before{content:"";background:url('./escudocorinthians.png') no-repeat center center fixed;background-size:50%;opacity:0.15;top:0;left:0;bottom:0;right:0;position:absolute;z-index:-1;}.conteudo-box{background-color:rgba(255,255,255,0.92);border-radius:12px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,0.3);}.titulo-clube{color:#000;font-weight:900;text-transform:uppercase;border-bottom:3px solid #000;padding-bottom:5px;}.hino-letra{font-style:italic;line-height:1.8;color:#222;text-align:center;font-size:1.05rem;}.mascote{max-width:140px;float:right;margin-left:15px;border-radius:8px;}</style></head><body><div class="container py-4">
+
+  <!-- CABEÇALHO: Nome Completo + Escudo + Botão -->
+  <div class="d-flex justify-content-between align-items-center mb-4 conteudo-box">
+    <h1 class="titulo-clube m-0 border-0">Sport Club Corinthians Paulista</h1>
+    <div class="d-flex align-items-center">
+      <img src="./escudocorinthians.png" style="height: 50px; margin-right: 15px; object-fit: contain;">
+      <button id="btn-hino" class="btn btn-dark shadow-sm fw-bold" style="background-color:#000;border:none;" onclick="tocarHino()">▶ Tocar Hino Oficial</button>
+    </div>
+  </div>
+
+  <div class="row g-4"><div class="col-md-7"><div class="conteudo-box h-100">
+    <h4 class="fw-bold mb-3">História e Glórias</h4>
+    <img src="./mascote-corinthians.png" class="mascote" onerror="this.style.display='none';">
+    
+    <p class="text-justify mb-2"><strong>Fundação:</strong> 1 de setembro de 1910</p>
+    <p class="text-justify">Sob a luz de um lampião no bairro do Bom Retiro, em São Paulo, um grupo de operários decidiu fundar um clube de futebol. Assim nasceu o Sport Club Corinthians Paulista, o "Time do Povo". Diferente da elite da época, o Corinthians sempre carregou o DNA da massa trabalhadora.</p>
+    <p class="text-justify">A força de sua "Fiel Torcida" é lendária, imortalizada em eventos como a Invasão Corintiana de 1976 no Maracanã e o Mundial de 2012 no Japão. Palco de movimentos históricos como a Democracia Corinthiana liderada por Sócrates na década de 80, o clube atingiu o topo do mundo duas vezes (2000 e 2012), sendo o último de forma épica e invicta contra o Chelsea.</p>
+    
+    <h5 class="fw-bold mt-4 mb-3">Principais Títulos 🏆</h5>
+    <ul class="list-group list-group-flush" style="background:transparent;">
+      <li class="list-group-item" style="background:transparent;"><strong>Mundial de Clubes FIFA:</strong> 2 (2000, 2012)</li>
+      <li class="list-group-item" style="background:transparent;"><strong>Copa Libertadores:</strong> 1 (2012 - Invicto)</li>
+      <li class="list-group-item" style="background:transparent;"><strong>Campeonato Brasileiro:</strong> 7 Vezes</li>
+      <li class="list-group-item" style="background:transparent;"><strong>Copa do Brasil:</strong> 3 Vezes</li>
+    </ul>
+  </div></div>
+  <div class="col-md-5"><div class="conteudo-box h-100 d-flex flex-column align-items-center">
+    <h4 class="fw-bold mb-3">Hino do Clube</h4>
+    <div class="hino-letra">
+      Salve o Corinthians<br>O campeão dos campeões<br>Eternamente dentro dos nossos corações<br><br>
+      Salve o Corinthians de tradição e glórias mil<br>Tu és orgulho dos desportistas do Brasil<br><br>
+      Teu passado é uma bandeira<br>Teu presente, uma lição<br>Figuras entre os primeiros<br>Do nosso esporte bretão<br><br>
+      Corinthians grande, sempre Altaneiro<br>És do Brasil o clube mais brasileiro!
+    </div>
+  </div></div></div></div>
+<script>let audio=new Audio('./hino-corinthians.mp3');let hinoTocando=false;function tocarHino(){const b=document.getElementById('btn-hino');if(!hinoTocando){audio.play();b.innerText="🔇 Parar Hino";b.classList.replace('btn-dark','btn-secondary');hinoTocando=true;}else{audio.pause();audio.currentTime=0;b.innerText="▶ Tocar Hino Oficial";b.classList.replace('btn-secondary','btn-dark');b.style.backgroundColor='#000';hinoTocando=false;}}</script></body></html>

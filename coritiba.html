@@ -1,1 +1,35 @@
-<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Coritiba</title><link rel="icon" type="image/png" href="./escudocoritiba.png"><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"><style>body{background:linear-gradient(135deg,#006437 0%,#fff 100%);position:relative;min-height:100vh;}body::before{content:"";background:url('./escudocoritiba.png') no-repeat center center fixed;background-size:50%;opacity:0.15;top:0;left:0;bottom:0;right:0;position:absolute;z-index:-1;}.conteudo-box{background-color:rgba(255,255,255,0.92);border-radius:12px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,0.3);}.titulo-clube{color:#006437;font-weight:900;text-transform:uppercase;border-bottom:3px solid #006437;padding-bottom:5px;}.hino-letra{font-style:italic;line-height:1.8;color:#222;text-align:center;font-size:1.05rem;}.mascote{max-width:140px;float:right;margin-left:15px;border-radius:8px;}</style></head><body><div class="container py-4"><div class="d-flex justify-content-between align-items-center mb-4 conteudo-box"><h1 class="titulo-clube m-0 border-0">Coritiba</h1><div><button id="btn-hino" class="btn btn-dark shadow-sm fw-bold" style="background-color:#006437;border:none;" onclick="tocarHino()">▶ Tocar Hino Oficial</button></div></div><div class="row g-4"><div class="col-md-7"><div class="conteudo-box h-100"><h4 class="fw-bold mb-3">História e Glórias</h4><img src="./mascote-coritiba.png" class="mascote" onerror="this.style.display='none';"><p class="text-justify">Fundado em 1909, o Coxa-Branca ostenta uma tradição imensa no sul do Brasil, com um título nacional e o histórico recorde de vitórias consecutivas.</p><h5 class="fw-bold mt-4 mb-3">Principais Títulos 🏆</h5><ul class="list-group list-group-flush" style="background:transparent;"><li class="list-group-item" style="background:transparent;"><strong>Campeonato Brasileiro:</strong> 1 (1985)</li><li class="list-group-item" style="background:transparent;"><strong>Série B do Brasileiro:</strong> 2 (2007, 2010)</li><li class="list-group-item" style="background:transparent;"><strong>Campeonato Paranaense:</strong> 39 Vezes</li></ul></div></div><div class="col-md-5"><div class="conteudo-box h-100 d-flex flex-column align-items-center"><h4 class="fw-bold mb-3">Hino do Clube</h4><div class="hino-letra">Lá no alto de glórias mil<br>Brilha o Coxa em todo o Brasil<br>Enaltecendo as nossas cores<br>O Coritiba de grandes valores<br><br>Coxa, Coxa, é de coração!<br>Coritiba campeão!</div></div></div></div></div><script>let audio=new Audio('./hino-coritiba.mp3');let hinoTocando=false;function tocarHino(){const b=document.getElementById('btn-hino');if(!hinoTocando){audio.play();b.innerText="🔇 Parar Hino";b.classList.replace('btn-dark','btn-secondary');hinoTocando=true;}else{audio.pause();audio.currentTime=0;b.innerText="▶ Tocar Hino Oficial";b.classList.replace('btn-secondary','btn-dark');b.style.backgroundColor='#006437';hinoTocando=false;}}</script></body></html>
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Coritiba</title><link rel="icon" type="image/png" href="./escudocoritiba.png"><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"><style>body{background:linear-gradient(135deg,#006437 0%,#fff 100%);position:relative;min-height:100vh;}body::before{content:"";background:url('./escudocoritiba.png') no-repeat center center fixed;background-size:50%;opacity:0.15;top:0;left:0;bottom:0;right:0;position:absolute;z-index:-1;}.conteudo-box{background-color:rgba(255,255,255,0.92);border-radius:12px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,0.3);}.titulo-clube{color:#006437;font-weight:900;text-transform:uppercase;border-bottom:3px solid #006437;padding-bottom:5px;}.hino-letra{font-style:italic;line-height:1.8;color:#222;text-align:center;font-size:1.05rem;}.mascote{max-width:140px;float:right;margin-left:15px;border-radius:8px;}</style></head><body><div class="container py-4">
+
+  <!-- CABEÇALHO: Nome Completo + Escudo + Botão -->
+  <div class="d-flex justify-content-between align-items-center mb-4 conteudo-box">
+    <h1 class="titulo-clube m-0 border-0">Coritiba Foot Ball Club</h1>
+    <div class="d-flex align-items-center">
+      <img src="./escudocoritiba.png" style="height: 50px; margin-right: 15px; object-fit: contain;">
+      <button id="btn-hino" class="btn btn-dark shadow-sm fw-bold" style="background-color:#006437;border:none;" onclick="tocarHino()">▶ Tocar Hino Oficial</button>
+    </div>
+  </div>
+
+  <div class="row g-4"><div class="col-md-7"><div class="conteudo-box h-100">
+    <h4 class="fw-bold mb-3">História e Glórias</h4>
+    <img src="./mascote-coritiba.png" class="mascote" onerror="this.style.display='none';">
+    
+    <p class="text-justify mb-2"><strong>Fundação:</strong> 12 de outubro de 1909</p>
+    <p class="text-justify">Clube mais antigo do estado do Paraná, o Coritiba Foot Ball Club nasceu por iniciativa de jovens descendentes de alemães apaixonados por futebol. O "Coxa", como é carinhosamente chamado por sua torcida, joga no lendário estádio Couto Pereira, um caldeirão no sul do país.</p>
+    <p class="text-justify">A maior glória da história do Coxa-Branca ocorreu em 1985, quando sagrou-se Campeão Brasileiro da Série A no Maracanã, em uma final épica contra o Bangu. O clube também ostenta um feito incrível validado pelo Guinness Book: em 2011, obteve o recorde mundial de 24 vitórias consecutivas em jogos oficiais, mostrando a força impressionante do seu elenco.</p>
+    
+    <h5 class="fw-bold mt-4 mb-3">Principais Títulos 🏆</h5>
+    <ul class="list-group list-group-flush" style="background:transparent;">
+      <li class="list-group-item" style="background:transparent;"><strong>Campeonato Brasileiro:</strong> 1 (1985)</li>
+      <li class="list-group-item" style="background:transparent;"><strong>Campeonato Brasileiro - Série B:</strong> 2 (2007, 2010)</li>
+      <li class="list-group-item" style="background:transparent;"><strong>Campeonato Paranaense:</strong> 39 Vezes</li>
+    </ul>
+  </div></div>
+  <div class="col-md-5"><div class="conteudo-box h-100 d-flex flex-column align-items-center">
+    <h4 class="fw-bold mb-3">Hino do Clube</h4>
+    <div class="hino-letra">
+      Lá no alto de glórias mil<br>Brilha o Coxa em todo o Brasil<br>Enaltecendo as nossas cores<br>O Coritiba de grandes valores<br><br>
+      Coxa, Coxa, é de coração!<br>Coxa, Coxa, campeão do Paraná!<br>Onde o Coritiba for jogar<br>A sua imensa torcida lá estará<br><br>
+      Com a camisa verde e branca<br>Mostrando a todos que o Coritiba é raça<br>No campo a lutar, para vencer e encantar<br>Coritiba, eternamente vou te amar!
+    </div>
+  </div></div></div></div>
+<script>let audio=new Audio('./hino-coritiba.mp3');let hinoTocando=false;function tocarHino(){const b=document.getElementById('btn-hino');if(!hinoTocando){audio.play();b.innerText="🔇 Parar Hino";b.classList.replace('btn-dark','btn-secondary');hinoTocando=true;}else{audio.pause();audio.currentTime=0;b.innerText="▶ Tocar Hino Oficial";b.classList.replace('btn-secondary','btn-dark');b.style.backgroundColor='#006437';hinoTocando=false;}}</script></body></html>

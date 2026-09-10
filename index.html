@@ -3,36 +3,66 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brasileirão</title>
+  <title>Brasileirão 2026</title>
   <link rel="icon" type="image/png" href="./taca.png">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    body { background-color: #e2eee6; margin: 0; padding: 0; min-height: 100vh; overflow-x: hidden; }
+    /* VARIÁVEIS PARA MODO CLARO/ESCURO */
+    :root {
+      --bg-body: #e2eee6; --bg-painel: rgba(255, 255, 255, 0.96); --text-main: #333; --border-color: #FFD700;
+      --bg-table: transparent; --bg-card: #f8f9fa; --text-muted: #6c757d; --bg-header: #f8f9fa;
+    }
+    body.dark-mode {
+      --bg-body: #121212; --bg-painel: #1e1e1e; --text-main: #e0e0e0; --border-color: #444;
+      --bg-table: #1e1e1e; --bg-card: #2a2a2a; --text-muted: #aaa; --bg-header: #2a2a2a;
+    }
+
+    body { background-color: var(--bg-body); color: var(--text-main); margin: 0; padding: 0; min-height: 100vh; overflow-x: hidden; transition: background 0.3s; }
     body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: url('https://flagcdn.com/w2560/br.png'); background-size: cover; background-position: center; opacity: 0.12; z-index: -1; }
+    body.dark-mode::before { opacity: 0.04; filter: grayscale(50%); }
+
     .text-brasil { background: linear-gradient(to right, #007A33 0%, #D6A800 50%, #001E60 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; text-transform: uppercase; }
-    .painel-classificacao, .painel-jogos { background-color: rgba(255, 255, 255, 0.96); border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12); border: 3px solid #FFD700; padding: 12px 15px; height: 82vh; display: flex; flex-direction: column; }
-    .painel-classificacao { width: 42vw; }
-    .painel-jogos { width: 36vw; }
+    body.dark-mode .text-brasil { background: linear-gradient(to right, #4ade80 0%, #facc15 50%, #60a5fa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    
+    .painel-classificacao, .painel-jogos { background-color: var(--bg-painel); border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); border: 3px solid var(--border-color); padding: 12px 15px; height: 82vh; display: flex; flex-direction: column; transition: all 0.3s; }
+    .painel-classificacao { width: 42vw; } .painel-jogos { width: 36vw; }
+    
     .logo-clube { width: 20px; height: 20px; object-fit: contain; margin-right: 6px; vertical-align: middle; }
-    .logo-estadio { width: 38px; height: 38px; object-fit: cover; border-radius: 6px; margin-right: 6px; border: 1px solid #dcdcdc; box-shadow: 0 1px 3px rgba(0,0,0,0.15); }
+    .logo-estadio { width: 38px; height: 38px; object-fit: cover; border-radius: 6px; margin-right: 6px; border: 1px solid #dcdcdc; }
+    
     .zona-libertadores td:first-child { border-left: 4px solid #0d6efd !important; } 
     .zona-pre-liberta td:first-child { border-left: 4px solid #0dcaf0 !important; } 
     .zona-sulamericana td:first-child { border-left: 4px solid #198754 !important; } 
     .zona-rebaixamento td:first-child { border-left: 4px solid #dc3545 !important; } 
-    .tabela-alinhada td, .tabela-alinhada th { vertical-align: middle; padding: 3px 6px !important; font-size: 0.8rem; }
-    .box-cor { display: inline-block; width: 10px; height: 10px; margin-right: 3px; border-radius: 3px; vertical-align: middle; }
-    .card-jogo { background: #f8f9fa; border-radius: 6px; padding: 8px 10px; margin-bottom: 8px; border-left: 4px solid #007A33; box-shadow: 0 2px 4px rgba(0,0,0,0.06); }
-    .info-partida { font-size: 0.73rem; color: #555; text-align: center; margin-bottom: 6px; font-weight: 600; display: flex; align-items: center; justify-content: space-between; }
-    .input-simulacao { width: 35px; text-align: center; font-weight: bold; border: 1px solid #ced4da; border-radius: 4px; }
-    .link-clube { color: inherit; text-decoration: none; font-weight: bold; }
-    .link-clube:hover { text-decoration: underline; color: #000; }
     
-    /* Bolinha piscando AO VIVO */
+    .table { color: var(--text-main); }
+    .table-hover tbody tr:hover { background-color: rgba(128,128,128,0.1); }
+    .tabela-alinhada td, .tabela-alinhada th { vertical-align: middle; padding: 3px 6px !important; font-size: 0.8rem; background-color: var(--bg-table); border-color: rgba(128,128,128,0.2); }
+    .tabela-alinhada thead th { background-color: var(--bg-header); }
+    
+    .box-cor { display: inline-block; width: 10px; height: 10px; margin-right: 3px; border-radius: 3px; vertical-align: middle; }
+    
+    .card-jogo { background: var(--bg-card); border-radius: 6px; padding: 8px 10px; margin-bottom: 8px; border-left: 4px solid #007A33; }
+    body.dark-mode .card-jogo { border-left-color: #4ade80; }
+    
+    .info-partida { font-size: 0.73rem; color: var(--text-muted); text-align: center; margin-bottom: 6px; font-weight: 600; display: flex; align-items: center; justify-content: space-between; }
+    .input-simulacao { width: 35px; text-align: center; font-weight: bold; border: 1px solid #ced4da; border-radius: 4px; background: var(--bg-painel); color: var(--text-main); }
+    
+    .link-clube { color: inherit; text-decoration: none; font-weight: bold; }
+    .link-clube:hover { text-decoration: underline; color: #007A33; }
+    
     .live-dot { height: 8px; width: 8px; background-color: #dc3545; border-radius: 50%; display: inline-block; animation: blink 1s infinite; margin-right: 4px; }
     @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.2; } 100% { opacity: 1; } }
 
-    /* Seção Inferior: Artilharia e Assistências */
-    .painel-inferior { background-color: rgba(255, 255, 255, 0.96); border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12); border: 3px solid #FFD700; padding: 15px 20px; width: 80vw; margin: 20px auto; }
+    .painel-inferior { background-color: var(--bg-painel); border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); border: 3px solid var(--border-color); padding: 15px 20px; width: 80vw; margin: 20px auto; }
+    
+    /* BOLINHAS DE MOMENTO (V-E-D) */
+    .form-dot { display: inline-block; width: 14px; height: 14px; border-radius: 50%; margin: 0 1px; font-size: 9px; text-align: center; color: white; line-height: 14px; font-weight: bold; }
+    .form-v { background-color: #198754; } .form-e { background-color: #6c757d; } .form-d { background-color: #dc3545; }
+    
+    /* MODAL GRÁFICO */
+    .modal-content { background-color: var(--bg-painel); color: var(--text-main); border-radius: 12px; border: 2px solid var(--border-color); }
     
     @media (max-width: 900px) { .painel-classificacao, .painel-jogos, .painel-inferior { width: 100%; height: auto; min-height: 40vh; } .d-flex.gap-4 { flex-direction: column; gap: 15px !important; } }
   </style>
@@ -40,530 +70,307 @@
 <body>
 
 <div class="container-fluid px-2 py-2">
-  <div class="d-flex justify-content-between align-items-center mb-2 px-3">
-    <div class="d-flex flex-column">
-      <div class="d-flex align-items-center">
-        <img src="./taca.png" style="height: 45px; margin-right: 12px; object-fit: contain; filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.1));" onerror="this.style.display='none';">
-        <h4 class="m-0 fw-bold text-dark me-3">
-          <span class="text-brasil">BRASILEIRÃO</span> Série A
-        </h4>
-        <button id="btn-audio" class="btn btn-outline-dark btn-sm fw-bold shadow-sm" onclick="tocarTema()">▶ Tocar Tema</button>
-      </div>
-      <div class="mt-2 ms-5 ps-1">
-        <button class="btn btn-sm fw-bold shadow-sm text-white" data-bs-toggle="modal" data-bs-target="#modalProbabilidades" style="background-color: #001E60; border: none; font-size: 0.75rem;">
-          📊 Ver Probabilidades (UFMG)
-        </button>
-      </div>
+  <div class="d-flex justify-content-between align-items-center mb-2 px-3 flex-wrap">
+    <div class="d-flex align-items-center mb-2 mb-md-0">
+      <img src="./taca.png" style="height: 45px; margin-right: 12px; object-fit: contain; filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.1));" onerror="this.style.display='none';">
+      <h4 class="m-0 fw-bold me-3"><span class="text-brasil">BRASILEIRÃO</span> Série A</h4>
+      <button id="btn-audio" class="btn btn-outline-success btn-sm fw-bold me-2" onclick="tocarTema()">▶ Som</button>
+      <button class="btn btn-dark btn-sm fw-bold" onclick="toggleDarkMode()">🌙 Tema</button>
     </div>
-    <button id="btn-simulacao" class="btn btn-warning btn-sm fw-bold shadow-sm" onclick="alternarModoSimulacao()">Modo Simulação: DESLIGADO</button>
+    <div>
+      <button class="btn btn-sm fw-bold text-white me-2" data-bs-toggle="modal" data-bs-target="#modalProbabilidades" style="background-color: #001E60;">📊 UFMG</button>
+      <button id="btn-simulacao" class="btn btn-warning btn-sm fw-bold" onclick="alternarModoSimulacao()">Simulador: OFF</button>
+    </div>
   </div>
 
-  <!-- PAINÉIS PRINCIPAIS -->
   <div class="d-flex justify-content-center gap-4 mt-2">
     <div>
       <div class="painel-classificacao">
-        <h6 class="mb-2 text-secondary fw-bold text-center">Classificação</h6>
+        <h6 class="mb-2 fw-bold text-center" style="color: var(--text-muted);">Classificação e Momento</h6>
         <div class="table-responsive" style="flex-grow: 1; overflow-y: auto;">
-          <table class="table table-hover tabela-alinhada mb-0" style="background-color: transparent;">
-            <thead class="text-center border-bottom sticky-top bg-light" style="z-index: 1;">
-              <tr>
-                <th style="width: 6%;">Pos</th><th class="text-start">Clube</th><th>P</th><th>J</th><th>V</th><th>E</th><th>D</th><th>GP</th><th>GC</th><th>SG</th>
-              </tr>
+          <table class="table table-hover tabela-alinhada mb-0">
+            <thead class="text-center border-bottom sticky-top" style="z-index: 1;">
+              <tr><th style="width: 5%;">Pos</th><th class="text-start">Clube</th><th>P</th><th>J</th><th>V</th><th>E</th><th>D</th><th>GP</th><th>GC</th><th>SG</th><th>Últ. 5</th></tr>
             </thead>
             <tbody id="tabela-corpo" class="text-center border-top-0">
-              <tr><td colspan="10" class="py-3 text-muted">Carregando tabela...</td></tr>
+              <tr><td colspan="11" class="py-3 text-muted">Carregando tabela...</td></tr>
             </tbody>
           </table>
         </div>
       </div>
-      <div class="mt-1 d-flex flex-wrap justify-content-center gap-3 fw-bold" style="font-size: 0.7rem; color: #333;">
-        <div><span class="box-cor" style="background-color: #0d6efd;"></span>Libertadores</div>
-        <div><span class="box-cor" style="background-color: #0dcaf0;"></span>Pré-Libertadores</div>
-        <div><span class="box-cor" style="background-color: #198754;"></span>Sul-Americana</div>
-        <div><span class="box-cor" style="background-color: #dc3545;"></span>Rebaixamento</div>
+      <div class="mt-1 d-flex flex-wrap justify-content-center gap-3 fw-bold" style="font-size: 0.7rem; color: var(--text-main);">
+        <div><span class="box-cor bg-primary"></span>Libertadores</div>
+        <div><span class="box-cor bg-info"></span>Pré-Libertadores</div>
+        <div><span class="box-cor bg-success"></span>Sul-Americana</div>
+        <div><span class="box-cor bg-danger"></span>Rebaixamento</div>
       </div>
     </div>
+    
     <div>
       <div class="painel-jogos">
         <div class="d-flex justify-content-between align-items-center mb-2">
-          <button class="btn btn-outline-success btn-sm fw-bold px-2 py-1" onclick="mudarRodada(-1)">◀ Anterior</button>
-          <h6 id="titulo-rodada" class="m-0 text-secondary fw-bold">Carregando...</h6>
-          <button class="btn btn-outline-success btn-sm fw-bold px-2 py-1" onclick="mudarRodada(1)">Próxima ▶</button>
+          <button class="btn btn-outline-success btn-sm fw-bold px-2 py-1" onclick="mudarRodada(-1)">◀ Ant.</button>
+          <h6 id="titulo-rodada" class="m-0 fw-bold" style="color: var(--text-muted);">Carregando...</h6>
+          <button class="btn btn-outline-success btn-sm fw-bold px-2 py-1" onclick="mudarRodada(1)">Próx. ▶</button>
         </div>
-        <div id="lista-jogos" style="flex-grow: 1; overflow-y: auto; padding-right: 4px;">
-          <p class="text-center text-muted py-5">Buscando confrontos...</p>
-        </div>
+        <div id="lista-jogos" style="flex-grow: 1; overflow-y: auto; padding-right: 4px;"></div>
       </div>
     </div>
   </div>
 
-  <!-- SEÇÃO INFERIOR: ARTILHARIA E ASSISTÊNCIAS -->
+  <!-- SEÇÃO INFERIOR -->
   <div class="painel-inferior">
     <div class="row">
       <div class="col-md-6 mb-3 mb-md-0">
-        <h6 class="fw-bold text-success mb-2">⚽ Artilharia (Gols)</h6>
-        <div class="table-responsive" style="max-height: 200px; overflow-y: auto;">
-          <table class="table table-sm table-striped align-middle mb-0" style="font-size: 0.8rem;">
-            <thead class="table-light sticky-top">
-              <tr><th>#</th><th class="text-start">Jogador</th><th class="text-start">Clube</th><th class="text-center">Gols</th></tr>
-            </thead>
-            <tbody id="corpo-artilharia">
-              <tr><td colspan="4" class="text-muted text-center py-2">Carregando artilheiros...</td></tr>
-            </tbody>
-          </table>
-        </div>
+        <h6 class="fw-bold text-success mb-2">⚽ Artilharia</h6>
+        <div class="table-responsive" style="max-height: 200px; overflow-y: auto;"><table class="table table-sm tabela-alinhada table-striped mb-0"><tbody id="corpo-artilharia"></tbody></table></div>
       </div>
       <div class="col-md-6">
-        <h6 class="fw-bold text-primary mb-2">🎯 Assistências (Passes para Gol)</h6>
-        <div class="table-responsive" style="max-height: 200px; overflow-y: auto;">
-          <table class="table table-sm table-striped align-middle mb-0" style="font-size: 0.8rem;">
-            <thead class="table-light sticky-top">
-              <tr><th>#</th><th class="text-start">Jogador</th><th class="text-start">Clube</th><th class="text-center">Assist.</th></tr>
-            </thead>
-            <tbody id="corpo-assistencias">
-              <tr><td colspan="4" class="text-muted text-center py-2">Carregando assistências...</td></tr>
-            </tbody>
-          </table>
-        </div>
+        <h6 class="fw-bold text-primary mb-2">🎯 Assistências</h6>
+        <div class="table-responsive" style="max-height: 200px; overflow-y: auto;"><table class="table table-sm tabela-alinhada table-striped mb-0"><tbody id="corpo-assistencias"></tbody></table></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- MODAL FLUTUANTE DAS PROBABILIDADES -->
+<!-- MODAL DO GRÁFICO (EVOLUÇÃO) -->
+<div class="modal fade" id="modalGrafico" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header text-white" style="background: linear-gradient(to right, #007A33, #001E60);">
+        <h5 class="modal-title fw-bold" id="tituloModalGrafico">📈 Evolução na Tabela</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-2" style="background-color: var(--bg-body);"><canvas id="graficoCanvas" style="max-height: 400px;"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PROBABILIDADES UFMG -->
 <div class="modal fade" id="modalProbabilidades" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-    <div class="modal-content" style="border-radius: 12px; border: 3px solid #FFD700; overflow: hidden;">
+    <div class="modal-content">
       <div class="modal-header text-white" style="background: linear-gradient(to right, #007A33, #001E60);">
-        <h5 class="modal-title fw-bold">📊 Probabilidades do Campeonato</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h5 class="modal-title fw-bold">📊 Probabilidades (UFMG)</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
       </div>
-      <div class="modal-body bg-light p-0">
-        <table class="table table-hover text-center align-middle mb-0" style="font-size: 0.85rem;">
-          <thead class="table-dark sticky-top">
-            <tr><th class="text-start ps-3">Clube</th><th>Campeão</th><th>Libertadores</th><th>Sul-Americana</th><th>Rebaixamento</th></tr>
-          </thead>
-          <tbody id="corpo-probabilidades">
-            <tr><td colspan="5" class="py-4 text-muted">Carregando dados da UFMG...</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="modal-footer py-1 px-3" style="background: #f1f1f1;">
-        <span class="text-muted w-100 text-end" style="font-size: 0.65rem;">*Fonte dos cálculos matemáticos: Depto. Matemática UFMG</span>
-      </div>
+      <div class="modal-body p-0"><table class="table table-hover text-center align-middle mb-0"><tbody id="corpo-probabilidades"></tbody></table></div>
     </div>
   </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
 <script>
+  // ================= CONFIGURAÇÕES INICIAIS =================
   const API_URL = 'https://script.google.com/macros/s/AKfycby2W_byRD0m1qHTSs_W20VynlNc2zcFPW6j01U9YWJnGNM4eqLrwmfWF_gp_20DTgdDWA/exec';
+  const escudos = { "Flamengo": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/orE554NToSkH6nuwofe7Yg_500x500.png", "Palmeiras": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/7spurne-xDt2p6C0imYYNA_500x500.png", "Athletico-PR": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/9LkdBR4L5plovKM8eIy7nQ_500x500.png", "Fluminense": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/fCMxMMDF2AZPU7LzYKSlig_500x500.png", "Bahia": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/nIdbR6qIUDyZUBO9vojSPw_500x500.png", "Cruzeiro": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/Tcv9X__nIh-6wFNJPMwIXQ_500x500.png", "Coritiba": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/LaFlBADLmsjHfGTehCYtuA_500x500.png", "Atlético-MG": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/q9fhEsgpuyRq58OgmSndcQ_500x500.png", "Bragantino": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/lMyw2zn1Z4cdkaxKJWnsQw_500x500.png", "São Paulo": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/4w2Z97Hf9CSOqICK3a8AxQ_500x500.png", "Vitória": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/LHSM6VchpkI4NIptoSTHOg_500x500.png", "Corinthians": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/tCMSqgXVHROpdCpQhzTo1g_500x500.png", "Santos": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/VHdNOT6wWOw_vJ38GMjMzg_500x500.png", "Botafogo": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/KLDWYp-H8CAOT9H_JgizRg_500x500.png", "Grêmio": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/Ku-73v_TW9kpex-IEGb0ZA_500x500.png", "Mirassol": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/5J3JY7fcdiDYU5rbPW7AKA_500x500.png", "Vasco": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/hHwT8LwRmYCAGxQ-STLxYA_500x500.png", "Internacional": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/OWVFKuHrQuf4q2Wk0hEmSA_500x500.png", "Remo": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/bENrK5iSMF6sXrEkDNNxng_500x500.png", "Chapecoense": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/K7JQUKTRsuXfO9YrD5dq5g_500x500.png" };
+  const urlsClubes = { "Athletico-PR": "./athletico.html", "Atlético-MG": "./atletico.html", "Bahia": "./bahia.html", "Botafogo": "./botafogo.html", "Bragantino": "./bragantino.html", "Chapecoense": "./chapecoense.html", "Corinthians": "./corinthians.html", "Coritiba": "./coritiba.html", "Cruzeiro": "./cruzeiro.html", "Flamengo": "./flamengo.html", "Fluminense": "./fluminense.html", "Grêmio": "./gremio.html", "Internacional": "./internacional.html", "Mirassol": "./mirassol.html", "Palmeiras": "./palmeiras.html", "Remo": "./remo.html", "Santos": "./santos.html", "São Paulo": "./saopaulo.html", "Vasco": "./vasco.html", "Vitória": "./vitoria.html" };
+  const estadiosFotos = { "maracan": "./maracana.jpg", "allianz": "./allianz.jpg", "mineir": "./mineirao.jpg", "química": "./quimica.jpg", "morum": "./morumbis.jpg", "beira": "./beirario.jpg", "grêmio": "./gremio.jpg", "nilton": "./niltonsantos.jpg", "januário": "./saojanuario.jpg", "couto": "./couto.jpg", "mrv": "./mrv.jpg", "fonte": "./fontenova.jpg", "barradão": "./barradao.jpg", "belmiro": "./vilabelmiro.jpg", "baixada": "./baixada.jpg", "mangueirão": "./mangueirao.jpg", "bragantino": "./bragantino.jpg", "chedid": "./bragantino.jpg", "campos maia": "./mirassol.jpg", "mirassol": "./mirassol.jpg", "condá": "./conda.jpg" };
 
-  const escudos = {
-    "Flamengo": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/orE554NToSkH6nuwofe7Yg_500x500.png",
-    "Palmeiras": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/7spurne-xDt2p6C0imYYNA_500x500.png",
-    "Athletico-PR": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/9LkdBR4L5plovKM8eIy7nQ_500x500.png",
-    "Fluminense": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/fCMxMMDF2AZPU7LzYKSlig_500x500.png",
-    "Bahia": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/nIdbR6qIUDyZUBO9vojSPw_500x500.png",
-    "Cruzeiro": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/Tcv9X__nIh-6wFNJPMwIXQ_500x500.png",
-    "Coritiba": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/LaFlBADLmsjHfGTehCYtuA_500x500.png",
-    "Atlético-MG": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/q9fhEsgpuyRq58OgmSndcQ_500x500.png",
-    "Bragantino": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/lMyw2zn1Z4cdkaxKJWnsQw_500x500.png",
-    "São Paulo": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/4w2Z97Hf9CSOqICK3a8AxQ_500x500.png",
-    "Vitória": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/LHSM6VchpkI4NIptoSTHOg_500x500.png",
-    "Corinthians": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/tCMSqgXVHROpdCpQhzTo1g_500x500.png",
-    "Santos": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/VHdNOT6wWOw_vJ38GMjMzg_500x500.png",
-    "Botafogo": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/KLDWYp-H8CAOT9H_JgizRg_500x500.png",
-    "Grêmio": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/Ku-73v_TW9kpex-IEGb0ZA_500x500.png",
-    "Mirassol": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/5J3JY7fcdiDYU5rbPW7AKA_500x500.png",
-    "Vasco": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/hHwT8LwRmYCAGxQ-STLxYA_500x500.png",
-    "Internacional": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/OWVFKuHrQuf4q2Wk0hEmSA_500x500.png",
-    "Remo": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/bENrK5iSMF6sXrEkDNNxng_500x500.png",
-    "Chapecoense": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/K7JQUKTRsuXfO9YrD5dq5g_500x500.png"
-  };
+  let rodadaAtual = 1; let todosOsJogos = []; let dadosClassificacaoBase = []; let dadosArtilharia = []; let dadosProbabilidades = []; let modoSimulacao = false; let placaresSimulados = {}; let ordemClassificacao = []; let chartEvolucao = null;
+  let audioTema = new Audio('./hino-brasileirao.mp3'); audioTema.loop = true; let musicaTocando = false;
 
-  const urlsClubes = {
-    "Athletico-PR": "./athletico.html", "Atlético-MG": "./atletico.html", "Bahia": "./bahia.html",
-    "Botafogo": "./botafogo.html", "Bragantino": "./bragantino.html", "Chapecoense": "./chapecoense.html",
-    "Corinthians": "./corinthians.html", "Coritiba": "./coritiba.html", "Cruzeiro": "./cruzeiro.html",
-    "Flamengo": "./flamengo.html", "Fluminense": "./fluminense.html", "Grêmio": "./gremio.html",
-    "Internacional": "./internacional.html", "Mirassol": "./mirassol.html", "Palmeiras": "./palmeiras.html",
-    "Remo": "./remo.html", "Santos": "./santos.html", "São Paulo": "./saopaulo.html",
-    "Vasco": "./vasco.html", "Vitória": "./vitoria.html"
-  };
-
-  const estadiosFotos = {
-    "maracan": "./maracana.jpg", "allianz": "./allianz.jpg", "mineir": "./mineirao.jpg", "química": "./quimica.jpg",
-    "morum": "./morumbis.jpg", "beira": "./beirario.jpg", "grêmio": "./gremio.jpg", "nilton": "./niltonsantos.jpg",
-    "januário": "./saojanuario.jpg", "couto": "./couto.jpg", "mrv": "./mrv.jpg", "fonte": "./fontenova.jpg",
-    "barradão": "./barradao.jpg", "belmiro": "./vilabelmiro.jpg", "baixada": "./baixada.jpg", "mangueirão": "./mangueirao.jpg",
-    "bragantino": "./bragantino.jpg", "chedid": "./bragantino.jpg", "campos maia": "./mirassol.jpg", "mirassol": "./mirassol.jpg", "condá": "./conda.jpg"
-  };
-
-  let rodadaAtual = 1;
-  let todosOsJogos = [];
-  let dadosClassificacaoBase = [];
-  let dadosArtilharia = [];
-  let dadosProbabilidades = [];
-  let modoSimulacao = false;
-  let placaresSimulados = {};
-  let ordemClassificacao = []; 
-
-  let audioTema = new Audio('./hino-brasileirao.mp3');
-  audioTema.loop = true;
-  let musicaTocando = false;
-
+  // ================= TEMA E SOM =================
+  if (localStorage.getItem('temaEscuro') === 'sim') document.body.classList.add('dark-mode');
+  function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('temaEscuro', document.body.classList.contains('dark-mode') ? 'sim' : 'nao');
+    if(chartEvolucao) chartEvolucao.update(); // Atualiza cores do gráfico
+  }
   function tocarTema() {
     const btn = document.getElementById('btn-audio');
-    if (!musicaTocando) {
-      audioTema.play();
-      btn.innerText = "🔇 Parar Tema";
-      btn.classList.replace('btn-outline-dark', 'btn-danger');
-      musicaTocando = true;
-    } else {
-      audioTema.pause();
-      audioTema.currentTime = 0;
-      btn.innerText = "▶ Tocar Tema";
-      btn.classList.replace('btn-danger', 'btn-outline-dark');
-      musicaTocando = false;
-    }
+    if (!musicaTocando) { audioTema.play(); btn.innerText = "🔇 Parar Som"; btn.classList.replace('btn-outline-success', 'btn-danger'); musicaTocando = true; }
+    else { audioTema.pause(); audioTema.currentTime = 0; btn.innerText = "▶ Som"; btn.classList.replace('btn-danger', 'btn-outline-success'); musicaTocando = false; }
   }
 
-  function normalizar(texto) {
-    return String(texto || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
-  }
+  // ================= UTILIDADES =================
+  function normalizar(t) { return String(t || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim(); }
+  function pegarEscudo(n) { const norm = normalizar(n); for (const [k, v] of Object.entries(escudos)) { if (normalizar(k) === norm) return v; } return "https://cdn-icons-png.flaticon.com/512/53/53283.png"; }
 
-  function formatarNomeClube(nome) {
-    const norm = normalizar(nome);
-    for (const [original, url] of Object.entries(urlsClubes)) {
-      if (normalizar(original) === norm) {
-        return `<a href="${url}" target="_blank" class="link-clube">${original}</a>`;
-      }
-    }
-    return nome;
-  }
-
-  function pegarEscudo(nome) {
-    const norm = normalizar(nome);
-    for (const [original, url] of Object.entries(escudos)) {
-      if (normalizar(original) === norm) {
-        return url;
-      }
-    }
-    return "https://cdn-icons-png.flaticon.com/512/53/53283.png";
-  }
-
+  // ================= CARREGAMENTO DE DADOS =================
   async function carregarTudo(silencioso = false) {
     try {
       const [resClass, resRodadas, resRodadaAtual, resArt, resProb] = await Promise.all([
-        fetch(API_URL + "?acao=classificacao").then(r => r.json()),
-        fetch(API_URL + "?acao=rodadas").then(r => r.json()),
-        fetch(API_URL + "?acao=rodada_atual").then(r => r.json()),
-        fetch(API_URL + "?acao=artilharia").then(r => r.json()).catch(() => []),
-        fetch(API_URL + "?acao=probabilidades").then(r => r.json()).catch(() => [])
+        fetch(API_URL + "?acao=classificacao").then(r => r.json()), fetch(API_URL + "?acao=rodadas").then(r => r.json()),
+        fetch(API_URL + "?acao=rodada_atual").then(r => r.json()), fetch(API_URL + "?acao=artilharia").then(r => r.json()).catch(()=>[]),
+        fetch(API_URL + "?acao=probabilidades").then(r => r.json()).catch(()=>[])
       ]);
-
-      dadosClassificacaoBase = resClass;
-      todosOsJogos = resRodadas;
-      if (!modoSimulacao) {
-        rodadaAtual = parseInt(resRodadaAtual.rodada) || rodadaAtual;
-      }
-      dadosArtilharia = resArt;
-      dadosProbabilidades = resProb;
+      dadosClassificacaoBase = resClass; todosOsJogos = resRodadas; dadosArtilharia = resArt; dadosProbabilidades = resProb;
+      if (!modoSimulacao && !silencioso) rodadaAtual = parseInt(resRodadaAtual.rodada) || rodadaAtual;
       
-      recalcularEAtualizarTabela();
-      renderizarRodada();
-      renderizarArtilhariaAssistencias();
-      if(dadosProbabilidades.length > 0) renderizarProbabilidades();
-
-    } catch (erro) {
-      if (!silencioso) console.error("Erro ao carregar dados:", erro);
-    }
+      recalcularEAtualizarTabela(); renderizarRodada(); renderizarArtilhariaAssistencias(); if(dadosProbabilidades.length > 0) renderizarProbabilidades();
+    } catch (e) { if (!silencioso) console.error(e); }
   }
 
-  function renderizarArtilhariaAssistencias() {
-    const corpoArt = document.getElementById('corpo-artilharia');
-    const corpoAst = document.getElementById('corpo-assistencias');
-    corpoArt.innerHTML = ''; corpoAst.innerHTML = '';
-
-    if (!dadosArtilharia || dadosArtilharia.length === 0) {
-      corpoArt.innerHTML = '<tr><td colspan="4" class="text-muted text-center py-2">Sem dados de artilharia.</td></tr>';
-      corpoAst.innerHTML = '<tr><td colspan="4" class="text-muted text-center py-2">Sem dados de assistências.</td></tr>';
-      return;
-    }
-
-    let artilheiros = [...dadosArtilharia].sort((a, b) => (parseInt(b.Gols) || 0) - (parseInt(a.Gols) || 0));
-    artilheiros.slice(0, 10).forEach((art, idx) => {
-      const esc = pegarEscudo(art.Clube);
-      corpoArt.innerHTML += `
-        <tr>
-          <td class="fw-bold">${idx + 1}</td>
-          <td class="text-start">${art.Jogador}</td>
-          <td class="text-start"><img src="${esc}" class="logo-clube">${art.Clube}</td>
-          <td class="text-center fw-bold text-success">${art.Gols || 0}</td>
-        </tr>`;
-    });
-
-    let assistentes = [...dadosArtilharia].sort((a, b) => (parseInt(b.Assistencias || b['Assistências']) || 0) - (parseInt(a.Assistencias || a['Assistências']) || 0));
-    assistentes.slice(0, 10).forEach((ast, idx) => {
-      const esc = pegarEscudo(ast.Clube);
-      const numAst = ast.Assistencias || ast['Assistências'] || 0;
-      corpoAst.innerHTML += `
-        <tr>
-          <td class="fw-bold">${idx + 1}</td>
-          <td class="text-start">${ast.Jogador}</td>
-          <td class="text-start"><img src="${esc}" class="logo-clube">${ast.Clube}</td>
-          <td class="text-center fw-bold text-primary">${numAst}</td>
-        </tr>`;
-    });
-  }
-
-  function formatarDataHoraLimpa(dataStr, horaStr) {
-    let d = "A definir"; let h = "";
-    let dMatch = String(dataStr || "").match(/\d{1,2}\/\d{1,2}\/\d{4}/);
-    if (dMatch) d = dMatch[0];
-    let hMatch = String(horaStr || "").match(/\d{2}:\d{2}/);
-    if (hMatch) h = hMatch[0];
-    return (d + " " + h).trim();
-  }
-
-  function alternarModoSimulacao() {
-    modoSimulacao = !modoSimulacao;
-    const btn = document.getElementById('btn-simulacao');
-    if (modoSimulacao) {
-      btn.innerText = "Modo Simulação: LIGADO";
-      btn.className = "btn btn-danger btn-sm fw-bold shadow-sm";
-    } else {
-      btn.innerText = "Modo Simulação: DESLIGADO";
-      btn.className = "btn btn-warning btn-sm fw-bold shadow-sm";
-    }
-    renderizarRodada();
-    recalcularEAtualizarTabela();
-  }
-
-  function atualizarSimulacao(r, idx, campo, valor) {
-    const chave = `${r}-${idx}`;
-    if (!placaresSimulados[chave]) placaresSimulados[chave] = { mandante: "", visitante: "" };
-    placaresSimulados[chave][campo] = valor;
-    recalcularEAtualizarTabela();
-  }
-
+  // ================= CÁLCULO E TABELA (COM ÚLTIMOS 5) =================
   function recalcularEAtualizarTabela() {
-    let tabela = JSON.parse(JSON.stringify(dadosClassificacaoBase));
-    let stats = {};
-    tabela.forEach(t => {
-      stats[t['Clube']] = {
-        Clube: t['Clube'], Pontos: parseInt(t['Pontos'])||0, Jogos: parseInt(t['Jogos'])||0,
-        Vitorias: parseInt(t['Vitórias'])||0, Empates: parseInt(t['Empates'])||0, Derrotas: parseInt(t['Derrotas'])||0,
-        GP: parseInt(t['Gols Pró'])||0, GC: parseInt(t['Gols Contra'])||0, Saldo: parseInt(t['Saldo'])||0
-      };
+    let stats = {}; let formaTimes = {};
+    dadosClassificacaoBase.forEach(t => {
+      let nome = t['Clube'];
+      stats[nome] = { Clube: nome, Pontos: 0, Jogos: 0, Vitorias: 0, Empates: 0, Derrotas: 0, GP: 0, GC: 0, Saldo: 0 };
+      formaTimes[nome] = [];
     });
 
-    todosOsJogos.forEach((jogo, index) => {
-      const r = parseInt(jogo['Rodada']);
-      const chave = `${r}-${index}`;
-      let gm = ""; let gv = "";
+    // Ordenar jogos por rodada para garantir ordem cronológica da "Forma"
+    let jogosOrdenados = [...todosOsJogos].sort((a, b) => parseInt(a.Rodada) - parseInt(b.Rodada));
 
-      if ((jogo['Status'] === 'Encerrado' || jogo['Status'] === 'Ao Vivo' || jogo['Status'] === 'Intervalo') && jogo['GolsMandante'] !== '' && jogo['GolsVisitante'] !== '') {
-        gm = parseInt(jogo['GolsMandante']); gv = parseInt(jogo['GolsVisitante']);
+    jogosOrdenados.forEach((jogo, index) => {
+      const chave = `${parseInt(jogo['Rodada'])}-${jogo.originalIndex || index}`;
+      let gm = NaN, gv = NaN;
+      if ((jogo.Status === 'Encerrado' || jogo.Status === 'Ao Vivo' || jogo.Status === 'Intervalo') && jogo.GolsMandante !== '' && jogo.GolsVisitante !== '') {
+        gm = parseInt(jogo.GolsMandante); gv = parseInt(jogo.GolsVisitante);
       } else if (modoSimulacao && placaresSimulados[chave] && placaresSimulados[chave].mandante !== "" && placaresSimulados[chave].visitante !== "") {
         gm = parseInt(placaresSimulados[chave].mandante); gv = parseInt(placaresSimulados[chave].visitante);
       }
 
       if (!isNaN(gm) && !isNaN(gv)) {
-        const mandante = jogo['Mandante']; const visitante = jogo['Visitante'];
-        if (!stats[mandante] && mandante) stats[mandante] = { Clube: mandante, Pontos: 0, Jogos: 0, Vitorias: 0, Empates: 0, Derrotas: 0, GP: 0, GC: 0, Saldo: 0 };
-        if (!stats[visitante] && visitante) stats[visitante] = { Clube: visitante, Pontos: 0, Jogos: 0, Vitorias: 0, Empates: 0, Derrotas: 0, GP: 0, GC: 0, Saldo: 0 };
+        const m = jogo.Mandante, v = jogo.Visitante;
+        if (stats[m] && stats[v]) {
+          stats[m].Jogos++; stats[v].Jogos++;
+          stats[m].GP += gm; stats[m].GC += gv; stats[v].GP += gv; stats[v].GC += gm;
+          if (gm > gv) { stats[m].Pontos+=3; stats[m].Vitorias++; stats[v].Derrotas++; formaTimes[m].push('V'); formaTimes[v].push('D'); }
+          else if (gm < gv) { stats[v].Pontos+=3; stats[v].Vitorias++; stats[m].Derrotas++; formaTimes[m].push('D'); formaTimes[v].push('V'); }
+          else { stats[m].Pontos+=1; stats[m].Empates++; stats[v].Pontos+=1; stats[v].Empates++; formaTimes[m].push('E'); formaTimes[v].push('E'); }
+          stats[m].Saldo = stats[m].GP - stats[m].GC; stats[v].Saldo = stats[v].GP - stats[v].GC;
+        }
       }
     });
 
     let arrayTabela = Object.values(stats);
-    arrayTabela.sort((a, b) => {
-      if (b.Pontos !== a.Pontos) return b.Pontos - a.Pontos;
-      if (b.Vitorias !== a.Vitorias) return b.Vitorias - a.Vitorias;
-      if (b.Saldo !== a.Saldo) return b.Saldo - a.Saldo;
-      return b.GP - a.GP;
-    });
+    arrayTabela.sort((a, b) => { if (b.Pontos !== a.Pontos) return b.Pontos - a.Pontos; if (b.Vitorias !== a.Vitorias) return b.Vitorias - a.Vitorias; if (b.Saldo !== a.Saldo) return b.Saldo - a.Saldo; return b.GP - a.GP; });
     
+    // SALVAR LOCALMENTE PARA AS PÁGINAS DOS CLUBES
     ordemClassificacao = arrayTabela.map(t => normalizar(t.Clube));
+    localStorage.setItem('brasileirao_tabela', JSON.stringify(arrayTabela));
+    localStorage.setItem('brasileirao_artilharia', JSON.stringify(dadosArtilharia));
 
-    montarTabelaDinamica(arrayTabela);
-    if(dadosProbabilidades.length > 0) renderizarProbabilidades();
-  }
-
-  function montarTabelaDinamica(dados) {
-    const corpoTabela = document.getElementById('tabela-corpo');
-    corpoTabela.innerHTML = ''; 
-    dados.forEach((time, index) => {
+    const corpo = document.getElementById('tabela-corpo'); corpo.innerHTML = ''; 
+    arrayTabela.forEach((time, index) => {
       const pos = index + 1;
-      let classeLinha = ''; let corPosicao = '';
-      if (pos <= 4) { classeLinha = 'zona-libertadores'; corPosicao = 'color: #0d6efd; font-weight: bold;'; }
-      else if (pos <= 6) { classeLinha = 'zona-pre-liberta'; corPosicao = 'color: #0dcaf0; font-weight: bold;'; }
-      else if (pos >= 7 && pos <= 12) { classeLinha = 'zona-sulamericana'; corPosicao = 'color: #198754; font-weight: bold;'; }
-      else if (pos >= 17) { classeLinha = 'zona-rebaixamento'; corPosicao = 'color: #dc3545; font-weight: bold;'; }
-      else { corPosicao = 'color: #6c757d; font-weight: normal;'; }
+      let classe = ''; if (pos <= 4) classe = 'zona-libertadores text-primary'; else if (pos <= 6) classe = 'zona-pre-liberta text-info'; else if (pos >= 7 && pos <= 12) classe = 'zona-sulamericana text-success'; else if (pos >= 17) classe = 'zona-rebaixamento text-danger';
 
-      const escudoUrl = pegarEscudo(time.Clube);
-      let imgTag = `<img src="${escudoUrl}" class="logo-clube" onerror="this.style.display='none';">`;
-      let nomeFormatado = formatarNomeClube(time.Clube);
+      let formaHtml = (formaTimes[time.Clube] || []).slice(-5).map(f => {
+        if(f==='V') return `<span class="form-dot form-v" title="Vitória">V</span>`;
+        if(f==='E') return `<span class="form-dot form-e" title="Empate">E</span>`;
+        return `<span class="form-dot form-d" title="Derrota">D</span>`;
+      }).join('');
+      
+      let linkNome = urlsClubes[time.Clube] ? `<a href="${urlsClubes[time.Clube]}" target="_blank" class="link-clube">${time.Clube}</a>` : time.Clube;
 
-      const linha = document.createElement('tr');
-      linha.className = classeLinha;
-      linha.innerHTML = `
-        <td style="${corPosicao}">${pos}</td>
-        <td class="text-start text-dark" style="background-color: transparent;">${imgTag}${nomeFormatado}</td>
-        <td class="fw-bold" style="background-color: transparent;">${time.Pontos}</td>
-        <td style="background-color: transparent;">${time.Jogos}</td>
-        <td style="background-color: transparent;">${time.Vitorias}</td>
-        <td style="background-color: transparent;">${time.Empates}</td>
-        <td style="background-color: transparent;">${time.Derrotas}</td>
-        <td style="background-color: transparent;">${time.GP}</td>
-        <td style="background-color: transparent;">${time.GC}</td>
-        <td style="background-color: transparent;">${time.Saldo}</td>
-      `;
-      corpoTabela.appendChild(linha);
+      corpo.innerHTML += `
+        <tr class="${classe.split(' ')[0]}">
+          <td class="fw-bold ${classe.split(' ')[1]||'text-secondary'}">${pos}</td>
+          <td class="text-start d-flex justify-content-between align-items-center" style="border:none;">
+            <span><img src="${pegarEscudo(time.Clube)}" class="logo-clube">${linkNome}</span>
+            <span style="cursor:pointer;" onclick="gerarGrafico('${time.Clube}')" title="Ver Evolução">📈</span>
+          </td>
+          <td class="fw-bold">${time.Pontos}</td><td>${time.Jogos}</td><td>${time.Vitorias}</td><td>${time.Empates}</td><td>${time.Derrotas}</td><td>${time.GP}</td><td>${time.GC}</td><td>${time.Saldo}</td>
+          <td><div class="d-flex justify-content-center">${formaHtml}</div></td>
+        </tr>`;
     });
   }
 
-  function renderizarRodada() {
-    document.getElementById('titulo-rodada').innerText = `Rodada ${rodadaAtual}`;
-    const containerJogos = document.getElementById('lista-jogos');
-    containerJogos.innerHTML = '';
-    const jogosDaRodada = todosOsJogos.map((j, idx) => ({ ...j, originalIndex: idx })).filter(j => parseInt(j['Rodada']) === rodadaAtual);
-
-    if (jogosDaRodada.length === 0) {
-      containerJogos.innerHTML = `<p class="text-center text-muted py-5">Nenhum jogo encontrado nesta rodada.</p>`;
-      return;
+  // ================= GRÁFICO DE EVOLUÇÃO (CHART.JS) =================
+  function gerarGrafico(clubeNome) {
+    let posicoesAteRodada = []; let labels = [];
+    
+    // Calcula a tabela progressivamente rodada por rodada
+    for (let r = 1; r <= rodadaAtual; r++) {
+      let statsTemp = {};
+      dadosClassificacaoBase.forEach(t => { statsTemp[t.Clube] = { Clube: t.Clube, Pontos: 0, Vitorias: 0, Saldo: 0, GP: 0, GC: 0 }; });
+      
+      todosOsJogos.filter(j => parseInt(j.Rodada) <= r && (j.Status === 'Encerrado' || j.Status === 'Ao Vivo')).forEach(jogo => {
+         let gm = parseInt(jogo.GolsMandante); let gv = parseInt(jogo.GolsVisitante);
+         if (!isNaN(gm) && !isNaN(gv)) {
+            let m = jogo.Mandante; let v = jogo.Visitante;
+            if (statsTemp[m] && statsTemp[v]) {
+               statsTemp[m].GP += gm; statsTemp[m].GC += gv; statsTemp[v].GP += gv; statsTemp[v].GC += gm;
+               if (gm > gv) { statsTemp[m].Pontos+=3; statsTemp[m].Vitorias++; } else if (gv > gm) { statsTemp[v].Pontos+=3; statsTemp[v].Vitorias++; } else { statsTemp[m].Pontos+=1; statsTemp[v].Pontos+=1; }
+               statsTemp[m].Saldo = statsTemp[m].GP - statsTemp[m].GC; statsTemp[v].Saldo = statsTemp[v].GP - statsTemp[v].GC;
+            }
+         }
+      });
+      let arr = Object.values(statsTemp);
+      arr.sort((a,b) => { if(b.Pontos !== a.Pontos) return b.Pontos - a.Pontos; if(b.Vitorias !== a.Vitorias) return b.Vitorias - a.Vitorias; if(b.Saldo !== a.Saldo) return b.Saldo - a.Saldo; return b.GP - a.GP; });
+      
+      let pos = arr.findIndex(t => t.Clube === clubeNome) + 1;
+      posicoesAteRodada.push(pos); labels.push("R" + r);
     }
 
-    jogosDaRodada.forEach(jogo => {
-      const escudoMandante = pegarEscudo(jogo['Mandante']);
-      const escudoVisitante = pegarEscudo(jogo['Visitante']);
-      
-      const imgMandante = `<img src="${escudoMandante}" class="logo-clube ms-1" onerror="this.style.display='none';">`;
-      const imgVisitante = `<img src="${escudoVisitante}" class="logo-clube me-1" onerror="this.style.display='none';">`;
-      
-      let nomeMandanteFormatado = formatarNomeClube(jogo['Mandante']);
-      let nomeVisitanteFormatado = formatarNomeClube(jogo['Visitante']);
-
-      const chave = `${rodadaAtual}-${jogo.originalIndex}`;
-      let centralHtml = "";
-      let statusBadge = "";
-
-      const statusJogo = String(jogo['Status'] || '').trim();
-      if (statusJogo === 'Ao Vivo') {
-        statusBadge = `<span class="badge bg-danger text-white"><span class="live-dot"></span>AO VIVO</span>`;
-      } else if (statusJogo === 'Intervalo') {
-        statusBadge = `<span class="badge bg-warning text-dark">Intervalo</span>`;
-      } else if (statusJogo === 'Encerrado') {
-        statusBadge = `<span class="text-muted" style="font-size: 0.68rem;">Encerrado</span>`;
-      }
-
-      if ((statusJogo === 'Encerrado' || statusJogo === 'Ao Vivo' || statusJogo === 'Intervalo') && jogo['GolsMandante'] !== '' && jogo['GolsVisitante'] !== '') {
-        centralHtml = `<div class="text-center bg-white px-2 py-1 rounded shadow-sm fw-bold" style="width: 24%; font-size: 0.78rem;">${jogo['GolsMandante']} x ${jogo['GolsVisitante']}</div>`;
-      } else if (modoSimulacao) {
-        const valM = (placaresSimulados[chave] ? placaresSimulados[chave].mandante : "");
-        const valV = (placaresSimulados[chave] ? placaresSimulados[chave].visitante : "");
-        centralHtml = `
-          <div class="text-center d-flex justify-content-center align-items-center gap-1" style="width: 32%;">
-            <input type="number" class="input-simulacao" value="${valM}" oninput="atualizarSimulacao(${rodadaAtual}, ${jogo.originalIndex}, 'mandante', this.value)">
-            <span>x</span>
-            <input type="number" class="input-simulacao" value="${valV}" oninput="atualizarSimulacao(${rodadaAtual}, ${jogo.originalIndex}, 'visitante', this.value)">
-          </div>`;
-      } else {
-        centralHtml = `<div class="text-center bg-white px-2 py-1 rounded shadow-sm fw-bold text-muted" style="width: 24%; font-size: 0.8rem;">x</div>`;
-      }
-
-      const estadioNome = jogo['Estadio'] || 'A Definir';
-      let estadioSrc = ""; 
-      const estadioNomeMin = estadioNome.toLowerCase();
-      for (const [chaveEstadio, urlFoto] of Object.entries(estadiosFotos)) {
-        if (estadioNomeMin.includes(chaveEstadio)) { estadioSrc = urlFoto; break; }
-      }
-      const estadioFoto = estadioSrc ? `<img src="${estadioSrc}" class="logo-estadio" onerror="this.style.display='none';">` : '';
-      
-      const dataHoraFormatada = formatarDataHoraLimpa(jogo['Data'], jogo['Horario']);
-
-      const div = document.createElement('div');
-      div.className = 'card-jogo';
-      div.innerHTML = `
-        <div class="info-partida">
-          <span>📅 ${dataHoraFormatada} | ${estadioFoto} ${estadioNome}</span>
-          <span>${statusBadge}</span>
-        </div>
-        <div class="d-flex justify-content-between align-items-center">
-          <div class="text-end text-truncate" style="width: 38%; font-size: 0.78rem;">
-            ${nomeMandanteFormatado} ${imgMandante}
-          </div>
-          ${centralHtml}
-          <div class="text-start text-truncate d-flex align-items-center justify-content-start" style="width: 38%; font-size: 0.78rem;">
-            ${imgVisitante} ${nomeVisitanteFormatado}
-          </div>
-        </div>
-      `;
-      containerJogos.appendChild(div);
-    });
-  }
-
-  function renderizarProbabilidades() {
-    const corpo = document.getElementById('corpo-probabilidades');
-    corpo.innerHTML = '';
+    document.getElementById('tituloModalGrafico').innerText = `📈 Evolução: ${clubeNome}`;
+    let modal = new bootstrap.Modal(document.getElementById('modalGrafico')); modal.show();
     
-    dadosProbabilidades.sort((a, b) => {
-      let posA = ordemClassificacao.indexOf(normalizar(a.Clube));
-      let posB = ordemClassificacao.indexOf(normalizar(b.Clube));
-      if (posA === -1) posA = 99;
-      if (posB === -1) posB = 99;
-      return posA - posB;
-    });
-
-    const criarBarra = (valorRaw, cor) => {
-      let num = parseFloat(String(valorRaw).replace(',', '.').replace('<', '').replace('>', '')) || 0;
-      if (num < 0) num = 0; if (num > 100) num = 100;
-      let displayVal = String(valorRaw).trim() !== "" ? String(valorRaw).trim() + (String(valorRaw).includes('%')?'':'%') : "-";
-      return `
-        <div class="d-flex align-items-center justify-content-center">
-          <div class="progress" style="width: 50px; height: 8px; margin-right: 6px; background-color: #e9ecef;">
-            <div class="progress-bar ${cor}" style="width: ${num}%;"></div>
-          </div>
-          <span style="font-size: 0.75rem; font-weight: 600; width: 45px; text-align: right;">${displayVal}</span>
-        </div>
-      `;
-    };
-
-    dadosProbabilidades.forEach(dado => {
-      const esc = pegarEscudo(dado.Clube);
-      let nomeFormatado = formatarNomeClube(dado.Clube);
-
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td class="text-start ps-3"><img src="${esc}" class="logo-clube">${nomeFormatado}</td>
-        <td>${criarBarra(dado.Titulo, 'bg-success')}</td>
-        <td>${criarBarra(dado.Libertadores, 'bg-primary')}</td>
-        <td>${criarBarra(dado.SulAmericana, 'bg-warning')}</td>
-        <td>${criarBarra(dado.Rebaixamento, 'bg-danger')}</td>
-      `;
-      corpo.appendChild(tr);
-    });
-  }
-
-  function mudarRodada(direcao) {
-    rodadaAtual += direcao;
-    if (rodadaAtual < 1) rodadaAtual = 1;
-    if (rodadaAtual > 38) rodadaAtual = 38; 
-    renderizarRodada();
-  }
-
-  window.onload = function() {
-    carregarTudo();
-    // AUTO-REFRESH: Atualiza o site silenciosamente a cada 30 segundos
-    setInterval(() => {
-      if (!modoSimulacao) {
-        carregarTudo(true);
+    let ctx = document.getElementById('graficoCanvas').getContext('2d');
+    if (chartEvolucao) chartEvolucao.destroy();
+    let isDark = document.body.classList.contains('dark-mode');
+    
+    chartEvolucao = new Chart(ctx, {
+      type: 'line',
+      data: { labels: labels, datasets: [{ label: 'Posição na Tabela', data: posicoesAteRodada, borderColor: '#007A33', backgroundColor: 'rgba(0,122,51,0.2)', borderWidth: 3, tension: 0.3, pointRadius: 4, fill: true }] },
+      options: {
+        responsive: true,
+        scales: { 
+          y: { reverse: true, min: 1, max: 20, ticks: { stepSize: 1, color: isDark ? '#ccc' : '#333' }, grid: { color: isDark ? '#444' : '#ddd' } },
+          x: { ticks: { color: isDark ? '#ccc' : '#333' }, grid: { color: isDark ? '#444' : '#ddd' } }
+        },
+        plugins: { legend: { labels: { color: isDark ? '#ccc' : '#333' } } }
       }
-    }, 30000);
-  };
+    });
+  }
+
+  // ================= RODADAS =================
+  function renderizarRodada() {
+    document.getElementById('titulo-rodada').innerText = `Rodada ${rodadaAtual}`;
+    const cont = document.getElementById('lista-jogos'); cont.innerHTML = '';
+    const jogosDaRodada = todosOsJogos.map((j, i) => ({...j, originalIndex: i})).filter(j => parseInt(j.Rodada) === rodadaAtual);
+    if(jogosDaRodada.length === 0) return cont.innerHTML = `<p class="text-center py-4">Sem jogos.</p>`;
+
+    jogosDaRodada.forEach(jogo => {
+      let central = "", badge = `<span class="text-muted" style="font-size: 0.68rem;">${jogo.Status||'Agendado'}</span>`;
+      if (jogo.Status === 'Ao Vivo') badge = `<span class="badge bg-danger"><span class="live-dot"></span>AO VIVO</span>`;
+      else if (jogo.Status === 'Intervalo') badge = `<span class="badge bg-warning text-dark">Intervalo</span>`;
+      
+      const chave = `${rodadaAtual}-${jogo.originalIndex}`;
+      if ((jogo.Status === 'Encerrado' || jogo.Status === 'Ao Vivo' || jogo.Status === 'Intervalo') && jogo.GolsMandante !== '' && jogo.GolsVisitante !== '') {
+        central = `<div class="text-center px-2 py-1 rounded fw-bold" style="background:var(--bg-header); width: 24%; border:1px solid #ccc;">${jogo.GolsMandante} x ${jogo.GolsVisitante}</div>`;
+      } else if (modoSimulacao) {
+        let vM = placaresSimulados[chave]?.mandante || "", vV = placaresSimulados[chave]?.visitante || "";
+        central = `<div class="d-flex justify-content-center gap-1" style="width: 32%;"><input type="number" class="input-simulacao" value="${vM}" oninput="atualizarSimulacao(${rodadaAtual}, ${jogo.originalIndex}, 'mandante', this.value)"> x <input type="number" class="input-simulacao" value="${vV}" oninput="atualizarSimulacao(${rodadaAtual}, ${jogo.originalIndex}, 'visitante', this.value)"></div>`;
+      } else { central = `<div class="text-center px-2 py-1 rounded text-muted fw-bold" style="background:var(--bg-header); width: 24%; border:1px solid #ccc;">x</div>`; }
+
+      let estNome = jogo.Estadio || 'A Definir', estSrc = "";
+      for (const [k, v] of Object.entries(estadiosFotos)) if (estNome.toLowerCase().includes(k)) { estSrc = v; break; }
+      
+      cont.innerHTML += `
+        <div class="card-jogo">
+          <div class="info-partida"><span>📅 ${String(jogo.Data||'').split(' ')[0]} ${jogo.Horario||''} | ${estSrc?`<img src="${estSrc}" class="logo-estadio">`:''}${estNome}</span> ${badge}</div>
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="text-end text-truncate fw-bold" style="width: 38%;">${formatarNomeClube(jogo.Mandante)} <img src="${pegarEscudo(jogo.Mandante)}" class="logo-clube ms-1"></div>
+            ${central}
+            <div class="text-start text-truncate fw-bold" style="width: 38%;"><img src="${pegarEscudo(jogo.Visitante)}" class="logo-clube me-1"> ${formatarNomeClube(jogo.Visitante)}</div>
+          </div>
+        </div>`;
+    });
+  }
+
+  function mudarRodada(d) { rodadaAtual += d; if(rodadaAtual < 1) rodadaAtual = 1; if(rodadaAtual > 38) rodadaAtual = 38; renderizarRodada(); }
+  function alternarModoSimulacao() { modoSimulacao = !modoSimulacao; const b = document.getElementById('btn-simulacao'); b.innerText = modoSimulacao ? "Simulador: ON" : "Simulador: OFF"; b.className = modoSimulacao ? "btn btn-danger btn-sm fw-bold" : "btn btn-warning btn-sm fw-bold"; renderizarRodada(); recalcularEAtualizarTabela(); }
+  function atualizarSimulacao(r, i, c, v) { const ch = `${r}-${i}`; if(!placaresSimulados[ch]) placaresSimulados[ch] = {mandante:"", visitante:""}; placaresSimulados[ch][c] = v; recalcularEAtualizarTabela(); }
+
+  // ================= EXTRAS (Artilharia / Probabilidades) =================
+  function renderizarArtilhariaAssistencias() {
+    const cArt = document.getElementById('corpo-artilharia'), cAst = document.getElementById('corpo-assistencias'); cArt.innerHTML=''; cAst.innerHTML='';
+    [...dadosArtilharia].sort((a,b)=> (b.Gols||0) - (a.Gols||0)).slice(0,10).forEach((a,i) => cArt.innerHTML += `<tr><td class="fw-bold">${i+1}</td><td class="text-start">${a.Jogador}</td><td class="text-start"><img src="${pegarEscudo(a.Clube)}" class="logo-clube">${a.Clube}</td><td class="fw-bold text-success text-center">${a.Gols||0}</td></tr>`);
+    [...dadosArtilharia].sort((a,b)=> (b.Assistencias||0) - (a.Assistencias||0)).slice(0,10).forEach((a,i) => cAst.innerHTML += `<tr><td class="fw-bold">${i+1}</td><td class="text-start">${a.Jogador}</td><td class="text-start"><img src="${pegarEscudo(a.Clube)}" class="logo-clube">${a.Clube}</td><td class="fw-bold text-primary text-center">${a.Assistencias||0}</td></tr>`);
+  }
+  function renderizarProbabilidades() {
+    const c = document.getElementById('corpo-probabilidades'); c.innerHTML='';
+    dadosProbabilidades.sort((a,b)=> { let pA = ordemClassificacao.indexOf(normalizar(a.Clube)), pB = ordemClassificacao.indexOf(normalizar(b.Clube)); return (pA===-1?99:pA) - (pB===-1?99:pB); });
+    const b = (v, cor) => `<div class="d-flex align-items-center"><div class="progress" style="width:40px; height:6px; margin-right:4px;"><div class="progress-bar ${cor}" style="width:${parseFloat(String(v).replace(',','.'))||0}%;"></div></div><span style="font-size:0.7rem;">${v}</span></div>`;
+    dadosProbabilidades.forEach(d => c.innerHTML += `<tr><td class="text-start ps-3"><img src="${pegarEscudo(d.Clube)}" class="logo-clube">${d.Clube}</td><td>${b(d.Titulo,'bg-success')}</td><td>${b(d.Libertadores,'bg-primary')}</td><td>${b(d.SulAmericana,'bg-warning')}</td><td>${b(d.Rebaixamento,'bg-danger')}</td></tr>`);
+  }
+
+  window.onload = function() { carregarTudo(); setInterval(() => { if (!modoSimulacao) carregarTudo(true); }, 30000); };
 </script>
 </body>
 </html>

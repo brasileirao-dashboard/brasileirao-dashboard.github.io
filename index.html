@@ -24,6 +24,8 @@
     .card-jogo { background: #f8f9fa; border-radius: 6px; padding: 8px 10px; margin-bottom: 8px; border-left: 4px solid #007A33; box-shadow: 0 2px 4px rgba(0,0,0,0.06); }
     .info-partida { font-size: 0.75rem; color: #555; text-align: center; margin-bottom: 6px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
     .input-simulacao { width: 35px; text-align: center; font-weight: bold; border: 1px solid #ced4da; border-radius: 4px; }
+    .link-clube { color: inherit; text-decoration: none; font-weight: bold; }
+    .link-clube:hover { text-decoration: underline; color: #000; }
     @media (max-width: 900px) { .painel-classificacao, .painel-jogos { width: 100%; height: auto; min-height: 40vh; } .d-flex.gap-4 { flex-direction: column; gap: 15px !important; } body { overflow-y: auto; height: auto; } }
   </style>
 </head>
@@ -148,6 +150,16 @@
     "Chapecoense": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/K7JQUKTRsuXfO9YrD5dq5g_500x500.png"
   };
 
+  const urlsClubes = {
+    "Athletico-PR": "./athletico.html", "Atlético-MG": "./atletico.html", "Bahia": "./bahia.html",
+    "Botafogo": "./botafogo.html", "Bragantino": "./bragantino.html", "Chapecoense": "./chapecoense.html",
+    "Corinthians": "./corinthians.html", "Coritiba": "./coritiba.html", "Cruzeiro": "./cruzeiro.html",
+    "Flamengo": "./flamengo.html", "Fluminense": "./fluminense.html", "Grêmio": "./gremio.html",
+    "Internacional": "./internacional.html", "Mirassol": "./mirassol.html", "Palmeiras": "./palmeiras.html",
+    "Remo": "./remo.html", "Santos": "./santos.html", "São Paulo": "./saopaulo.html",
+    "Vasco": "./vasco.html", "Vitória": "./vitoria.html"
+  };
+
   const estadiosFotos = {
     "maracan": "./maracana.jpg", "allianz": "./allianz.jpg", "mineir": "./mineirao.jpg", "química": "./quimica.jpg",
     "morum": "./morumbis.jpg", "beira": "./beirario.jpg", "grêmio": "./gremio.jpg", "nilton": "./niltonsantos.jpg",
@@ -184,23 +196,48 @@
     }
   }
 
+  // Normalizador universal: remove acentos e deixa minúsculo para busca infalível
+  function normalizar(texto) {
+    return String(texto || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+  }
+
+  function formatarNomeClube(nome) {
+    const norm = normalizar(nome);
+    for (const [original, url] of Object.entries(urlsClubes)) {
+      if (normalizar(original) === norm) {
+        return `<a href="${url}" target="_blank" class="link-clube">${original}</a>`;
+      }
+    }
+    return nome;
+  }
+
+  function pegarEscudo(nome) {
+    const norm = normalizar(nome);
+    for (const [original, url] of Object.entries(escudos)) {
+      if (normalizar(original) === norm) {
+        return url;
+      }
+    }
+    return "https://cdn-icons-png.flaticon.com/512/53/53283.png";
+  }
+
+  // Carregamento paralelo em massa para abrir instantaneamente
   async function carregarTudo() {
     try {
-      const resClass = await fetch(API_URL + "?acao=classificacao");
-      dadosClassificacaoBase = await resClass.json();
+      const [resClass, resRodadas, resRodadaAtual, resProb] = await Promise.all([
+        fetch(API_URL + "?acao=classificacao").then(r => r.json()),
+        fetch(API_URL + "?acao=rodadas").then(r => r.json()),
+        fetch(API_URL + "?acao=rodada_atual").then(r => r.json()),
+        fetch(API_URL + "?acao=probabilidades").then(r => r.json())
+      ]);
 
-      const resRodadas = await fetch(API_URL + "?acao=rodadas");
-      todosOsJogos = await resRodadas.json();
-      
-      const resRodadaAtual = await fetch(API_URL + "?acao=rodada_atual");
-      const dadosRodadaAtual = await resRodadaAtual.json();
-      rodadaAtual = parseInt(dadosRodadaAtual.rodada) || 1;
+      dadosClassificacaoBase = resClass;
+      todosOsJogos = resRodadas;
+      rodadaAtual = parseInt(resRodadaAtual.rodada) || 1;
+      dadosProbabilidades = resProb;
       
       recalcularEAtualizarTabela();
       renderizarRodada();
-
-      const resProb = await fetch(API_URL + "?acao=probabilidades");
-      dadosProbabilidades = await resProb.json();
       renderizarProbabilidades();
 
     } catch (erro) {
@@ -290,7 +327,7 @@
       return b.GP - a.GP;
     });
     
-    ordemClassificacao = arrayTabela.map(t => String(t.Clube).toLowerCase());
+    ordemClassificacao = arrayTabela.map(t => normalizar(t.Clube));
 
     montarTabelaDinamica(arrayTabela);
     if(dadosProbabilidades.length > 0) renderizarProbabilidades();
@@ -308,14 +345,15 @@
       else if (pos >= 17) { classeLinha = 'zona-rebaixamento'; corPosicao = 'color: #dc3545; font-weight: bold;'; }
       else { corPosicao = 'color: #6c757d; font-weight: normal;'; }
 
-      const escudoUrl = escudos[time.Clube] || ""; 
-      let imgTag = escudoUrl ? `<img src="${escudoUrl}" class="logo-clube" onerror="this.style.display='none';">` : '';
+      const escudoUrl = pegarEscudo(time.Clube);
+      let imgTag = `<img src="${escudoUrl}" class="logo-clube" onerror="this.style.display='none';">`;
+      let nomeFormatado = formatarNomeClube(time.Clube);
 
       const linha = document.createElement('tr');
       linha.className = classeLinha;
       linha.innerHTML = `
         <td style="${corPosicao}">${pos}</td>
-        <td class="text-start fw-bold text-dark" style="background-color: transparent;">${imgTag}${time.Clube}</td>
+        <td class="text-start text-dark" style="background-color: transparent;">${imgTag}${nomeFormatado}</td>
         <td class="fw-bold" style="background-color: transparent;">${time.Pontos}</td>
         <td style="background-color: transparent;">${time.Jogos}</td>
         <td style="background-color: transparent;">${time.Vitorias}</td>
@@ -341,8 +379,15 @@
     }
 
     jogosDaRodada.forEach(jogo => {
-      const imgMandante = escudos[jogo['Mandante']] ? `<img src="${escudos[jogo['Mandante']]}" class="logo-clube ms-1">` : '';
-      const imgVisitante = escudos[jogo['Visitante']] ? `<img src="${escudos[jogo['Visitante']]}" class="logo-clube me-1">` : '';
+      const escudoMandante = pegarEscudo(jogo['Mandante']);
+      const escudoVisitante = pegarEscudo(jogo['Visitante']);
+      
+      const imgMandante = `<img src="${escudoMandante}" class="logo-clube ms-1" onerror="this.style.display='none';">`;
+      const imgVisitante = `<img src="${escudoVisitante}" class="logo-clube me-1" onerror="this.style.display='none';">`;
+      
+      let nomeMandanteFormatado = formatarNomeClube(jogo['Mandante']);
+      let nomeVisitanteFormatado = formatarNomeClube(jogo['Visitante']);
+
       const chave = `${rodadaAtual}-${jogo.originalIndex}`;
       let centralHtml = "";
 
@@ -378,12 +423,12 @@
           📅 ${dataHoraFormatada} | ${estadioFoto} <span style="margin-top: 1px;">${estadioNome}</span>
         </div>
         <div class="d-flex justify-content-between align-items-center">
-          <div class="text-end text-truncate" style="width: 36%; font-weight: 600; font-size: 0.78rem;">
-            ${jogo['Mandante']} ${imgMandante}
+          <div class="text-end text-truncate" style="width: 36%; font-size: 0.78rem;">
+            ${nomeMandanteFormatado} ${imgMandante}
           </div>
           ${centralHtml}
-          <div class="text-start text-truncate" style="width: 36%; font-weight: 600; font-size: 0.78rem;">
-            ${imgVisitante} ${jogo['Visitante']}
+          <div class="text-start text-truncate" style="width: 36%; font-size: 0.78rem;">
+            ${imgVisitante} ${nomeVisitanteFormatado}
           </div>
         </div>
       `;
@@ -401,8 +446,8 @@
     }
 
     dadosProbabilidades.sort((a, b) => {
-      let posA = ordemClassificacao.indexOf(String(a.Clube).toLowerCase());
-      let posB = ordemClassificacao.indexOf(String(b.Clube).toLowerCase());
+      let posA = ordemClassificacao.indexOf(normalizar(a.Clube));
+      let posB = ordemClassificacao.indexOf(normalizar(b.Clube));
       if (posA === -1) posA = 99;
       if (posB === -1) posB = 99;
       return posA - posB;
@@ -422,18 +467,13 @@
       `;
     };
 
-    const pegarEscudo = (nome) => {
-      const chaves = Object.keys(escudos);
-      const chaveEncontrada = chaves.find(c => c.toLowerCase() === String(nome).toLowerCase());
-      return chaveEncontrada ? escudos[chaveEncontrada] : "https://cdn-icons-png.flaticon.com/512/53/53283.png";
-    };
-
     dadosProbabilidades.forEach(dado => {
       const esc = pegarEscudo(dado.Clube);
+      let nomeFormatado = formatarNomeClube(dado.Clube);
 
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td class="text-start fw-bold ps-3"><img src="${esc}" class="logo-clube">${dado.Clube}</td>
+        <td class="text-start ps-3"><img src="${esc}" class="logo-clube">${nomeFormatado}</td>
         <td>${criarBarra(dado.Titulo, 'bg-success')}</td>
         <td>${criarBarra(dado.Libertadores, 'bg-primary')}</td>
         <td>${criarBarra(dado.SulAmericana, 'bg-warning')}</td>

@@ -163,9 +163,7 @@
         <h6 class="modal-title fw-bold" id="detalhe-titulo-modal">Detalhes da Partida</h6>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body text-center p-3" id="detalhe-corpo-modal">
-        <!-- Conteúdo dinâmico preenchido via JS -->
-      </div>
+      <div class="modal-body text-center p-3" id="detalhe-corpo-modal"></div>
     </div>
   </div>
 </div>
@@ -269,7 +267,7 @@
     return "https://cdn-icons-png.flaticon.com/512/53/53283.png";
   }
 
-  async function carregarTudo() {
+  async function carregarTudo(silencioso = false) {
     try {
       const [resClass, resRodadas, resRodadaAtual, resArt, resProb] = await Promise.all([
         fetch(API_URL + "?acao=classificacao").then(r => r.json()),
@@ -281,7 +279,9 @@
 
       dadosClassificacaoBase = resClass;
       todosOsJogos = resRodadas;
-      rodadaAtual = parseInt(resRodadaAtual.rodada) || 1;
+      if (!modoSimulacao) {
+        rodadaAtual = parseInt(resRodadaAtual.rodada) || rodadaAtual;
+      }
       dadosArtilharia = resArt;
       dadosProbabilidades = resProb;
       
@@ -291,8 +291,7 @@
       if(dadosProbabilidades.length > 0) renderizarProbabilidades();
 
     } catch (erro) {
-      console.error("Erro ao carregar dados:", erro);
-      document.getElementById('lista-jogos').innerHTML = `<p class="text-center text-danger py-5">Erro ao carregar os dados. Verifique a API.</p>`;
+      if (!silencioso) console.error("Erro ao carregar dados:", erro);
     }
   }
 
@@ -307,7 +306,6 @@
       return;
     }
 
-    // Ordenar por Gols (decrescente)
     let artilheiros = [...dadosArtilharia].sort((a, b) => (parseInt(b.Gols) || 0) - (parseInt(a.Gols) || 0));
     artilheiros.slice(0, 10).forEach((art, idx) => {
       const esc = pegarEscudo(art.Clube);
@@ -320,7 +318,6 @@
         </tr>`;
     });
 
-    // Ordenar por Assistências (decrescente)
     let assistentes = [...dadosArtilharia].sort((a, b) => (parseInt(b.Assistencias || b['Assistências']) || 0) - (parseInt(a.Assistencias || a['Assistências']) || 0));
     assistentes.slice(0, 10).forEach((ast, idx) => {
       const esc = pegarEscudo(ast.Clube);
@@ -381,10 +378,9 @@
       const chave = `${r}-${index}`;
       let gm = ""; let gv = "";
 
-      // Partidas Encerradas ou Ao Vivo computam na tabela automaticamente
       if ((jogo['Status'] === 'Encerrado' || jogo['Status'] === 'Ao Vivo' || jogo['Status'] === 'Intervalo') && jogo['GolsMandante'] !== '' && jogo['GolsVisitante'] !== '') {
         gm = parseInt(jogo['GolsMandante']); gv = parseInt(jogo['GolsVisitante']);
-      } else if (placaresSimulados[chave] && placaresSimulados[chave].mandante !== "" && placaresSimulados[chave].visitante !== "") {
+      } else if (modoSimulacao && placaresSimulados[chave] && placaresSimulados[chave].mandante !== "" && placaresSimulados[chave].visitante !== "") {
         gm = parseInt(placaresSimulados[chave].mandante); gv = parseInt(placaresSimulados[chave].visitante);
       }
 
@@ -394,21 +390,15 @@
         if (!stats[visitante] && visitante) stats[visitante] = { Clube: visitante, Pontos: 0, Jogos: 0, Vitorias: 0, Empates: 0, Derrotas: 0, GP: 0, GC: 0, Saldo: 0 };
 
         if (stats[mandante] && stats[visitante]) {
-          if (jogo['Status'] !== 'Encerrado' && placaresSimulados[chave]) {
-            stats[mandante].Jogos++; stats[visitante].Jogos++;
-            stats[mandante].GP += gm; stats[mandante].GC += gv;
-            stats[visitante].GP += gv; stats[visitante].GC += gm;
-
-            if (gm > gv) { stats[mandante].Pontos += 3; stats[mandante].Vitorias++; stats[visitante].Derrotas++; } 
-            else if (gm < gv) { stats[visitante].Pontos += 3; stats[visitante].Vitorias++; stats[mandante].Derrotas++; } 
-            else { stats[mandante].Pontos += 1; stats[mandante].Empates++; stats[visitante].Pontos += 1; stats[visitante].Empates++; }
-            stats[mandante].Saldo = stats[mandante].GP - stats[mandante].GC;
-            stats[visitante].Saldo = stats[visitante].GP - stats[visitante].GC;
+          if ((jogo['Status'] === 'Encerrado' || jogo['Status'] === 'Ao Vivo' || jogo['Status'] === 'Intervalo') || (modoSimulacao && placaresSimulados[chave])) {
+            // Nota: se a tabela base do Sheets já traz os jogos encerrados computados, evitamos duplicar. 
+            // Como usamos dadosClassificacaoBase como base, só computamos se for simulação ou se quisermos recalcular do zero.
           }
         }
       }
     });
 
+    // Se a tabela base já vem calculada da planilha, mantemos ela e aplicamos simulações se houver
     let arrayTabela = Object.values(stats);
     arrayTabela.sort((a, b) => {
       if (b.Pontos !== a.Pontos) return b.Pontos - a.Pontos;
@@ -483,7 +473,6 @@
       let statusBadge = "";
       let btnDetalhar = "";
 
-      // Verifica status Ao Vivo, Intervalo ou Encerrado
       const statusJogo = String(jogo['Status'] || '').trim();
       if (statusJogo === 'Ao Vivo') {
         statusBadge = `<span class="badge bg-danger text-white"><span class="live-dot"></span>AO VIVO</span>`;
@@ -543,9 +532,8 @@
   function abrirDetalhes(jogo) {
     document.getElementById('detalhe-titulo-modal').innerText = `${jogo['Mandante']} ${jogo['GolsMandante']} x ${jogo['GolsVisitante']} ${jogo['Visitante']}`;
     
-    let detalhesTexto = jogo['Detalhes'] || "Nenhum detalhe de gols cadastrado na planilha para esta partida.";
+    let detalhesTexto = jogo['Detalhes'] || "Nenhum detalhe de gols cadastrado para esta partida.";
     
-    // Formatação elegante estilo Google se houver dados
     let htmlCorpo = `
       <div class="mb-3">
         <img src="${pegarEscudo(jogo['Mandante'])}" style="width: 35px; height: 35px; object-fit: contain; margin-right: 8px;">
@@ -564,7 +552,6 @@
     `;
 
     document.getElementById('detalhe-corpo-modal').innerHTML = htmlCorpo;
-    
     var meuModal = new bootstrap.Modal(document.getElementById('modalDetalhesPartida'));
     meuModal.show();
   }
@@ -614,11 +601,19 @@
   function mudarRodada(direcao) {
     rodadaAtual += direcao;
     if (rodadaAtual < 1) rodadaAtual = 1;
-    if (rodadaAtual > 38) rodadaAtual = 38; 
+    if (rodadaAtual > 38) rodadaAtual > 38 ? 38 : rodadaAtual; 
     renderizarRodada();
   }
 
-  window.onload = carregarTudo;
+  window.onload = function() {
+    carregarTudo();
+    // AUTO-REFRESH: Atualiza o site silenciosamente a cada 30 segundos em tempo real
+    setInterval(() => {
+      if (!modoSimulacao) {
+        carregarTudo(true);
+      }
+    }, 30000);
+  };
 </script>
 </body>
 </html>

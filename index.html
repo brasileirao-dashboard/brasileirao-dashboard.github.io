@@ -196,7 +196,6 @@
     }
   }
 
-  // Normalizador universal: remove acentos e deixa minúsculo para busca infalível
   function normalizar(texto) {
     return String(texto || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
   }
@@ -221,24 +220,28 @@
     return "https://cdn-icons-png.flaticon.com/512/53/53283.png";
   }
 
-  // Carregamento paralelo em massa para abrir instantaneamente
   async function carregarTudo() {
     try {
-      const [resClass, resRodadas, resRodadaAtual, resProb] = await Promise.all([
+      const [resClass, resRodadas, resRodadaAtual] = await Promise.all([
         fetch(API_URL + "?acao=classificacao").then(r => r.json()),
         fetch(API_URL + "?acao=rodadas").then(r => r.json()),
-        fetch(API_URL + "?acao=rodada_atual").then(r => r.json()),
-        fetch(API_URL + "?acao=probabilidades").then(r => r.json())
+        fetch(API_URL + "?acao=rodada_atual").then(r => r.json())
       ]);
 
       dadosClassificacaoBase = resClass;
       todosOsJogos = resRodadas;
       rodadaAtual = parseInt(resRodadaAtual.rodada) || 1;
-      dadosProbabilidades = resProb;
       
       recalcularEAtualizarTabela();
       renderizarRodada();
-      renderizarProbabilidades();
+
+      // Carrega probabilidades em segundo plano para não travar a tela principal
+      fetch(API_URL + "?acao=probabilidades")
+        .then(r => r.json())
+        .then(resProb => {
+          dadosProbabilidades = resProb;
+          renderizarProbabilidades();
+        }).catch(e => console.log("Probabilidades carregando em segundo plano..."));
 
     } catch (erro) {
       console.error("Erro ao carregar dados:", erro);

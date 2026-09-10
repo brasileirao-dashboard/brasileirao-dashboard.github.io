@@ -1,1 +1,34 @@
-<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Mirassol</title><link rel="icon" type="image/png" href="./escudomirassol.png"><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"><style>body{background:linear-gradient(135deg,#ffcc00 0%,#006437 100%);position:relative;min-height:100vh;}body::before{content:"";background:url('./escudomirassol.png') no-repeat center center fixed;background-size:50%;opacity:0.15;top:0;left:0;bottom:0;right:0;position:absolute;z-index:-1;}.conteudo-box{background-color:rgba(255,255,255,0.92);border-radius:12px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,0.3);}.titulo-clube{color:#006437;font-weight:900;text-transform:uppercase;border-bottom:3px solid #006437;padding-bottom:5px;}.hino-letra{font-style:italic;line-height:1.8;color:#222;text-align:center;font-size:1.05rem;}.mascote{max-width:140px;float:right;margin-left:15px;border-radius:8px;}</style></head><body><div class="container py-4"><div class="d-flex justify-content-between align-items-center mb-4 conteudo-box"><h1 class="titulo-clube m-0 border-0">Mirassol</h1><div><button id="btn-hino" class="btn btn-dark shadow-sm fw-bold" style="background-color:#006437;border:none;" onclick="tocarHino()">▶ Tocar Hino Oficial</button></div></div><div class="row g-4"><div class="col-md-7"><div class="conteudo-box h-100"><h4 class="fw-bold mb-3">História e Glórias</h4><img src="./mascote-mirassol.png" class="mascote" onerror="this.style.display='none';"><p class="text-justify">O Leão consolidou-se como modelo de gestão no Brasil, saltando de divisão em divisão até chegar aos grandes campeonatos nacionais.</p><h5 class="fw-bold mt-4 mb-3">Principais Títulos 🏆</h5><ul class="list-group list-group-flush" style="background:transparent;"><li class="list-group-item" style="background:transparent;"><strong>Campeonato Brasileiro - Série C:</strong> 1 (2022)</li><li class="list-group-item" style="background:transparent;"><strong>Campeonato Brasileiro - Série D:</strong> 1 (2020)</li></ul></div></div><div class="col-md-5"><div class="conteudo-box h-100 d-flex flex-column align-items-center"><h4 class="fw-bold mb-3">Hino do Clube</h4><div class="hino-letra">Mirassol, Mirassol<br>O teu nome é uma glória<br>És o time de valor<br>Que orgulha a nossa história<br><br>Tuas cores verde e amarela<br>No gramado sempre brilharão!</div></div></div></div></div><script>let audio=new Audio('./hino-mirassol.mp3');let hinoTocando=false;function tocarHino(){const b=document.getElementById('btn-hino');if(!hinoTocando){audio.play();b.innerText="🔇 Parar Hino";b.classList.replace('btn-dark','btn-secondary');hinoTocando=true;}else{audio.pause();audio.currentTime=0;b.innerText="▶ Tocar Hino Oficial";b.classList.replace('btn-secondary','btn-dark');b.style.backgroundColor='#006437';hinoTocando=false;}}</script></body></html>
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Mirassol</title><link rel="icon" type="image/png" href="./escudomirassol.png"><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"><style>body{background:linear-gradient(135deg,#ffcc00 0%,#006437 100%);position:relative;min-height:100vh;}body::before{content:"";background:url('./escudomirassol.png') no-repeat center center fixed;background-size:50%;opacity:0.15;top:0;left:0;bottom:0;right:0;position:absolute;z-index:-1;}.conteudo-box{background-color:rgba(255,255,255,0.92);border-radius:12px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,0.3);}.titulo-clube{color:#006437;font-weight:900;text-transform:uppercase;border-bottom:3px solid #006437;padding-bottom:5px;}.hino-letra{font-style:italic;line-height:1.8;color:#222;text-align:center;font-size:1.05rem;}.mascote{max-width:140px;float:right;margin-left:15px;border-radius:8px;}</style></head><body><div class="container py-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-4 conteudo-box">
+    <h1 class="titulo-clube m-0 border-0">Mirassol Futebol Clube</h1>
+    <div class="d-flex align-items-center">
+      <img src="./escudomirassol.png" style="height: 50px; margin-right: 15px; object-fit: contain;">
+      <button id="btn-hino" class="btn btn-dark shadow-sm fw-bold" style="background-color:#006437;border:none;" onclick="tocarHino()">▶ Tocar Hino Oficial</button>
+    </div>
+  </div>
+
+  <div class="row g-4"><div class="col-md-7"><div class="conteudo-box h-100">
+    <h4 class="fw-bold mb-3">História e Glórias</h4>
+    <img src="./mascote-mirassol.png" class="mascote" onerror="this.style.display='none';">
+    
+    <p class="text-justify mb-2"><strong>Fundação:</strong> 9 de novembro de 1925</p>
+    <p class="text-justify">O Mirassol Futebol Clube nasceu no interior paulista com as cores verde e amarela, representando com orgulho a nação. O "Leão da Alta Araraquarense" construiu uma história pautada na estruturação cuidadosa e no forte trabalho nas categorias de base, despontando como um verdadeiro modelo de gestão e competência fora das capitais.</p>
+    <p class="text-justify">Seu crescimento moderno chocou o país. Em 2020, coroou seu grande projeto conquistando o título do Campeonato Brasileiro da Série D de forma avassaladora. Sem tirar o pé do acelerador, subiu rapidamente de patamar e em 2022 ergueu a taça do Campeonato Brasileiro da Série C, consolidando-se de vez entre as forças e figurando hoje nos grandes cenários do futebol nacional.</p>
+    
+    <h5 class="fw-bold mt-4 mb-3">Principais Títulos 🏆</h5>
+    <ul class="list-group list-group-flush" style="background:transparent;">
+      <li class="list-group-item" style="background:transparent;"><strong>Campeonato Brasileiro - Série C:</strong> 1 (2022)</li>
+      <li class="list-group-item" style="background:transparent;"><strong>Campeonato Brasileiro - Série D:</strong> 1 (2020)</li>
+      <li class="list-group-item" style="background:transparent;"><strong>Campeonato Paulista - Série A3:</strong> 1 (1997)</li>
+    </ul>
+  </div></div>
+  <div class="col-md-5"><div class="conteudo-box h-100 d-flex flex-column align-items-center">
+    <h4 class="fw-bold mb-3">Hino do Clube</h4>
+    <div class="hino-letra">
+      Mirassol, Mirassol<br>O teu nome é uma glória<br>És o time de valor<br>Que orgulha a nossa história<br><br>
+      Mirassol, Mirassol<br>Vai buscar nova vitória<br>Tuas cores verde e amarela<br>No gramado sempre brilharão<br><br>
+      Avante, avante, meu Leão<br>A torcida é tua fiel parceira<br>Lutando sempre com o coração<br>Honrando a nossa bandeira!
+    </div>
+  </div></div></div></div>
+<script>let audio=new Audio('./hino-mirassol.mp3');let hinoTocando=false;function tocarHino(){const b=document.getElementById('btn-hino');if(!hinoTocando){audio.play();b.innerText="🔇 Parar Hino";b.classList.replace('btn-dark','btn-secondary');hinoTocando=true;}else{audio.pause();audio.currentTime=0;b.innerText="▶ Tocar Hino Oficial";b.classList.replace('btn-secondary','btn-dark');b.style.backgroundColor='#006437';hinoTocando=false;}}</script></body></html>

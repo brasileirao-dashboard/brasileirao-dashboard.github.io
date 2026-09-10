@@ -235,13 +235,12 @@
       recalcularEAtualizarTabela();
       renderizarRodada();
 
-      // Carrega probabilidades em segundo plano para não travar a tela principal
       fetch(API_URL + "?acao=probabilidades")
         .then(r => r.json())
         .then(resProb => {
           dadosProbabilidades = resProb;
           renderizarProbabilidades();
-        }).catch(e => console.log("Probabilidades carregando em segundo plano..."));
+        }).catch(e => console.log("Probabilidades em segundo plano..."));
 
     } catch (erro) {
       console.error("Erro ao carregar dados:", erro);

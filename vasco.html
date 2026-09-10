@@ -7,18 +7,36 @@
   <link rel="icon" type="image/png" href="https://ssl.gstatic.com/onebox/media/sports/logos/optimized/hHwT8LwRmYCAGxQ-STLxYA_500x500.png">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    body { background-color: #e2eee6; font-family: 'Segoe UI', sans-serif; padding-top: 20px; }
-    .container { max-width: 1000px; }
-    /* Cabeçalho */
-    .cabecalho-clube { background-color: #fff; border-radius: 12px; padding: 15px 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-bottom: 6px solid #000; display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
-    .titulo-clube { font-weight: 900; font-size: 2.2rem; text-transform: uppercase; margin: 0; color: #000; letter-spacing: 1px; }
+    body { 
+      background-color: #d1d5db; /* Fundo cinza do print */
+      font-family: 'Segoe UI', sans-serif; 
+      padding-top: 20px; 
+      position: relative;
+    }
+    /* Marca d'água de fundo (Escudo) */
+    body::before { 
+      content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+      background-image: url('https://ssl.gstatic.com/onebox/media/sports/logos/optimized/hHwT8LwRmYCAGxQ-STLxYA_500x500.png'); 
+      background-size: 60%; background-position: center; background-repeat: no-repeat; opacity: 0.05; z-index: -1; 
+    }
+    .container { max-width: 1100px; position: relative; z-index: 1; }
+    
+    /* Cabeçalho Fiel ao Print */
+    .cabecalho-clube { background-color: #000; color: #fff; border-radius: 12px; padding: 15px 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .titulo-clube { font-weight: 900; font-size: 2.2rem; text-transform: uppercase; margin: 0; letter-spacing: 1px; }
+    
     /* Barra Dinâmica */
-    .barra-dinamica { background: linear-gradient(to right, #111, #333); color: #fff; border-radius: 8px; padding: 12px 20px; margin-bottom: 25px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); font-size: 0.95rem; }
-    /* Cards */
-    .card-info { background-color: #fff; border-radius: 12px; padding: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); height: 100%; }
-    .card-info h3 { font-weight: bold; margin-bottom: 20px; color: #000; }
+    .barra-dinamica { background: #fff; border-radius: 8px; padding: 12px 20px; margin-bottom: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-left: 6px solid #000; font-size: 0.95rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+    
+    /* Cards Brancos (Fundo História) */
+    .card-info { background-color: rgba(255, 255, 255, 0.95); border-radius: 12px; padding: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); height: 100%; }
+    .card-info h3 { font-weight: bold; margin-bottom: 20px; color: #000; font-size: 1.5rem; }
+    .texto-historia { font-size: 0.95rem; line-height: 1.6; text-align: justify; }
+    
+    /* Imagem do Mascote (Almirante) */
+    .mascote-img { float: right; width: 140px; margin-left: 20px; margin-bottom: 10px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+    
     .hino-texto { font-style: italic; text-align: center; line-height: 1.8; color: #444; font-size: 1.05rem; }
-    .mascote-img { float: right; width: 120px; margin-left: 20px; margin-bottom: 10px; border-radius: 8px; }
   </style>
 </head>
 <body>
@@ -27,36 +45,34 @@
   
   <!-- CABEÇALHO -->
   <div class="cabecalho-clube flex-wrap gap-3">
-    <div class="d-flex align-items-center">
-      <img src="https://ssl.gstatic.com/onebox/media/sports/logos/optimized/hHwT8LwRmYCAGxQ-STLxYA_500x500.png" style="height: 60px; margin-right: 20px;">
-      <h1 class="titulo-clube">Club de Regatas Vasco da Gama</h1>
-    </div>
-    <button id="btn-audio" class="btn btn-dark fw-bold px-4 py-2 shadow-sm" onclick="tocarHino()">▶ Tocar Hino Oficial</button>
+    <h1 class="titulo-clube">CLUB DE REGATAS VASCO DA GAMA</h1>
+    <button id="btn-audio" class="btn btn-light fw-bold px-4 py-2 shadow-sm text-dark" onclick="tocarHino()">▶ Tocar Hino Oficial</button>
   </div>
 
-  <!-- BARRA DINÂMICA DE DADOS (Atualiza sozinha) -->
-  <div class="barra-dinamica d-flex justify-content-between align-items-center flex-wrap gap-2">
-    <div>🏆 <strong>Campanha 2026:</strong> <span id="dinamico-posicao" class="text-warning fw-bold fs-5">Carregando...</span></div>
-    <div>📊 <strong>Pontuação:</strong> <span id="dinamico-pontos" class="text-white fw-bold">...</span></div>
-    <div>⚽ <strong>Artilheiro do Time:</strong> <span id="dinamico-artilheiro" class="text-warning fw-bold">...</span></div>
+  <!-- BARRA DINÂMICA DE ESTATÍSTICAS -->
+  <div class="barra-dinamica">
+    <div class="text-dark">🏆 Campanha: <span id="dinamico-posicao" style="color: #d4af37; font-weight: bold; font-size: 1.1rem;">Carregando...</span></div>
+    <div class="text-dark">📊 Pontuação: <span id="dinamico-pontos" style="font-weight: bold; color: #000;">...</span></div>
+    <div class="text-dark">⚽ Goleador: <span id="dinamico-artilheiro" style="color: #d4af37; font-weight: bold;">...</span></div>
+    <div class="text-dark">🎯 Garçom (Assist.): <span id="dinamico-assistencia" style="color: #0dcaf0; font-weight: bold;">...</span></div>
   </div>
 
   <!-- CONTEÚDO: HISTÓRIA E HINO -->
   <div class="row g-4 mb-5">
-    <!-- Coluna Esquerda: História -->
+    <!-- Coluna Esquerda: História (Fiel ao seu print) -->
     <div class="col-md-7">
       <div class="card-info">
         <h3>História e Glórias</h3>
-        <p><strong>Fundação:</strong> 21 de agosto de 1898</p>
+        <p class="texto-historia"><strong>Fundação:</strong> 21 de agosto de 1898</p>
         
         <img src="https://i.pinimg.com/736x/21/d9/8e/21d98e8bfda7397734151fc1029c0b11.jpg" class="mascote-img" alt="Almirante Vasco">
         
-        <p>Gigante por natureza, o Vasco da Gama foi fundado por imigrantes portugueses. Mais do que suas imensas conquistas em campo, o clube gravou seu nome na história sociopolítica do Brasil ao emitir a "Resposta Histórica" de 1924, onde se recusou a excluir de seu elenco jogadores negros, operários e analfabetos para participar do campeonato organizado pela elite carioca, sendo um pioneiro e eterno bastião da luta contra o racismo.</p>
+        <p class="texto-historia">Gigante por natureza, o Vasco da Gama foi fundado por imigrantes portugueses. Mais do que suas imensas conquistas em campo, o clube gravou seu nome na história sociopolítica do Brasil ao emitir a "Resposta Histórica" de 1924, onde se recusou a excluir de seu elenco jogadores negros, operários e analfabetos para participar do campeonato organizado pela elite carioca, sendo um pioneiro e eterno bastião da luta contra o racismo.</p>
         
-        <p>Impulsionado por sua torcida fervorosa, o Vasco construiu com recursos próprios o lendário Estádio de São Januário. Em campo, foi conhecido nos anos 40 como "Expresso da Vitória" (o primeiro campeão sul-americano invicto, em 1948). Atingiu o ápice no ano de seu centenário (1998) ao vencer a Copa Libertadores, ostentando grandes ídolos como Roberto Dinamite (seu maior artilheiro), Romário e Edmundo.</p>
+        <p class="texto-historia">Impulsionado por sua torcida fervorosa, o Vasco construiu com recursos próprios o lendário Estádio de São Januário. Em campo, foi conhecido nos anos 40 como "Expresso da Vitória" (o primeiro campeão sul-americano invicto, em 1948). Atingiu o ápice no ano de seu centenário (1998) ao vencer a Copa Libertadores, ostentando grandes ídolos como Roberto Dinamite (seu maior artilheiro), Romário e Edmundo.</p>
         
-        <h5 class="fw-bold mt-4">Principais Títulos 🏆</h5>
-        <ul class="text-muted">
+        <h5 class="fw-bold mt-4" style="font-size: 1.1rem;">Principais Títulos 🏆</h5>
+        <ul class="text-muted" style="font-size: 0.9rem;">
           <li><strong>Copa Libertadores da América:</strong> 1 (1998)</li>
           <li><strong>Campeonato Sul-Americano de Campeões:</strong> 1 (1948)</li>
           <li><strong>Campeonato Brasileiro:</strong> 4 (1974, 1989, 1997, 2000)</li>
@@ -93,28 +109,33 @@
 <audio id="audio-hino" src="https://github.com/mvinhas/hinos-de-futebol/raw/master/vasco.mp3"></audio>
 
 <script>
-  // Nome exato do clube na sua Planilha
+  // NOME EXATO DO CLUBE NA PLANILHA
   const MEU_CLUBE = "Vasco";
 
   document.addEventListener("DOMContentLoaded", function() {
-    const dadosTabela = JSON.parse(localStorage.getItem('brasileirao_tabela')) || [];
-    const dadosArtilharia = JSON.parse(localStorage.getItem('brasileirao_artilharia')) || [];
+    try {
+        const dadosTabela = JSON.parse(localStorage.getItem('brasileirao_tabela')) || [];
+        const dadosArtilharia = JSON.parse(localStorage.getItem('brasileirao_artilharia')) || [];
 
-    const meuTimeNaTabela = dadosTabela.find(t => t.Clube === MEU_CLUBE);
-    const posicao = dadosTabela.findIndex(t => t.Clube === MEU_CLUBE) + 1;
-    
-    const artilheirosDoClube = dadosArtilharia.filter(a => a.Clube === MEU_CLUBE).sort((a, b) => b.Gols - a.Gols);
-    const principalArtilheiro = artilheirosDoClube.length > 0 ? `${artilheirosDoClube[0].Jogador} (${artilheirosDoClube[0].Gols} gols)` : "Nenhum ainda";
+        const meuTime = dadosTabela.find(t => t.Clube === MEU_CLUBE);
+        const posicao = dadosTabela.findIndex(t => t.Clube === MEU_CLUBE) + 1;
+        
+        const artilheiros = dadosArtilharia.filter(a => a.Clube === MEU_CLUBE).sort((a, b) => (b.Gols||0) - (a.Gols||0));
+        const goleador = (artilheiros.length > 0 && artilheiros[0].Gols > 0) ? `${artilheiros[0].Jogador} (${artilheiros[0].Gols})` : "Nenhum";
 
-    if (meuTimeNaTabela) {
-      document.getElementById('dinamico-posicao').innerText = `${posicao}º Lugar`;
-      document.getElementById('dinamico-pontos').innerText = `${meuTimeNaTabela.Pontos} pts`;
-      document.getElementById('dinamico-artilheiro').innerText = principalArtilheiro;
-    }
+        const assistentes = dadosArtilharia.filter(a => a.Clube === MEU_CLUBE).sort((a, b) => (b.Assistencias||0) - (a.Assistencias||0));
+        const garcom = (assistentes.length > 0 && assistentes[0].Assistencias > 0) ? `${assistentes[0].Jogador} (${assistentes[0].Assistencias})` : "Nenhum";
+
+        if (meuTime) {
+          if(document.getElementById('dinamico-posicao')) document.getElementById('dinamico-posicao').innerText = `${posicao}º Lugar`;
+          if(document.getElementById('dinamico-pontos')) document.getElementById('dinamico-pontos').innerText = `${meuTime.Pontos} pts`;
+          if(document.getElementById('dinamico-artilheiro')) document.getElementById('dinamico-artilheiro').innerText = goleador;
+          if(document.getElementById('dinamico-assistencia')) document.getElementById('dinamico-assistencia').innerText = garcom;
+        }
+    } catch(e) { console.error("Erro ao carregar dados:", e); }
   });
 
-  let audioHino = document.getElementById('audio-hino');
-  let tocando = false;
+  let audioHino = document.getElementById('audio-hino'); let tocando = false;
   function tocarHino() {
     const btn = document.getElementById('btn-audio');
     if (!tocando) { audioHino.play(); btn.innerText = "🔇 Parar Hino"; tocando = true; }

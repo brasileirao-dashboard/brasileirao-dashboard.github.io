@@ -13,10 +13,9 @@
       --bg-body: #e2eee6; --bg-painel: rgba(255, 255, 255, 0.96); --text-main: #212529; --border-color: #FFD700;
       --bg-table: transparent; --bg-card: #f8f9fa; --text-muted: #6c757d; --bg-header: #f8f9fa;
     }
-    /* MODO ESCURO DE ALTO CONTRASTE */
     body.dark-mode {
-      --bg-body: #121212; --bg-painel: #1e1e1e; --text-main: #f8f9fa; --border-color: #444;
-      --bg-table: #1e1e1e; --bg-card: #2a2a2a; --text-muted: #adb5bd; --bg-header: #212529;
+      --bg-body: #121212; --bg-painel: #1e1e1e; --text-main: #ffffff; --border-color: #444;
+      --bg-table: #1e1e1e; --bg-card: #2a2a2a; --text-muted: #ced4da; --bg-header: #212529;
     }
 
     body { background-color: var(--bg-body); color: var(--text-main); margin: 0; padding: 0; min-height: 100vh; overflow-x: hidden; transition: background 0.3s; }
@@ -136,7 +135,7 @@
   </div>
 </div>
 
-<!-- MODAL GRÁFICO -->
+<!-- MODAL GRÁFICO (EVOLUÇÃO) -->
 <div class="modal fade" id="modalGrafico" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
@@ -188,15 +187,17 @@
   function normalizar(t) { return String(t || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim(); }
   function pegarEscudo(n) { const norm = normalizar(n); for (const [k, v] of Object.entries(escudos)) { if (normalizar(k) === norm) return v; } return ""; }
 
-  // CARREGAMENTO COM TRAVAS DE SEGURANÇA
+  // CARREGAMENTO SEGURO
   async function carregarTudo(silencioso = false) {
     try {
+      const fetchJsonSeguro = async (url) => { try { const res = await fetch(url); return await res.json(); } catch(e) { return []; } };
+
       const [resClass, resRodadas, resRodadaAtual, resArt, resProb] = await Promise.all([
-        fetch(API_URL + "?acao=classificacao").then(r => r.json()).catch(()=>[]), 
-        fetch(API_URL + "?acao=rodadas").then(r => r.json()).catch(()=>[]),
-        fetch(API_URL + "?acao=rodada_atual").then(r => r.json()).catch(()=>({rodada: rodadaAtual})), 
-        fetch(API_URL + "?acao=artilharia").then(r => r.json()).catch(()=>[]),
-        fetch(API_URL + "?acao=probabilidades").then(r => r.json()).catch(()=>[])
+        fetchJsonSeguro(API_URL + "?acao=classificacao"),
+        fetchJsonSeguro(API_URL + "?acao=rodadas"),
+        fetchJsonSeguro(API_URL + "?acao=rodada_atual"),
+        fetchJsonSeguro(API_URL + "?acao=artilharia"),
+        fetchJsonSeguro(API_URL + "?acao=probabilidades")
       ]);
       
       dadosClassificacaoBase = Array.isArray(resClass) ? resClass : []; 
@@ -276,7 +277,7 @@
     });
   }
 
-  // ================= GRÁFICO COM EIXO 1 A 20 COLORIDO =================
+  // ================= GRÁFICO COM EIXO 1 A 20 COMPLETO E COLORIDO =================
   function gerarGrafico(clubeNome) {
     let posicoesAteRodada = []; let labels = [];
     
@@ -319,21 +320,22 @@
             reverse: true, min: 1, max: 20, 
             ticks: { 
               stepSize: 1,
+              autoSkip: false, // ISTO FORÇA TODOS OS NÚMEROS A APARECEREM
               font: { weight: 'bold' },
               color: function(context) {
                 let v = context.tick.value;
-                if(v <= 4) return '#0d6efd'; // Libertadores
-                if(v <= 6) return '#0dcaf0'; // Pré-Liberta
-                if(v >= 7 && v <= 12) return '#198754'; // Sul-Americana
-                if(v >= 17) return '#dc3545'; // Z4
-                return isDark ? '#adb5bd' : '#6c757d'; // Meio de Tabela
+                if(v <= 4) return '#0d6efd'; 
+                if(v <= 6) return '#0dcaf0'; 
+                if(v >= 7 && v <= 12) return '#198754'; 
+                if(v >= 17) return '#dc3545'; 
+                return isDark ? '#ffffff' : '#444444'; 
               }
             }, 
             grid: { color: isDark ? '#333' : '#ddd' } 
           },
-          x: { ticks: { color: isDark ? '#adb5bd' : '#333' }, grid: { color: isDark ? '#333' : '#ddd' } }
+          x: { ticks: { color: isDark ? '#ffffff' : '#333' }, grid: { color: isDark ? '#333' : '#ddd' } }
         },
-        plugins: { legend: { labels: { color: isDark ? '#adb5bd' : '#333' } } }
+        plugins: { legend: { labels: { color: isDark ? '#ffffff' : '#333' } } }
       }
     });
   }
@@ -342,7 +344,7 @@
     document.getElementById('titulo-rodada').innerText = `Rodada ${rodadaAtual}`;
     const cont = document.getElementById('lista-jogos'); cont.innerHTML = '';
     const jogosDaRodada = todosOsJogos.map((j, i) => ({...j, originalIndex: i})).filter(j => parseInt(j.Rodada) === rodadaAtual);
-    if(jogosDaRodada.length === 0) return cont.innerHTML = `<p class="text-center py-4 text-muted">Sem jogos.</p>`;
+    if(jogosDaRodada.length === 0) { cont.innerHTML = `<p class="text-center py-4 text-muted">Sem jogos agendados.</p>`; return; }
 
     jogosDaRodada.forEach(jogo => {
       let central = "", badge = `<span class="text-muted" style="font-size: 0.68rem;">${jogo.Status||'Agendado'}</span>`;
@@ -377,10 +379,17 @@
   function atualizarSimulacao(r, i, c, v) { const ch = `${r}-${i}`; if(!placaresSimulados[ch]) placaresSimulados[ch] = {mandante:"", visitante:""}; placaresSimulados[ch][c] = v; recalcularEAtualizarTabela(); }
 
   function renderizarArtilhariaAssistencias() {
-    const cArt = document.getElementById('corpo-artilharia'), cAst = document.getElementById('corpo-assistencias'); cArt.innerHTML=''; cAst.innerHTML='';
+    const cArt = document.getElementById('corpo-artilharia'), cAst = document.getElementById('corpo-assistencias'); 
+    cArt.innerHTML=''; cAst.innerHTML='';
+    if (!dadosArtilharia || dadosArtilharia.length === 0) {
+      cArt.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-3">Aguardando dados...</td></tr>';
+      cAst.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-3">Aguardando dados...</td></tr>';
+      return;
+    }
     [...dadosArtilharia].sort((a,b)=> (b.Gols||0) - (a.Gols||0)).slice(0,10).forEach((a,i) => cArt.innerHTML += `<tr><td class="fw-bold">${i+1}</td><td class="text-start">${a.Jogador}</td><td class="text-start"><img src="${pegarEscudo(a.Clube)}" class="logo-clube" onerror="this.style.display='none';">${a.Clube}</td><td class="fw-bold text-success text-center">${a.Gols||0}</td></tr>`);
     [...dadosArtilharia].sort((a,b)=> (b.Assistencias||0) - (a.Assistencias||0)).slice(0,10).forEach((a,i) => cAst.innerHTML += `<tr><td class="fw-bold">${i+1}</td><td class="text-start">${a.Jogador}</td><td class="text-start"><img src="${pegarEscudo(a.Clube)}" class="logo-clube" onerror="this.style.display='none';">${a.Clube}</td><td class="fw-bold text-primary text-center">${a.Assistencias||0}</td></tr>`);
   }
+  
   function renderizarProbabilidades() {
     const c = document.getElementById('corpo-probabilidades'); c.innerHTML='';
     dadosProbabilidades.sort((a,b)=> { let pA = ordemClassificacao.indexOf(normalizar(a.Clube)), pB = ordemClassificacao.indexOf(normalizar(b.Clube)); return (pA===-1?99:pA) - (pB===-1?99:pB); });

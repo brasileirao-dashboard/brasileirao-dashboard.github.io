@@ -1,107 +1,36 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <title>Athletico-PR</title>
-  <!-- Usa o nome do arquivo exatamente como você salvou -->
-  <link rel="icon" type="image/png" href="./escudoathetico.png">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    /* FUNDO DEGRADÊ COM AS CORES DO CLUBE (Vermelho e Preto) */
-    body { 
-      background: linear-gradient(135deg, #c8102e 0%, #000000 100%); 
-      position: relative; 
-      min-height: 100vh; 
-    }
-    /* MARCA D'ÁGUA DO ESCUDO GIGANTE NO FUNDO */
-    body::before { 
-      content: ""; 
-      background: url('./escudoathetico.png') no-repeat center center fixed; 
-      background-size: 50%; 
-      opacity: 0.15; /* Mais visível agora com o fundo escuro */
-      top: 0; left: 0; bottom: 0; right: 0; 
-      position: absolute; 
-      z-index: -1; 
-    }
-    /* CAIXAS TIPO "VIDRO" BRANCO */
-    .conteudo-box { 
-      background-color: rgba(255, 255, 255, 0.92); 
-      border-radius: 12px; 
-      padding: 20px; 
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
-    }
-    .titulo-clube { color: #c8102e; font-weight: 900; text-transform: uppercase; border-bottom: 3px solid #c8102e; padding-bottom: 5px; }
-    .hino-letra { font-style: italic; line-height: 1.8; color: #222; text-align: center; font-size: 1.05rem; }
-    .mascote { max-width: 140px; float: right; margin-left: 15px; border-radius: 8px; }
-  </style>
-</head>
-<body>
-<div class="container py-4">
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Athletico Paranaense</title><link rel="icon" type="image/png" href="./escudoathetico.png"><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"><style>body{background:linear-gradient(135deg,#c8102e 0%,#000 100%);position:relative;min-height:100vh;}body::before{content:"";background:url('./escudoathetico.png') no-repeat center center fixed;background-size:50%;opacity:0.15;top:0;left:0;bottom:0;right:0;position:absolute;z-index:-1;}.conteudo-box{background-color:rgba(255,255,255,0.92);border-radius:12px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,0.3);}.titulo-clube{color:#c8102e;font-weight:900;text-transform:uppercase;border-bottom:3px solid #c8102e;padding-bottom:5px;}.hino-letra{font-style:italic;line-height:1.8;color:#222;text-align:center;font-size:1.05rem;}.mascote{max-width:140px;float:right;margin-left:15px;border-radius:8px;}</style></head><body><div class="container py-4">
+  
+  <!-- CABEÇALHO ATUALIZADO: Nome Completo + Escudo + Botão -->
   <div class="d-flex justify-content-between align-items-center mb-4 conteudo-box">
-    <h1 class="titulo-clube m-0 border-0">Athletico Paranaense</h1>
-    <div>
+    <h1 class="titulo-clube m-0 border-0">Club Athletico Paranaense</h1>
+    <div class="d-flex align-items-center">
+      <img src="./escudoathetico.png" style="height: 50px; margin-right: 15px; object-fit: contain;">
       <button id="btn-hino" class="btn btn-dark shadow-sm fw-bold" style="background-color:#c8102e;border:none;" onclick="tocarHino()">▶ Tocar Hino Oficial</button>
     </div>
   </div>
 
-  <div class="row g-4">
-    <div class="col-md-7">
-      <div class="conteudo-box h-100">
-        <h4 class="fw-bold mb-3">História e Glórias</h4>
-        
-        <!-- AQUI ENTRA A FOTO DO MASCOTE -->
-        <img src="./mascote-athletico.png" class="mascote" alt="Mascote" onerror="this.style.display='none';">
-        
-        <p class="text-justify">O Furacão, fundado em 1924, é a maior potência do futebol paranaense. Com uma estrutura invejável na Arena da Baixada, consolidou-se como um gigante sul-americano nas últimas décadas.</p>
-        
-        <h5 class="fw-bold mt-4 mb-3">Principais Títulos 🏆</h5>
-        <ul class="list-group list-group-flush" style="background:transparent;">
-          <li class="list-group-item" style="background:transparent;"><strong>Copa Sul-Americana:</strong> 2 (2018, 2021)</li>
-          <li class="list-group-item" style="background:transparent;"><strong>Campeonato Brasileiro:</strong> 1 (2001)</li>
-          <li class="list-group-item" style="background:transparent;"><strong>Copa do Brasil:</strong> 1 (2019)</li>
-        </ul>
-      </div>
+  <div class="row g-4"><div class="col-md-7"><div class="conteudo-box h-100">
+    <h4 class="fw-bold mb-3">História e Glórias</h4>
+    <img src="./mascote-athletico.png" class="mascote" onerror="this.style.display='none';">
+    
+    <p class="text-justify mb-2"><strong>Fundação:</strong> 26 de março de 1924</p>
+    <p class="text-justify">O Club Athletico Paranaense nasceu da fusão entre o International Foot-Ball Club e o América Futebol Clube. O clube carrega o apelido de "Furacão" desde 1949, quando montou um esquadrão que aplicou goleadas impiedosas no campeonato estadual, ganhando fama nacional por seu ímpeto ofensivo.</p>
+    <p class="text-justify">Reconhecido por ter uma das infraestruturas mais modernas da América Latina, incluindo a Ligga Arena (a primeira arena com teto retrátil do Brasil) e o CT do Caju, o clube quebrou a hegemonia do eixo Rio-São Paulo. Conquistou o Campeonato Brasileiro em 2001 e consolidou sua força internacional levantando duas Copas Sul-Americanas (2018 e 2021).</p>
+    
+    <h5 class="fw-bold mt-4 mb-3">Principais Títulos 🏆</h5>
+    <ul class="list-group list-group-flush" style="background:transparent;">
+      <li class="list-group-item" style="background:transparent;"><strong>Copa Sul-Americana:</strong> 2 (2018, 2021)</li>
+      <li class="list-group-item" style="background:transparent;"><strong>Campeonato Brasileiro:</strong> 1 (2001)</li>
+      <li class="list-group-item" style="background:transparent;"><strong>Copa do Brasil:</strong> 1 (2019)</li>
+    </ul>
+  </div></div>
+  <div class="col-md-5"><div class="conteudo-box h-100 d-flex flex-column align-items-center">
+    <h4 class="fw-bold mb-3">Hino do Clube</h4>
+    <div class="hino-letra">
+      Athletico! Athletico!<br>Conhecemos teu valor<br>E a camisa rubro-negra<br>Só se veste por amor!<br><br>
+      Vamos marchar, sempre cantando<br>O hino do Furacão<br>E no peito ostentando<br>A faixa de campeão!<br><br>
+      O coração athleticano<br>Estará sempre voltado<br>Para os feitos do presente<br>E as glórias do passado!<br><br>
+      A tradição, a raça, o destemor<br>Ousadia, a rebeldia, o Furacão<br>São virtudes que o torcedor<br>Traz dentro do coração!
     </div>
-    <div class="col-md-5">
-      <div class="conteudo-box h-100 d-flex flex-column align-items-center">
-        <h4 class="fw-bold mb-3">Hino do Clube</h4>
-        <div class="hino-letra">
-          <!-- QUEBRA DE LINHA CORRETA COM <br> -->
-          Athletico! Athletico!<br>
-          Conhecemos teu valor<br>
-          E a camisa rubro-negra<br>
-          Só se veste por amor!<br><br>
-          O coração athleticano<br>
-          Estará sempre voltado<br>
-          Para os feitos do presente<br>
-          E as glórias do passado!
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-  // O ÁUDIO AGORA PUXA DIRETO DO SEU GITHUB (Sem YouTube, sem anúncios!)
-  let audio = new Audio('./hino-athletico.mp3');
-  let hinoTocando = false;
-
-  function tocarHino() {
-    const btn = document.getElementById('btn-hino');
-    if (!hinoTocando) {
-      audio.play();
-      btn.innerText = "🔇 Parar Hino"; 
-      btn.classList.replace('btn-dark', 'btn-secondary'); 
-      hinoTocando = true;
-    } else {
-      audio.pause();
-      audio.currentTime = 0; // Volta a música pro começo
-      btn.innerText = "▶ Tocar Hino Oficial"; 
-      btn.classList.replace('btn-secondary', 'btn-dark');
-      btn.style.backgroundColor = '#c8102e'; 
-      hinoTocando = false;
-    }
-  }
-</script>
-</body>
-</html>
+  </div></div></div></div>
+<script>let audio=new Audio('./hino-athletico.mp3');let hinoTocando=false;function tocarHino(){const b=document.getElementById('btn-hino');if(!hinoTocando){audio.play();b.innerText="🔇 Parar Hino";b.classList.replace('btn-dark','btn-secondary');hinoTocando=true;}else{audio.pause();audio.currentTime=0;b.innerText="▶ Tocar Hino Oficial";b.classList.replace('btn-secondary','btn-dark');b.style.backgroundColor='#c8102e';hinoTocando=false;}}</script></body></html>

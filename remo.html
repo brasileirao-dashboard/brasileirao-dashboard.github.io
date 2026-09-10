@@ -1,1 +1,34 @@
-<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Remo</title><link rel="icon" type="image/png" href="./escudoremo.png"><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"><style>body{background:linear-gradient(135deg,#001e60 0%,#000 100%);position:relative;min-height:100vh;}body::before{content:"";background:url('./escudoremo.png') no-repeat center center fixed;background-size:50%;opacity:0.15;top:0;left:0;bottom:0;right:0;position:absolute;z-index:-1;}.conteudo-box{background-color:rgba(255,255,255,0.92);border-radius:12px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,0.3);}.titulo-clube{color:#001e60;font-weight:900;text-transform:uppercase;border-bottom:3px solid #001e60;padding-bottom:5px;}.hino-letra{font-style:italic;line-height:1.8;color:#222;text-align:center;font-size:1.05rem;}.mascote{max-width:140px;float:right;margin-left:15px;border-radius:8px;}</style></head><body><div class="container py-4"><div class="d-flex justify-content-between align-items-center mb-4 conteudo-box"><h1 class="titulo-clube m-0 border-0">Clube do Remo</h1><div><button id="btn-hino" class="btn btn-dark shadow-sm fw-bold" style="background-color:#001e60;border:none;" onclick="tocarHino()">▶ Tocar Hino Oficial</button></div></div><div class="row g-4"><div class="col-md-7"><div class="conteudo-box h-100"><h4 class="fw-bold mb-3">História e Glórias</h4><img src="./mascote-remo.png" class="mascote" onerror="this.style.display='none';"><p class="text-justify">O Leão Azul da Amazônia é um dos maiores símbolos do esporte no Norte, arrastando multidões apaixonadas por onde joga.</p><h5 class="fw-bold mt-4 mb-3">Principais Títulos 🏆</h5><ul class="list-group list-group-flush" style="background:transparent;"><li class="list-group-item" style="background:transparent;"><strong>Campeonato Brasileiro - Série C:</strong> 1 (2005)</li><li class="list-group-item" style="background:transparent;"><strong>Copa Verde:</strong> 1 (2021)</li><li class="list-group-item" style="background:transparent;"><strong>Campeonato Paraense:</strong> 47 Vezes</li></ul></div></div><div class="col-md-5"><div class="conteudo-box h-100 d-flex flex-column align-items-center"><h4 class="fw-bold mb-3">Hino do Clube</h4><div class="hino-letra">Clube do Remo<br>Tu és a nossa glória<br>És o time de ouro<br>Que o povo adora<br><br>Tuas cores, azul marinho<br>No Pará ninguém te iguala!</div></div></div></div></div><script>let audio=new Audio('./hino-remo.mp3');let hinoTocando=false;function tocarHino(){const b=document.getElementById('btn-hino');if(!hinoTocando){audio.play();b.innerText="🔇 Parar Hino";b.classList.replace('btn-dark','btn-secondary');hinoTocando=true;}else{audio.pause();audio.currentTime=0;b.innerText="▶ Tocar Hino Oficial";b.classList.replace('btn-secondary','btn-dark');b.style.backgroundColor='#001e60';hinoTocando=false;}}</script></body></html>
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Clube do Remo</title><link rel="icon" type="image/png" href="./escudoremo.png"><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"><style>body{background:linear-gradient(135deg,#001e60 0%,#000 100%);position:relative;min-height:100vh;}body::before{content:"";background:url('./escudoremo.png') no-repeat center center fixed;background-size:50%;opacity:0.15;top:0;left:0;bottom:0;right:0;position:absolute;z-index:-1;}.conteudo-box{background-color:rgba(255,255,255,0.92);border-radius:12px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,0.3);}.titulo-clube{color:#001e60;font-weight:900;text-transform:uppercase;border-bottom:3px solid #001e60;padding-bottom:5px;}.hino-letra{font-style:italic;line-height:1.8;color:#222;text-align:center;font-size:1.05rem;}.mascote{max-width:140px;float:right;margin-left:15px;border-radius:8px;}</style></head><body><div class="container py-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-4 conteudo-box">
+    <h1 class="titulo-clube m-0 border-0">Clube do Remo</h1>
+    <div class="d-flex align-items-center">
+      <img src="./escudoremo.png" style="height: 50px; margin-right: 15px; object-fit: contain;">
+      <button id="btn-hino" class="btn btn-dark shadow-sm fw-bold" style="background-color:#001e60;border:none;" onclick="tocarHino()">▶ Tocar Hino Oficial</button>
+    </div>
+  </div>
+
+  <div class="row g-4"><div class="col-md-7"><div class="conteudo-box h-100">
+    <h4 class="fw-bold mb-3">História e Glórias</h4>
+    <img src="./mascote-remo.png" class="mascote" onerror="this.style.display='none';">
+    
+    <p class="text-justify mb-2"><strong>Fundação:</strong> 5 de fevereiro de 1905</p>
+    <p class="text-justify">Fundado como "Grupo do Remo" por dissidentes apaixonados pelos esportes náuticos, o Clube do Remo logo encamparia o futebol e se tornaria um verdadeiro gigante do esporte na região Norte do Brasil. O apelido de "Leão Azul da Amazônia" foi abraçado por uma das torcidas mais vibrantes e fanáticas do país, conhecida como Fenômeno Azul.</p>
+    <p class="text-justify">O clube tem no Estádio Baenão a sua fortaleza. É o grande detentor de títulos do Campeonato Paraense e coleciona feitos históricos, sendo um expoente vital para colocar o futebol do Norte no mapa das grandes competições. Conquistou o Campeonato Brasileiro da Série C em 2005 e, mais recentemente, garantiu a glória da Copa Verde em 2021.</p>
+    
+    <h5 class="fw-bold mt-4 mb-3">Principais Títulos 🏆</h5>
+    <ul class="list-group list-group-flush" style="background:transparent;">
+      <li class="list-group-item" style="background:transparent;"><strong>Campeonato Brasileiro - Série C:</strong> 1 (2005)</li>
+      <li class="list-group-item" style="background:transparent;"><strong>Copa Verde:</strong> 1 (2021)</li>
+      <li class="list-group-item" style="background:transparent;"><strong>Campeonato Paraense:</strong> 47 Vezes</li>
+    </ul>
+  </div></div>
+  <div class="col-md-5"><div class="conteudo-box h-100 d-flex flex-column align-items-center">
+    <h4 class="fw-bold mb-3">Hino do Clube</h4>
+    <div class="hino-letra">
+      Clube do Remo, és a nossa glória<br>És o time de ouro, que o povo adora<br>Tuas cores azul marinho e branco<br>No Pará ninguém te iguala, teu vigor é sempre franco<br><br>
+      Avante Clube do Remo<br>Vamos à vitória, meu Leão<br>Quando a torcida grita "É campeão"<br>Vibra no peito nosso coração!<br><br>
+      A tradição no esporte tu nos trazes<br>Sempre ostentando tua fibra e raça<br>Sempre aplaudido pelas multidões<br>És a alegria dos nossos corações!
+    </div>
+  </div></div></div></div>
+<script>let audio=new Audio('./hino-remo.mp3');let hinoTocando=false;function tocarHino(){const b=document.getElementById('btn-hino');if(!hinoTocando){audio.play();b.innerText="🔇 Parar Hino";b.classList.replace('btn-dark','btn-secondary');hinoTocando=true;}else{audio.pause();audio.currentTime=0;b.innerText="▶ Tocar Hino Oficial";b.classList.replace('btn-secondary','btn-dark');b.style.backgroundColor='#001e60';hinoTocando=false;}}</script></body></html>

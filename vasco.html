@@ -1,56 +1,125 @@
-<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Vasco da Gama</title><link rel="icon" type="image/png" href="./escudovasco.png"><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"><style>body{background:linear-gradient(135deg,#000 0%,#fff 100%);position:relative;min-height:100vh;}body::before{content:"";background:url('./escudovasco.png') no-repeat center center fixed;background-size:50%;opacity:0.15;top:0;left:0;bottom:0;right:0;position:absolute;z-index:-1;}.conteudo-box{background-color:rgba(255,255,255,0.92);border-radius:12px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,0.3);}.titulo-clube{color:#000;font-weight:900;text-transform:uppercase;border-bottom:3px solid #000;padding-bottom:5px;}.hino-letra{font-style:italic;line-height:1.8;color:#222;text-align:center;font-size:1.05rem;}.mascote{max-width:140px;float:right;margin-left:15px;border-radius:8px;}</style></head><body><div class="container py-4">
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vasco da Gama - Brasileirão</title>
+  <link rel="icon" type="image/png" href="https://ssl.gstatic.com/onebox/media/sports/logos/optimized/hHwT8LwRmYCAGxQ-STLxYA_500x500.png">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background-color: #e2eee6; font-family: 'Segoe UI', sans-serif; padding-top: 20px; }
+    .container { max-width: 1000px; }
+    /* Cabeçalho */
+    .cabecalho-clube { background-color: #fff; border-radius: 12px; padding: 15px 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-bottom: 6px solid #000; display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
+    .titulo-clube { font-weight: 900; font-size: 2.2rem; text-transform: uppercase; margin: 0; color: #000; letter-spacing: 1px; }
+    /* Barra Dinâmica */
+    .barra-dinamica { background: linear-gradient(to right, #111, #333); color: #fff; border-radius: 8px; padding: 12px 20px; margin-bottom: 25px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); font-size: 0.95rem; }
+    /* Cards */
+    .card-info { background-color: #fff; border-radius: 12px; padding: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); height: 100%; }
+    .card-info h3 { font-weight: bold; margin-bottom: 20px; color: #000; }
+    .hino-texto { font-style: italic; text-align: center; line-height: 1.8; color: #444; font-size: 1.05rem; }
+    .mascote-img { float: right; width: 120px; margin-left: 20px; margin-bottom: 10px; border-radius: 8px; }
+  </style>
+</head>
+<body>
 
-  <div class="d-flex justify-content-between align-items-center mb-4 conteudo-box">
-    <h1 class="titulo-clube m-0 border-0">Club de Regatas Vasco da Gama</h1>
+<div class="container">
+  
+  <!-- CABEÇALHO -->
+  <div class="cabecalho-clube flex-wrap gap-3">
     <div class="d-flex align-items-center">
-      <img src="./escudovasco.png" style="height: 50px; margin-right: 15px; object-fit: contain;">
-      <button id="btn-hino" class="btn btn-dark shadow-sm fw-bold" style="background-color:#000;border:none;" onclick="tocarHino()">▶ Tocar Hino Oficial</button>
+      <img src="https://ssl.gstatic.com/onebox/media/sports/logos/optimized/hHwT8LwRmYCAGxQ-STLxYA_500x500.png" style="height: 60px; margin-right: 20px;">
+      <h1 class="titulo-clube">Club de Regatas Vasco da Gama</h1>
     </div>
+    <button id="btn-audio" class="btn btn-dark fw-bold px-4 py-2 shadow-sm" onclick="tocarHino()">▶ Tocar Hino Oficial</button>
   </div>
 
-  <div class="row g-4">
+  <!-- BARRA DINÂMICA DE DADOS (Atualiza sozinha) -->
+  <div class="barra-dinamica d-flex justify-content-between align-items-center flex-wrap gap-2">
+    <div>🏆 <strong>Campanha 2026:</strong> <span id="dinamico-posicao" class="text-warning fw-bold fs-5">Carregando...</span></div>
+    <div>📊 <strong>Pontuação:</strong> <span id="dinamico-pontos" class="text-white fw-bold">...</span></div>
+    <div>⚽ <strong>Artilheiro do Time:</strong> <span id="dinamico-artilheiro" class="text-warning fw-bold">...</span></div>
+  </div>
+
+  <!-- CONTEÚDO: HISTÓRIA E HINO -->
+  <div class="row g-4 mb-5">
+    <!-- Coluna Esquerda: História -->
     <div class="col-md-7">
-      <div class="conteudo-box h-100">
-        <h4 class="fw-bold mb-3">História e Glórias</h4>
-        <img src="./mascote-vasco.png" class="mascote" onerror="this.onerror=null; this.src='./mascote-vasco.jpg';">
+      <div class="card-info">
+        <h3>História e Glórias</h3>
+        <p><strong>Fundação:</strong> 21 de agosto de 1898</p>
         
-        <p class="text-justify mb-2"><strong>Fundação:</strong> 21 de agosto de 1898</p>
-        <p class="text-justify">Gigante por natureza, o Vasco da Gama foi fundado por imigrantes portugueses. Mais do que suas imensas conquistas em campo, o clube gravou seu nome na história sociopolítica do Brasil ao emitir a "Resposta Histórica" de 1924, onde se recusou a excluir de seu elenco jogadores negros, operários e analfabetos para participar do campeonato organizado pela elite carioca, sendo um pioneiro e eterno bastião da luta contra o racismo.</p>
-        <p class="text-justify">Impulsionado por sua torcida fervorosa, o Vasco construiu com recursos próprios o lendário Estádio de São Januário. Em campo, foi conhecido nos anos 40 como "Expresso da Vitória" (o primeiro campeão sul-americano invicto, em 1948). Atingiu o ápice no ano de seu centenário (1998) ao vencer a Copa Libertadores, ostentando grandes ídolos como Roberto Dinamite (seu maior artilheiro), Romário e Edmundo.</p>
+        <img src="https://i.pinimg.com/736x/21/d9/8e/21d98e8bfda7397734151fc1029c0b11.jpg" class="mascote-img" alt="Almirante Vasco">
         
-        <h5 class="fw-bold mt-4 mb-3">Principais Títulos 🏆</h5>
-        <ul class="list-group list-group-flush" style="background:transparent;">
-          <li class="list-group-item" style="background:transparent;"><strong>Copa Libertadores:</strong> 1 (1998)</li>
-          <li class="list-group-item" style="background:transparent;"><strong>Campeonato Sul-Americano de Campeões:</strong> 1 (1948)</li>
-          <li class="list-group-item" style="background:transparent;"><strong>Campeonato Brasileiro:</strong> 4 (1974, 1989, 1997, 2000)</li>
+        <p>Gigante por natureza, o Vasco da Gama foi fundado por imigrantes portugueses. Mais do que suas imensas conquistas em campo, o clube gravou seu nome na história sociopolítica do Brasil ao emitir a "Resposta Histórica" de 1924, onde se recusou a excluir de seu elenco jogadores negros, operários e analfabetos para participar do campeonato organizado pela elite carioca, sendo um pioneiro e eterno bastião da luta contra o racismo.</p>
+        
+        <p>Impulsionado por sua torcida fervorosa, o Vasco construiu com recursos próprios o lendário Estádio de São Januário. Em campo, foi conhecido nos anos 40 como "Expresso da Vitória" (o primeiro campeão sul-americano invicto, em 1948). Atingiu o ápice no ano de seu centenário (1998) ao vencer a Copa Libertadores, ostentando grandes ídolos como Roberto Dinamite (seu maior artilheiro), Romário e Edmundo.</p>
+        
+        <h5 class="fw-bold mt-4">Principais Títulos 🏆</h5>
+        <ul class="text-muted">
+          <li><strong>Copa Libertadores da América:</strong> 1 (1998)</li>
+          <li><strong>Campeonato Sul-Americano de Campeões:</strong> 1 (1948)</li>
+          <li><strong>Campeonato Brasileiro:</strong> 4 (1974, 1989, 1997, 2000)</li>
+          <li><strong>Copa do Brasil:</strong> 1 (2011)</li>
         </ul>
       </div>
     </div>
     
+    <!-- Coluna Direita: Hino -->
     <div class="col-md-5">
-      <div class="conteudo-box h-100 d-flex flex-column align-items-center">
-        <h4 class="fw-bold mb-3">Hino do Clube</h4>
-        <div class="hino-letra">
-          Vamos todos cantar de coração<br>A Cruz de Malta é o meu pendão!<br>Tu tens o nome de um heroico português<br>Vasco da Gama, a tua fama assim se fez!<br><br>
-          Tua imensa torcida é bem feliz<br>Norte a Sul, Norte a Sul deste Brasil<br>Tua estrela, na terra a brilhar<br>Ilumina o mar!<br><br>
-          No atletismo, és um braço<br>No remo, és imortal<br>No futebol, és um traço<br>De união Brasil-Portugal!
+      <div class="card-info">
+        <h3 class="text-center">Hino do Clube</h3>
+        <div class="hino-texto mt-4">
+          Vamos todos cantar de coração<br>
+          A Cruz de Malta é o meu pendão!<br>
+          Tu tens o nome de um heroico português<br>
+          Vasco da Gama, a tua fama assim se fez!<br><br>
+          
+          Tua imensa torcida é bem feliz<br>
+          Norte a Sul, Norte a Sul deste Brasil<br>
+          Tua estrela, na terra a brilhar<br>
+          Ilumina o mar!<br><br>
+          
+          No atletismo, és um braço<br>
+          No remo, és imortal<br>
+          No futebol, és um traço<br>
+          De união Brasil-Portugal!
         </div>
       </div>
     </div>
   </div>
-
-  <!-- NOVO BLOCO: VÍDEO DO GOL HISTÓRICO -->
-  <div class="row mt-4">
-    <div class="col-12">
-      <div class="conteudo-box text-center">
-        <h4 class="fw-bold mb-3">Gol do Título - Copa Libertadores da América (1998)</h4>
-        <video controls style="width: 100%; max-width: 800px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
-          <source src="./gol-vasco.mp4" type="video/mp4">
-          Seu navegador não suporta a tag de vídeo.
-        </video>
-      </div>
-    </div>
-  </div>
-
 </div>
-<script>let audio=new Audio('./hino-vasco.mp3');let hinoTocando=false;function tocarHino(){const b=document.getElementById('btn-hino');if(!hinoTocando){audio.play();b.innerText="🔇 Parar Hino";b.classList.replace('btn-dark','btn-secondary');hinoTocando=true;}else{audio.pause();audio.currentTime=0;b.innerText="▶ Tocar Hino Oficial";b.classList.replace('btn-secondary','btn-dark');b.style.backgroundColor='#000';hinoTocando=false;}}</script></body></html>
+
+<audio id="audio-hino" src="https://github.com/mvinhas/hinos-de-futebol/raw/master/vasco.mp3"></audio>
+
+<script>
+  // Nome exato do clube na sua Planilha
+  const MEU_CLUBE = "Vasco";
+
+  document.addEventListener("DOMContentLoaded", function() {
+    const dadosTabela = JSON.parse(localStorage.getItem('brasileirao_tabela')) || [];
+    const dadosArtilharia = JSON.parse(localStorage.getItem('brasileirao_artilharia')) || [];
+
+    const meuTimeNaTabela = dadosTabela.find(t => t.Clube === MEU_CLUBE);
+    const posicao = dadosTabela.findIndex(t => t.Clube === MEU_CLUBE) + 1;
+    
+    const artilheirosDoClube = dadosArtilharia.filter(a => a.Clube === MEU_CLUBE).sort((a, b) => b.Gols - a.Gols);
+    const principalArtilheiro = artilheirosDoClube.length > 0 ? `${artilheirosDoClube[0].Jogador} (${artilheirosDoClube[0].Gols} gols)` : "Nenhum ainda";
+
+    if (meuTimeNaTabela) {
+      document.getElementById('dinamico-posicao').innerText = `${posicao}º Lugar`;
+      document.getElementById('dinamico-pontos').innerText = `${meuTimeNaTabela.Pontos} pts`;
+      document.getElementById('dinamico-artilheiro').innerText = principalArtilheiro;
+    }
+  });
+
+  let audioHino = document.getElementById('audio-hino');
+  let tocando = false;
+  function tocarHino() {
+    const btn = document.getElementById('btn-audio');
+    if (!tocando) { audioHino.play(); btn.innerText = "🔇 Parar Hino"; tocando = true; }
+    else { audioHino.pause(); audioHino.currentTime = 0; btn.innerText = "▶ Tocar Hino Oficial"; tocando = false; }
+  }
+</script>
+</body>
+</html>

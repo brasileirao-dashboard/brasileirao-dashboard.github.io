@@ -155,19 +155,6 @@
   </div>
 </div>
 
-<!-- MODAL DETALHAR PARTIDA -->
-<div class="modal fade" id="modalDetalhesPartida" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" style="border-radius: 12px; border: 2px solid #007A33;">
-      <div class="modal-header bg-success text-white py-2">
-        <h6 class="modal-title fw-bold" id="detalhe-titulo-modal">Detalhes da Partida</h6>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body text-center p-3" id="detalhe-corpo-modal"></div>
-    </div>
-  </div>
-</div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
@@ -214,7 +201,7 @@
     "bragantino": "./bragantino.jpg", "chedid": "./bragantino.jpg", "campos maia": "./mirassol.jpg", "mirassol": "./mirassol.jpg", "condá": "./conda.jpg"
   };
 
-  let rodadaAtual = 27;
+  let rodadaAtual = 1;
   let todosOsJogos = [];
   let dadosClassificacaoBase = [];
   let dadosArtilharia = [];
@@ -388,17 +375,9 @@
         const mandante = jogo['Mandante']; const visitante = jogo['Visitante'];
         if (!stats[mandante] && mandante) stats[mandante] = { Clube: mandante, Pontos: 0, Jogos: 0, Vitorias: 0, Empates: 0, Derrotas: 0, GP: 0, GC: 0, Saldo: 0 };
         if (!stats[visitante] && visitante) stats[visitante] = { Clube: visitante, Pontos: 0, Jogos: 0, Vitorias: 0, Empates: 0, Derrotas: 0, GP: 0, GC: 0, Saldo: 0 };
-
-        if (stats[mandante] && stats[visitante]) {
-          if ((jogo['Status'] === 'Encerrado' || jogo['Status'] === 'Ao Vivo' || jogo['Status'] === 'Intervalo') || (modoSimulacao && placaresSimulados[chave])) {
-            // Nota: se a tabela base do Sheets já traz os jogos encerrados computados, evitamos duplicar. 
-            // Como usamos dadosClassificacaoBase como base, só computamos se for simulação ou se quisermos recalcular do zero.
-          }
-        }
       }
     });
 
-    // Se a tabela base já vem calculada da planilha, mantemos ela e aplicamos simulações se houver
     let arrayTabela = Object.values(stats);
     arrayTabela.sort((a, b) => {
       if (b.Pontos !== a.Pontos) return b.Pontos - a.Pontos;
@@ -471,7 +450,6 @@
       const chave = `${rodadaAtual}-${jogo.originalIndex}`;
       let centralHtml = "";
       let statusBadge = "";
-      let btnDetalhar = "";
 
       const statusJogo = String(jogo['Status'] || '').trim();
       if (statusJogo === 'Ao Vivo') {
@@ -484,7 +462,6 @@
 
       if ((statusJogo === 'Encerrado' || statusJogo === 'Ao Vivo' || statusJogo === 'Intervalo') && jogo['GolsMandante'] !== '' && jogo['GolsVisitante'] !== '') {
         centralHtml = `<div class="text-center bg-white px-2 py-1 rounded shadow-sm fw-bold" style="width: 24%; font-size: 0.78rem;">${jogo['GolsMandante']} x ${jogo['GolsVisitante']}</div>`;
-        btnDetalhar = `<a href="javascript:void(0);" onclick='abrirDetalhes(${JSON.stringify(jogo)})' class="text-success fw-bold text-decoration-none" style="font-size: 0.68rem; margin-left: 4px;">Detalhar</a>`;
       } else if (modoSimulacao) {
         const valM = (placaresSimulados[chave] ? placaresSimulados[chave].mandante : "");
         const valV = (placaresSimulados[chave] ? placaresSimulados[chave].visitante : "");
@@ -516,44 +493,17 @@
           <span>${statusBadge}</span>
         </div>
         <div class="d-flex justify-content-between align-items-center">
-          <div class="text-end text-truncate" style="width: 35%; font-size: 0.78rem;">
+          <div class="text-end text-truncate" style="width: 38%; font-size: 0.78rem;">
             ${nomeMandanteFormatado} ${imgMandante}
           </div>
           ${centralHtml}
-          <div class="text-start text-truncate d-flex align-items-center justify-content-start" style="width: 35%; font-size: 0.78rem;">
-            ${imgVisitante} ${nomeVisitanteFormatado} ${btnDetalhar}
+          <div class="text-start text-truncate d-flex align-items-center justify-content-start" style="width: 38%; font-size: 0.78rem;">
+            ${imgVisitante} ${nomeVisitanteFormatado}
           </div>
         </div>
       `;
       containerJogos.appendChild(div);
     });
-  }
-
-  function abrirDetalhes(jogo) {
-    document.getElementById('detalhe-titulo-modal').innerText = `${jogo['Mandante']} ${jogo['GolsMandante']} x ${jogo['GolsVisitante']} ${jogo['Visitante']}`;
-    
-    let detalhesTexto = jogo['Detalhes'] || "Nenhum detalhe de gols cadastrado para esta partida.";
-    
-    let htmlCorpo = `
-      <div class="mb-3">
-        <img src="${pegarEscudo(jogo['Mandante'])}" style="width: 35px; height: 35px; object-fit: contain; margin-right: 8px;">
-        <span class="fw-bold fs-5">${jogo['Mandante']}</span>
-        <span class="fs-5 fw-bold ms-2">${jogo['GolsMandante']}</span>
-      </div>
-      <div class="my-2"><hr class="text-muted">⚽ <strong>Gols e Acontecimentos</strong><hr class="text-muted"></div>
-      <div class="mb-3">
-        <img src="${pegarEscudo(jogo['Visitante'])}" style="width: 35px; height: 35px; object-fit: contain; margin-right: 8px;">
-        <span class="fw-bold fs-5">${jogo['Visitante']}</span>
-        <span class="fs-5 fw-bold ms-2">${jogo['GolsVisitante']}</span>
-      </div>
-      <div class="p-2 bg-light rounded text-start" style="font-size: 0.85rem; white-space: pre-line;">
-        ${detalhesTexto}
-      </div>
-    `;
-
-    document.getElementById('detalhe-corpo-modal').innerHTML = htmlCorpo;
-    var meuModal = new bootstrap.Modal(document.getElementById('modalDetalhesPartida'));
-    meuModal.show();
   }
 
   function renderizarProbabilidades() {
@@ -601,13 +551,13 @@
   function mudarRodada(direcao) {
     rodadaAtual += direcao;
     if (rodadaAtual < 1) rodadaAtual = 1;
-    if (rodadaAtual > 38) rodadaAtual > 38 ? 38 : rodadaAtual; 
+    if (rodadaAtual > 38) rodadaAtual = 38; 
     renderizarRodada();
   }
 
   window.onload = function() {
     carregarTudo();
-    // AUTO-REFRESH: Atualiza o site silenciosamente a cada 30 segundos em tempo real
+    // AUTO-REFRESH: Atualiza o site silenciosamente a cada 30 segundos
     setInterval(() => {
       if (!modoSimulacao) {
         carregarTudo(true);

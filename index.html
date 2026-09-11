@@ -186,6 +186,9 @@
 
   function normalizar(t) { return String(t || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim(); }
   function pegarEscudo(n) { const norm = normalizar(n); for (const [k, v] of Object.entries(escudos)) { if (normalizar(k) === norm) return v; } return ""; }
+  
+  // FUNÇÃO MÁGICA RESTAURADA (Que vai impedir o erro da tela vazia)
+  function formatarNomeClube(nome) { return urlsClubes[nome] ? `<a href="${urlsClubes[nome]}" target="_blank" class="link-clube" style="color: inherit;">${nome}</a>` : nome; }
 
   // CARREGAMENTO SEGURO
   async function carregarTudo(silencioso = false) {
@@ -261,7 +264,7 @@
         return `<span class="form-dot form-d" title="Derrota">D</span>`;
       }).join('');
       
-      let linkNome = urlsClubes[time.Clube] ? `<a href="${urlsClubes[time.Clube]}" target="_blank" class="link-clube">${time.Clube}</a>` : time.Clube;
+      let linkNome = formatarNomeClube(time.Clube);
       let escudoImg = pegarEscudo(time.Clube) ? `<img src="${pegarEscudo(time.Clube)}" class="logo-clube" onerror="this.style.display='none';">` : '';
 
       corpo.innerHTML += `
@@ -320,7 +323,7 @@
             reverse: true, min: 1, max: 20, 
             ticks: { 
               stepSize: 1,
-              autoSkip: false, // ISTO FORÇA TODOS OS NÚMEROS A APARECEREM
+              autoSkip: false,
               font: { weight: 'bold' },
               color: function(context) {
                 let v = context.tick.value;

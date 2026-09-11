@@ -6,63 +6,34 @@
   <link rel="icon" type="image/png" href="./escudovasco.png">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    body {
-      background: linear-gradient(135deg, #000 0%, #fff 100%);
-      position: relative;
-      min-height: 100vh;
-      font-family: 'Segoe UI', sans-serif;
-    }
-    body::before {
-      content: "";
-      background: url('./escudovasco.png') no-repeat center center fixed;
-      background-size: 50%;
-      opacity: 0.15;
-      top: 0; left: 0; bottom: 0; right: 0;
-      position: absolute;
-      z-index: -1;
-    }
-    .conteudo-box {
-      background-color: rgba(255, 255, 255, 0.92);
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    }
-    .titulo-clube {
-      color: #000;
-      font-weight: 900;
-      text-transform: uppercase;
-      border-bottom: 3px solid #000;
-      padding-bottom: 5px;
-    }
-    .hino-letra {
-      font-style: italic;
-      line-height: 1.8;
-      color: #222;
-      text-align: center;
-      font-size: 1.05rem;
-    }
-    .mascote {
-      max-width: 140px;
-      float: right;
-      margin-left: 15px;
-      border-radius: 8px;
-    }
+    body { background: linear-gradient(135deg, #000 0%, #fff 100%); position: relative; min-height: 100vh; font-family: 'Segoe UI', sans-serif; }
+    body::before { content: ""; background: url('./escudovasco.png') no-repeat center center fixed; background-size: 50%; opacity: 0.15; top: 0; left: 0; bottom: 0; right: 0; position: absolute; z-index: -1; }
+    .conteudo-box { background-color: rgba(255, 255, 255, 0.92); border-radius: 12px; padding: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); }
+    .titulo-clube { color: #000; font-weight: 900; text-transform: uppercase; border-bottom: 3px solid #000; padding-bottom: 5px; margin: 0; }
+    .hino-letra { font-style: italic; line-height: 1.8; color: #222; text-align: center; font-size: 1.05rem; }
+    .mascote { max-width: 140px; float: right; margin-left: 15px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+    .form-dot { display: inline-block; width: 18px; height: 18px; border-radius: 50%; margin: 0 2px; font-size: 11px; text-align: center; color: white; line-height: 18px; font-weight: bold; }
+    .form-v { background-color: #198754; } .form-e { background-color: #6c757d; } .form-d { background-color: #dc3545; }
+    .jogo-card { border-left: 5px solid #000; padding: 10px 15px; background: #fff; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
   </style>
 </head>
 <body>
 
 <div class="container py-4">
 
-  <!-- CABEÇALHO -->
+  <!-- CABEÇALHO COM FORMA (V-E-D) -->
   <div class="d-flex justify-content-between align-items-center mb-4 conteudo-box flex-wrap gap-3">
-    <h1 class="titulo-clube m-0 border-0">Club de Regatas Vasco da Gama</h1>
+    <div>
+      <h1 class="titulo-clube border-0 d-inline-block">Club de Regatas Vasco da Gama</h1>
+      <div id="dinamico-forma" class="d-inline-block ms-3 mb-2"></div> <!-- Aqui entram as bolinhas -->
+    </div>
     <div class="d-flex align-items-center">
-      <img src="./escudovasco.png" style="height: 50px; margin-right: 15px; object-fit: contain;" onerror="this.style.display='none';">
+      <img src="./escudovasco.png" style="height: 50px; margin-right: 15px; object-fit: contain;">
       <button id="btn-hino" class="btn btn-dark shadow-sm fw-bold" style="background-color:#000; border:none;" onclick="tocarHino()">▶ Tocar Hino Oficial</button>
     </div>
   </div>
 
-  <!-- BARRA DINÂMICA DE ESTATÍSTICAS (Integrada ao seu design) -->
+  <!-- BARRA DE ESTATÍSTICAS -->
   <div class="conteudo-box mb-4 d-flex justify-content-between flex-wrap gap-3">
     <div class="fs-5 text-dark">🏆 Campanha 2026: <span id="dinamico-posicao" class="fw-bold" style="color: #b8860b;">Carregando...</span></div>
     <div class="fs-5 text-dark">📊 Pontuação: <span id="dinamico-pontos" class="fw-bold">...</span></div>
@@ -70,29 +41,46 @@
     <div class="fs-5 text-dark">🎯 Assistências: <span id="dinamico-assistencia" class="fw-bold text-primary">...</span></div>
   </div>
 
-  <!-- MEIO: HISTÓRIA E HINO -->
+  <!-- PAINEL: ÚLTIMO E PRÓXIMO JOGO -->
+  <div class="row g-4 mb-4">
+    <div class="col-md-6">
+      <div class="conteudo-box h-100">
+        <h6 class="text-muted fw-bold mb-3">⏪ Último Jogo</h6>
+        <div id="painel-ultimo-jogo" class="jogo-card d-flex justify-content-center align-items-center fw-bold fs-5">Carregando...</div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="conteudo-box h-100">
+        <h6 class="text-success fw-bold mb-3">⏩ Próximo Jogo</h6>
+        <div id="painel-proximo-jogo" class="jogo-card d-flex flex-column justify-content-center align-items-center fw-bold" style="border-left-color: #198754;">
+           <span class="fs-5">Carregando...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HISTÓRIA E HINO -->
   <div class="row g-4">
-    
-    <!-- Esquerda: História -->
     <div class="col-md-7">
       <div class="conteudo-box h-100">
         <h4 class="fw-bold mb-3">História e Glórias</h4>
-        <img src="./mascote-vasco.png" class="mascote" onerror="this.onerror=null; this.src='./mascote-vasco.jpg'; this.onerror=null; this.style.display='none';">
+        
+        <!-- GIF HISTÓRICO (Edmundo/Romário) -->
+        <img src="https://media.tenor.com/2s_1n0Jz6zMAAAAC/vasco-gol.gif" class="mascote" alt="Vasco Gol GIF" onerror="this.onerror=null; this.src='./mascote-vasco.png';">
         
         <p class="text-justify mb-2"><strong>Fundação:</strong> 21 de agosto de 1898</p>
-        <p class="text-justify">Gigante por natureza, o Vasco da Gama foi fundado por imigrantes portugueses. Mais do que suas imensas conquistas em campo, o clube gravou seu nome na história sociopolítica do Brasil ao emitir a "Resposta Histórica" de 1924, onde se recusou a excluir de seu elenco jogadores negros, operários e analfabetos para participar do campeonato organizado pela elite carioca, sendo um pioneiro e eterno bastião da luta contra o racismo.</p>
-        <p class="text-justify">Impulsionado por sua torcida fervorosa, o Vasco construiu com recursos próprios o lendário Estádio de São Januário. Em campo, foi conhecido nos anos 40 como "Expresso da Vitória" (o primeiro campeão sul-americano invicto, em 1948). Atingiu o ápice no ano de seu centenário (1998) ao vencer a Copa Libertadores, ostentando grandes ídolos como Roberto Dinamite (seu maior artilheiro), Romário e Edmundo.</p>
+        <p class="text-justify">Gigante por natureza, o Vasco da Gama foi fundado por imigrantes portugueses. Mais do que suas imensas conquistas em campo, o clube gravou seu nome na história sociopolítica do Brasil ao emitir a "Resposta Histórica" de 1924, sendo um pioneiro e eterno bastião da luta contra o racismo.</p>
+        <p class="text-justify">Impulsionado por sua torcida fervorosa, o Vasco construiu com recursos próprios o lendário Estádio de São Januário. Atingiu o ápice no ano de seu centenário (1998) ao vencer a Copa Libertadores, ostentando grandes ídolos como Roberto Dinamite, Romário e Edmundo.</p>
         
-        <h5 class="fw-bold mt-4 mb-3">Principais Títulos 🏆</h5>
+        <h5 class="fw-bold mt-4 mb-3">Principais Títulos</h5>
         <ul class="list-group list-group-flush" style="background:transparent;">
-          <li class="list-group-item px-0" style="background:transparent; border-color: rgba(0,0,0,0.1);"><strong>Copa Libertadores:</strong> 1 (1998)</li>
-          <li class="list-group-item px-0" style="background:transparent; border-color: rgba(0,0,0,0.1);"><strong>Campeonato Sul-Americano de Campeões:</strong> 1 (1948)</li>
-          <li class="list-group-item px-0" style="background:transparent; border-color: rgba(0,0,0,0.1);"><strong>Campeonato Brasileiro:</strong> 4 (1974, 1989, 1997, 2000)</li>
+          <li class="list-group-item px-0" style="background:transparent; border-color: rgba(0,0,0,0.1);">🌎 <strong>Copa Libertadores:</strong> 1 (1998)</li>
+          <li class="list-group-item px-0" style="background:transparent; border-color: rgba(0,0,0,0.1);">🥇 <strong>Sul-Americano de Campeões:</strong> 1 (1948)</li>
+          <li class="list-group-item px-0" style="background:transparent; border-color: rgba(0,0,0,0.1);">🏆 <strong>Campeonato Brasileiro:</strong> 4 (1974, 1989, 1997, 2000)</li>
         </ul>
       </div>
     </div>
 
-    <!-- Direita: Hino -->
     <div class="col-md-5">
       <div class="conteudo-box h-100 d-flex flex-column align-items-center">
         <h4 class="fw-bold mb-3">Hino do Clube</h4>
@@ -103,16 +91,15 @@
         </div>
       </div>
     </div>
-    
   </div>
 
-  <!-- FUNDO: VÍDEO DO GOL -->
+  <!-- VÍDEO DO GOL DO TÍTULO BRASILEIRO -->
   <div class="row mt-4">
     <div class="col-12">
       <div class="conteudo-box text-center">
-        <h4 class="fw-bold mb-3">Gol do Título - Copa Libertadores da América (1998)</h4>
+        <h4 class="fw-bold mb-3">Gol do Título - Campeonato Brasileiro (1997/2000)</h4>
         <video controls style="width: 100%; max-width: 800px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
-          <source src="./gol-vasco.mp4" type="video/mp4">
+          <source src="./gol-vascob.mp4" type="video/mp4">
           Seu navegador não suporta a tag de vídeo.
         </video>
       </div>
@@ -121,55 +108,83 @@
 
 </div>
 
-<!-- ÁUDIO DO HINO -->
 <audio id="audio-hino" src="./hino-vasco.mp3"></audio>
 
-<!-- SCRIPTS MÁGICOS -->
 <script>
-  // 1. Script do Hino
-  let audio = document.getElementById('audio-hino');
-  let hinoTocando = false;
-  function tocarHino(){
-    const b = document.getElementById('btn-hino');
-    if(!hinoTocando){
-      audio.play();
-      b.innerText = "🔇 Parar Hino";
-      b.classList.replace('btn-dark','btn-secondary');
-      hinoTocando = true;
-    }else{
-      audio.pause();
-      audio.currentTime = 0;
-      b.innerText = "▶ Tocar Hino Oficial";
-      b.classList.replace('btn-secondary','btn-dark');
-      b.style.backgroundColor = '#000';
-      hinoTocando = false;
-    }
-  }
-
-  // 2. Script da Barra Dinâmica de Estatísticas
   const MEU_CLUBE = "Vasco";
+  const escudosAPI = { "Flamengo": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/orE554NToSkH6nuwofe7Yg_500x500.png", "Palmeiras": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/7spurne-xDt2p6C0imYYNA_500x500.png", "Athletico-PR": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/9LkdBR4L5plovKM8eIy7nQ_500x500.png", "Fluminense": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/fCMxMMDF2AZPU7LzYKSlig_500x500.png", "Bahia": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/nIdbR6qIUDyZUBO9vojSPw_500x500.png", "Cruzeiro": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/Tcv9X__nIh-6wFNJPMwIXQ_500x500.png", "Coritiba": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/LaFlBADLmsjHfGTehCYtuA_500x500.png", "Atlético-MG": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/q9fhEsgpuyRq58OgmSndcQ_500x500.png", "Bragantino": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/lMyw2zn1Z4cdkaxKJWnsQw_500x500.png", "São Paulo": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/4w2Z97Hf9CSOqICK3a8AxQ_500x500.png", "Vitória": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/LHSM6VchpkI4NIptoSTHOg_500x500.png", "Corinthians": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/tCMSqgXVHROpdCpQhzTo1g_500x500.png", "Santos": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/VHdNOT6wWOw_vJ38GMjMzg_500x500.png", "Botafogo": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/KLDWYp-H8CAOT9H_JgizRg_500x500.png", "Grêmio": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/Ku-73v_TW9kpex-IEGb0ZA_500x500.png", "Mirassol": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/5J3JY7fcdiDYU5rbPW7AKA_500x500.png", "Vasco": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/hHwT8LwRmYCAGxQ-STLxYA_500x500.png", "Internacional": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/OWVFKuHrQuf4q2Wk0hEmSA_500x500.png", "Remo": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/bENrK5iSMF6sXrEkDNNxng_500x500.png", "Chapecoense": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/K7JQUKTRsuXfO9YrD5dq5g_500x500.png" };
+  
+  function normalizarStr(t) { return String(t || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim(); }
+  function getEscudo(n) { const norm = normalizarStr(n); for (const [k, v] of Object.entries(escudosAPI)) { if (normalizarStr(k) === norm) return v; } return ""; }
+
   document.addEventListener("DOMContentLoaded", function() {
     try {
         const dadosTabela = JSON.parse(localStorage.getItem('brasileirao_tabela')) || [];
         const dadosArtilharia = JSON.parse(localStorage.getItem('brasileirao_artilharia')) || [];
+        const todosOsJogos = JSON.parse(localStorage.getItem('brasileirao_jogos')) || [];
         
+        // 1. BARRA DINÂMICA
         const meuTime = dadosTabela.find(t => t.Clube === MEU_CLUBE);
         const posicao = dadosTabela.findIndex(t => t.Clube === MEU_CLUBE) + 1;
-        
         const art = dadosArtilharia.filter(a => a.Clube === MEU_CLUBE).sort((a, b) => (b.Gols||0) - (a.Gols||0));
-        const goleador = (art.length > 0 && art[0].Gols > 0) ? `${art[0].Jogador} (${art[0].Gols})` : "Nenhum ainda";
-        
         const ast = dadosArtilharia.filter(a => a.Clube === MEU_CLUBE).sort((a, b) => (b.Assistencias||0) - (a.Assistencias||0));
-        const garcom = (ast.length > 0 && ast[0].Assistencias > 0) ? `${ast[0].Jogador} (${ast[0].Assistencias})` : "Nenhum ainda";
         
         if (meuTime) {
           if(document.getElementById('dinamico-posicao')) document.getElementById('dinamico-posicao').innerText = `${posicao}º Lugar`;
           if(document.getElementById('dinamico-pontos')) document.getElementById('dinamico-pontos').innerText = `${meuTime.Pontos} pts`;
-          if(document.getElementById('dinamico-artilheiro')) document.getElementById('dinamico-artilheiro').innerText = goleador;
-          if(document.getElementById('dinamico-assistencia')) document.getElementById('dinamico-assistencia').innerText = garcom;
+          if(document.getElementById('dinamico-artilheiro')) document.getElementById('dinamico-artilheiro').innerText = (art.length > 0 && art[0].Gols > 0) ? `${art[0].Jogador} (${art[0].Gols})` : "Nenhum ainda";
+          if(document.getElementById('dinamico-assistencia')) document.getElementById('dinamico-assistencia').innerText = (ast.length > 0 && ast[0].Assistencias > 0) ? `${ast[0].Jogador} (${ast[0].Assistencias})` : "Nenhum ainda";
         }
-    } catch(e) { console.error("Erro ao carregar dados do painel:", e); }
+
+        // 2. FILTRAR JOGOS DO CLUBE
+        const jogosDoClube = todosOsJogos.filter(j => j.Mandante === MEU_CLUBE || j.Visitante === MEU_CLUBE);
+        
+        // Forma (Últimos 5 jogos Encerrados)
+        const jogosEncerrados = jogosDoClube.filter(j => j.Status === 'Encerrado' || j.Status === 'Ao Vivo').slice(-5);
+        let formaHtml = "";
+        jogosEncerrados.forEach(j => {
+            let gm = parseInt(j.GolsMandante); let gv = parseInt(j.GolsVisitante);
+            if(j.Mandante === MEU_CLUBE) {
+                if(gm > gv) formaHtml += `<span class="form-dot form-v" title="Vitória">V</span>`;
+                else if(gm < gv) formaHtml += `<span class="form-dot form-d" title="Derrota">D</span>`;
+                else formaHtml += `<span class="form-dot form-e" title="Empate">E</span>`;
+            } else {
+                if(gv > gm) formaHtml += `<span class="form-dot form-v" title="Vitória">V</span>`;
+                else if(gv < gm) formaHtml += `<span class="form-dot form-d" title="Derrota">D</span>`;
+                else formaHtml += `<span class="form-dot form-e" title="Empate">E</span>`;
+            }
+        });
+        document.getElementById('dinamico-forma').innerHTML = formaHtml;
+
+        // Último Jogo
+        const ultimoJogo = jogosEncerrados.length > 0 ? jogosEncerrados[jogosEncerrados.length - 1] : null;
+        if(ultimoJogo) {
+            document.getElementById('painel-ultimo-jogo').innerHTML = `
+              <img src="${getEscudo(ultimoJogo.Mandante)}" style="width:25px; margin-right:8px;">
+              ${ultimoJogo.Mandante} &nbsp;${ultimoJogo.GolsMandante} x ${ultimoJogo.GolsVisitante}&nbsp; ${ultimoJogo.Visitante}
+              <img src="${getEscudo(ultimoJogo.Visitante)}" style="width:25px; margin-left:8px;">
+            `;
+        }
+
+        // Próximo Jogo
+        const proximoJogo = jogosDoClube.find(j => j.Status !== 'Encerrado' && j.Status !== 'Ao Vivo');
+        if(proximoJogo) {
+            let dataFormatada = String(proximoJogo.Data||'').split(' ')[0] + " " + (proximoJogo.Horario||'');
+            document.getElementById('painel-proximo-jogo').innerHTML = `
+              <div style="font-size:0.8rem; color:#555; margin-bottom:4px;">📅 ${dataFormatada} | ${proximoJogo.Estadio}</div>
+              <div class="d-flex align-items-center justify-content-center">
+                 <img src="${getEscudo(proximoJogo.Mandante)}" style="width:25px; margin-right:8px;">
+                 ${proximoJogo.Mandante} &nbsp;x&nbsp; ${proximoJogo.Visitante}
+                 <img src="${getEscudo(proximoJogo.Visitante)}" style="width:25px; margin-left:8px;">
+              </div>
+            `;
+        }
+
+    } catch(e) { console.error("Erro painel clube:", e); }
   });
+
+  let audio = document.getElementById('audio-hino'); let hinoTocando = false;
+  function tocarHino(){ const b = document.getElementById('btn-hino'); if(!hinoTocando){ audio.play(); b.innerText = "🔇 Parar Hino"; b.classList.replace('btn-dark','btn-secondary'); hinoTocando = true; }else{ audio.pause(); audio.currentTime = 0; b.innerText = "▶ Tocar Hino Oficial"; b.classList.replace('btn-secondary','btn-dark'); b.style.backgroundColor = '#000'; hinoTocando = false; } }
 </script>
 </body>
 </html>

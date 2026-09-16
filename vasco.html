@@ -7,7 +7,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body {
-      background-color: #050505; /* Fundo quase todo preto para contraste */
+      background-color: #050505; 
       margin: 0; padding: 0; min-height: 100vh;
       font-family: 'Segoe UI', sans-serif;
       overflow-x: hidden;
@@ -25,32 +25,30 @@
       pointer-events: none;
     }
 
-    /* CAMADA 2: O CARROSSEL COM SUAS 5 FOTOS */
+    /* CAMADA 2: O CARROSSEL DE FOTOS */
     #slideshow-torcida {
       position: fixed;
       top: 0; left: 0; width: 100vw; height: 100vh;
-      z-index: 2; /* Atrás dos textos */
-      opacity: 0; /* Começa apagado */
+      z-index: 2; 
+      opacity: 0; 
       transition: opacity 1.5s ease-in-out;
       pointer-events: none; 
     }
 
-    /* MÁGICA: Hino tocou, o fundo aparece! */
     body.tocando-hino #slideshow-torcida {
-      opacity: 0.65; /* 65% de claridade nas fotos */
+      opacity: 0.65; 
     }
 
-    /* Configuração das fotos */
+    /* AJUSTE FINO DE FOTOS: "center 15%" foca do meio para cima, evitando cortar as pessoas */
     .slide-foto {
       position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
       background-size: cover;
-      background-position: center;
+      background-position: center 15%; 
       opacity: 0; 
-      transition: opacity 2s ease-in-out; /* Transição fantasma entre fotos */
+      transition: opacity 2s ease-in-out; 
     }
 
-    /* O Zoom Cinematográfico nas fotos */
     .slide-foto.ativo {
       opacity: 1;
       animation: zoomLento 12s infinite alternate linear;
@@ -61,7 +59,7 @@
       100% { transform: scale(1.08); }
     }
 
-    /* FOTOS DIRETO DO SEU PC AGORA COM 5 OPÇÕES EM PNG */
+    /* Suas fotos em PNG */
     .foto-1 { background-image: url('./torcidavasco1.png'); }
     .foto-2 { background-image: url('./torcidavasco2.png'); }
     .foto-3 { background-image: url('./torcidavasco3.png'); }
@@ -85,7 +83,6 @@
       transition: background-color 1.5s ease;
     }
     
-    /* Quando toca o hino, a caixa fica transparente pra revelar o Caldeirão */
     body.tocando-hino .conteudo-box {
       background-color: rgba(255, 255, 255, 0.55); 
     }
@@ -97,10 +94,8 @@
 </head>
 <body>
 
-<!-- CAMADA 1: ESCUDO -->
 <div class="fundo-escudo"></div>
 
-<!-- CAMADA 2: O SHOW DE 5 FOTOS (Invisível) -->
 <div id="slideshow-torcida">
   <div class="slide-foto foto-1"></div>
   <div class="slide-foto foto-2"></div>
@@ -109,22 +104,18 @@
   <div class="slide-foto foto-5"></div>
 </div>
 
-<!-- CAMADA 10: CONTEÚDO -->
 <div class="container py-4 conteudo-frente">
 
-  <!-- CABEÇALHO -->
   <div class="d-flex justify-content-between align-items-center mb-4 conteudo-box flex-wrap gap-3">
     <h1 class="titulo-clube m-0">Club de Regatas Vasco da Gama</h1>
     <div class="d-flex align-items-center">
       <img src="./escudovasco.png" style="height: 50px; margin-right: 15px; object-fit: contain;" onerror="this.style.display='none';">
-      <!-- BOTÃO DO HINO -->
       <button id="btn-hino" class="btn btn-dark shadow-sm fw-bold px-3 py-2" style="background-color:#000; border:none; transition: all 0.3s;" onclick="tocarHino()">▶ Tocar Hino Oficial</button>
     </div>
   </div>
 
   <div class="row g-4">
     
-    <!-- HISTÓRIA -->
     <div class="col-md-7">
       <div class="conteudo-box h-100">
         <h4 class="fw-bold mb-3">História e Glórias</h4>
@@ -144,7 +135,6 @@
       </div>
     </div>
 
-    <!-- HINO -->
     <div class="col-md-5">
       <div class="conteudo-box h-100 d-flex flex-column align-items-center">
         <h4 class="fw-bold mb-3">Hino do Clube</h4>
@@ -168,10 +158,8 @@
   </div>
 </div>
 
-<!-- ÁUDIO DO HINO -->
 <audio id="audio-hino" src="./hino-vasco.mp3"></audio>
 
-<!-- SCRIPT QUE FAZ O SHOW ACONTECER -->
 <script>
   let audio = document.getElementById('audio-hino');
   let hinoTocando = false;
@@ -180,7 +168,6 @@
   let fotoAtual = 0;
   let timerSlides;
 
-  // Troca a foto de fundo a cada 6 segundos
   function iniciarCarrossel() {
     fotos[fotoAtual].classList.add('ativo'); 
     timerSlides = setInterval(function() {
@@ -204,27 +191,20 @@
       audio.play().catch(function() { console.log("O áudio não foi encontrado."); });
       b.innerHTML = "🔇 Parar Hino e Efeito";
       b.classList.replace('btn-dark', 'btn-danger'); 
-      
-      // ACENDE A TORCIDA NO FUNDO
       document.body.classList.add('tocando-hino'); 
       iniciarCarrossel();
-      
       hinoTocando = true;
     } else {
       audio.pause();
       audio.currentTime = 0;
       b.innerHTML = "▶ Tocar Hino Oficial";
       b.classList.replace('btn-danger', 'btn-dark'); 
-      
-      // APAGA A TORCIDA
       document.body.classList.remove('tocando-hino'); 
       pararCarrossel();
-      
       hinoTocando = false;
     }
   }
 
-  // Desliga tudo automaticamente quando a música acaba
   audio.addEventListener("ended", function() {
       const b = document.getElementById('btn-hino');
       b.innerHTML = "▶ Tocar Hino Oficial";

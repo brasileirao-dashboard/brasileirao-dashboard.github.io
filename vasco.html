@@ -7,64 +7,70 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body {
-      background: linear-gradient(135deg, #000 0%, #fff 100%);
+      background: linear-gradient(135deg, #111 0%, #333 100%); /* Fundo escuro para a foto da torcida brilhar mais */
       position: relative;
       min-height: 100vh;
       font-family: 'Segoe UI', sans-serif;
       overflow-x: hidden;
     }
     
-    /* ESCUDO DE FUNDO PADRÃO */
+    /* ESCUDO DE FUNDO PADRÃO (Sempre visível bem fraquinho) */
     body::before {
       content: "";
       background: url('./escudovasco.png') no-repeat center center fixed;
       background-size: 50%;
-      opacity: 0.15;
+      opacity: 0.10;
       top: 0; left: 0; bottom: 0; right: 0;
       position: absolute;
       z-index: -2;
     }
 
-    /* EFEITO CALDEIRÃO: Fundo que pisca quando o hino toca */
+    /* ========================================================== */
+    /* EFEITO CALDEIRÃO: Fundo que pulsa quando o hino toca       */
+    /* ========================================================== */
     #fundo-torcida {
       position: fixed;
       top: 0; left: 0; width: 100vw; height: 100vh;
-      background-image: url('https://media.gazetadopovo.com.br/2019/12/03204732/sao-januario-vasco-cruzeiro.jpg'); /* Foto da Torcida do Vasco com fumaça */
+      background-image: url('https://media.gazetadopovo.com.br/2019/12/03204732/sao-januario-vasco-cruzeiro.jpg'); /* Foto da Torcida em São Januário */
       background-size: cover;
       background-position: center;
-      opacity: 0; /* Começa invisível */
-      z-index: -1;
-      transition: opacity 1.5s ease-in-out;
+      opacity: 0; /* Começa 100% invisível */
+      z-index: -1; /* Fica atrás do texto, mas na frente do escudo negro */
+      transition: opacity 1s ease-in-out;
       pointer-events: none;
     }
     
-    /* Animação que faz a torcida pulsar lentamente */
+    /* A Animação de piscar/pulsar suavemente */
     @keyframes pulsarTorcida {
       0% { opacity: 0.1; }
-      50% { opacity: 0.4; }
+      50% { opacity: 0.6; } /* Fica bem visível */
       100% { opacity: 0.1; }
     }
     
+    /* Quando o botão de play é clicado, essa classe ativa a mágica */
     .tocando-hino #fundo-torcida {
-      animation: pulsarTorcida 4s infinite; /* Pulsa a cada 4 segundos */
+      animation: pulsarTorcida 4s infinite; 
     }
+    /* ========================================================== */
 
+    /* CAIXAS DE CONTEÚDO (Mais transparentes estilo "Vidro") */
     .conteudo-box {
-      background-color: rgba(255, 255, 255, 0.85); /* Deixei levemente mais transparente pra ver a torcida */
-      backdrop-filter: blur(5px);
+      background-color: rgba(255, 255, 255, 0.75); /* Fundo branco levemente transparente para ver a torcida atrás */
+      backdrop-filter: blur(4px); /* Borra a torcida só um pouquinho pra dar leitura no texto */
       border-radius: 12px;
       padding: 24px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      border: 1px solid rgba(255,255,255,0.2);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.4);
     }
+    
     .titulo-clube { color: #000; font-weight: 900; text-transform: uppercase; }
-    .hino-letra { font-style: italic; line-height: 1.9; color: #222; text-align: center; font-size: 1.05rem; }
+    .hino-letra { font-style: italic; line-height: 1.9; color: #111; text-align: center; font-size: 1.05rem; font-weight: 500; }
     .mascote { max-width: 140px; float: right; margin-left: 15px; margin-bottom: 10px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
   </style>
 </head>
 <body>
 
-<!-- CAMADA DA TORCIDA (Invisível até o Play) -->
+<!-- CAMADA DA TORCIDA (Invisível até dar o Play no Hino) -->
 <div id="fundo-torcida"></div>
 
 <div class="container py-4">
@@ -74,7 +80,7 @@
     <h1 class="titulo-clube m-0">Club de Regatas Vasco da Gama</h1>
     <div class="d-flex align-items-center">
       <img src="./escudovasco.png" style="height: 50px; margin-right: 15px; object-fit: contain;" onerror="this.style.display='none';">
-      <!-- O BOTÃO AGORA DISPARA O EFEITO NA TELA TODA -->
+      <!-- BOTÃO DO HINO (Inicia a música e a torcida) -->
       <button id="btn-hino" class="btn btn-dark shadow-sm fw-bold px-3 py-2" style="background-color:#000; border:none; transition: all 0.3s;" onclick="tocarHino()">▶ Tocar Hino Oficial</button>
     </div>
   </div>
@@ -82,6 +88,7 @@
   <!-- CONTEÚDO PRINCIPAL: HISTÓRIA E HINO -->
   <div class="row g-4">
     
+    <!-- ESQUERDA: HISTÓRIA -->
     <div class="col-md-7">
       <div class="conteudo-box h-100">
         <h4 class="fw-bold mb-3">História e Glórias</h4>
@@ -93,14 +100,15 @@
         
         <h5 class="fw-bold mt-4 mb-3">Principais Títulos 🏆</h5>
         <ul class="list-group list-group-flush" style="background:transparent;">
-          <li class="list-group-item px-0" style="background:transparent; border-color: rgba(0,0,0,0.08);"><strong>Copa Libertadores da América:</strong> 1 (1998)</li>
-          <li class="list-group-item px-0" style="background:transparent; border-color: rgba(0,0,0,0.08);"><strong>Campeonato Sul-Americano de Campeões:</strong> 1 (1948)</li>
-          <li class="list-group-item px-0" style="background:transparent; border-color: rgba(0,0,0,0.08);"><strong>Campeonato Brasileiro:</strong> 4 (1974, 1989, 1997, 2000)</li>
-          <li class="list-group-item px-0" style="background:transparent; border-color: rgba(0,0,0,0.08);"><strong>Copa do Brasil:</strong> 1 (2011)</li>
+          <li class="list-group-item px-0" style="background:transparent; border-color: rgba(0,0,0,0.15);"><strong>Copa Libertadores da América:</strong> 1 (1998)</li>
+          <li class="list-group-item px-0" style="background:transparent; border-color: rgba(0,0,0,0.15);"><strong>Campeonato Sul-Americano de Campeões:</strong> 1 (1948)</li>
+          <li class="list-group-item px-0" style="background:transparent; border-color: rgba(0,0,0,0.15);"><strong>Campeonato Brasileiro:</strong> 4 (1974, 1989, 1997, 2000)</li>
+          <li class="list-group-item px-0" style="background:transparent; border-color: rgba(0,0,0,0.15);"><strong>Copa do Brasil:</strong> 1 (2011)</li>
         </ul>
       </div>
     </div>
 
+    <!-- DIREITA: HINO -->
     <div class="col-md-5">
       <div class="conteudo-box h-100 d-flex flex-column align-items-center">
         <h4 class="fw-bold mb-3">Hino do Clube</h4>
@@ -124,9 +132,10 @@
   </div>
 </div>
 
-<!-- ÁUDIO DO HINO -->
+<!-- O ÁUDIO INVISÍVEL -->
 <audio id="audio-hino" src="./hino-vasco.mp3"></audio>
 
+<!-- O SCRIPT QUE FAZ A MÁGICA -->
 <script>
   let audio = document.getElementById('audio-hino');
   let hinoTocando = false;
@@ -135,22 +144,28 @@
     const b = document.getElementById('btn-hino');
     
     if (!hinoTocando) {
-      audio.play();
+      // INICIA O HINO E A TORCIDA
+      audio.play().catch(function(error) {
+        console.log("Erro ao tentar tocar o áudio. Verifique se o arquivo hino-vasco.mp3 está na pasta.", error);
+        alert("O arquivo hino-vasco.mp3 não foi encontrado. Adicione-o à mesma pasta do site!");
+      });
+      
       b.innerText = "🔇 Parar Hino";
-      b.classList.replace('btn-dark', 'btn-danger'); // Botão fica vermelho
-      document.body.classList.add('tocando-hino'); // Aciona o Efeito da Torcida!
+      b.classList.replace('btn-dark', 'btn-danger'); // O botão fica vermelho para chamar atenção
+      document.body.classList.add('tocando-hino'); // Isso faz a foto da torcida piscar
       hinoTocando = true;
     } else {
+      // PAUSA O HINO E ESCONDE A TORCIDA
       audio.pause();
-      audio.currentTime = 0;
+      audio.currentTime = 0; // Volta a música para o começo
       b.innerText = "▶ Tocar Hino Oficial";
-      b.classList.replace('btn-danger', 'btn-dark'); // Volta ao normal
-      document.body.classList.remove('tocando-hino'); // Desliga a torcida
+      b.classList.replace('btn-danger', 'btn-dark'); // Botão volta a ser preto
+      document.body.classList.remove('tocando-hino'); // Desliga a foto pulsante
       hinoTocando = false;
     }
   }
 
-  // Se o hino acabar sozinho, ele desliga a torcida automaticamente
+  // EVENTO DE SEGURANÇA: Quando a música acaba sozinha, ele desliga a torcida automaticamente
   audio.addEventListener("ended", function() {
       const b = document.getElementById('btn-hino');
       b.innerText = "▶ Tocar Hino Oficial";

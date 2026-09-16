@@ -11,8 +11,10 @@
       position: relative;
       min-height: 100vh;
       font-family: 'Segoe UI', sans-serif;
+      overflow-x: hidden;
     }
-    /* MARCA D'ÁGUA DE FUNDO */
+    
+    /* ESCUDO DE FUNDO PADRÃO */
     body::before {
       content: "";
       background: url('./escudovasco.png') no-repeat center center fixed;
@@ -20,76 +22,66 @@
       opacity: 0.15;
       top: 0; left: 0; bottom: 0; right: 0;
       position: absolute;
-      z-index: -1;
+      z-index: -2;
     }
+
+    /* EFEITO CALDEIRÃO: Fundo que pisca quando o hino toca */
+    #fundo-torcida {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background-image: url('https://media.gazetadopovo.com.br/2019/12/03204732/sao-januario-vasco-cruzeiro.jpg'); /* Foto da Torcida do Vasco com fumaça */
+      background-size: cover;
+      background-position: center;
+      opacity: 0; /* Começa invisível */
+      z-index: -1;
+      transition: opacity 1.5s ease-in-out;
+      pointer-events: none;
+    }
+    
+    /* Animação que faz a torcida pulsar lentamente */
+    @keyframes pulsarTorcida {
+      0% { opacity: 0.1; }
+      50% { opacity: 0.4; }
+      100% { opacity: 0.1; }
+    }
+    
+    .tocando-hino #fundo-torcida {
+      animation: pulsarTorcida 4s infinite; /* Pulsa a cada 4 segundos */
+    }
+
     .conteudo-box {
-      background-color: rgba(255, 255, 255, 0.92);
+      background-color: rgba(255, 255, 255, 0.85); /* Deixei levemente mais transparente pra ver a torcida */
+      backdrop-filter: blur(5px);
       border-radius: 12px;
       padding: 24px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255,255,255,0.2);
     }
-    .titulo-clube {
-      color: #000;
-      font-weight: 900;
-      text-transform: uppercase;
-    }
-    .hino-letra {
-      font-style: italic;
-      line-height: 1.9;
-      color: #222;
-      text-align: center;
-      font-size: 1.05rem;
-    }
-    .mascote {
-      max-width: 140px;
-      float: right;
-      margin-left: 15px;
-      margin-bottom: 10px;
-      border-radius: 8px;
-    }
-
-    /* EFEITO DE VIDRO PARA O MODAL DOS CANTOS */
-    .modal-vidro {
-      background-color: rgba(255, 255, 255, 0.85); /* Fundo branco semi-transparente */
-      backdrop-filter: blur(8px); /* Borra o fundo, mantendo o escudo visível */
-      border-radius: 12px;
-      border: 1px solid rgba(0, 0, 0, 0.1);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-    }
-    .canto-card {
-      background-color: rgba(0, 0, 0, 0.05);
-      border-left: 5px solid #000;
-      border-radius: 8px;
-      padding: 15px;
-      margin-bottom: 15px;
-    }
-    .canto-letra {
-      font-style: italic;
-      font-size: 0.95rem;
-      color: #333;
-      margin-top: 10px;
-      white-space: pre-line; /* Mantém as quebras de linha do HTML */
-    }
+    .titulo-clube { color: #000; font-weight: 900; text-transform: uppercase; }
+    .hino-letra { font-style: italic; line-height: 1.9; color: #222; text-align: center; font-size: 1.05rem; }
+    .mascote { max-width: 140px; float: right; margin-left: 15px; margin-bottom: 10px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
   </style>
 </head>
 <body>
+
+<!-- CAMADA DA TORCIDA (Invisível até o Play) -->
+<div id="fundo-torcida"></div>
 
 <div class="container py-4">
 
   <!-- CABEÇALHO -->
   <div class="d-flex justify-content-between align-items-center mb-4 conteudo-box flex-wrap gap-3">
     <h1 class="titulo-clube m-0">Club de Regatas Vasco da Gama</h1>
-    <div class="d-flex align-items-center flex-wrap gap-2">
-      <img src="./escudovasco.png" style="height: 50px; margin-right: 10px; object-fit: contain;" onerror="this.style.display='none';">
-      <!-- NOVO BOTÃO DOS CANTOS -->
-      <button class="btn btn-outline-dark fw-bold px-3 py-2" data-bs-toggle="modal" data-bs-target="#modalCantos">🎤 Cantos da Torcida</button>
-      <!-- BOTÃO DO HINO -->
-      <button id="btn-hino" class="btn btn-dark shadow-sm fw-bold px-3 py-2" style="background-color:#000; border:none;" onclick="tocarHino()">▶ Tocar Hino Oficial</button>
+    <div class="d-flex align-items-center">
+      <img src="./escudovasco.png" style="height: 50px; margin-right: 15px; object-fit: contain;" onerror="this.style.display='none';">
+      <!-- O BOTÃO AGORA DISPARA O EFEITO NA TELA TODA -->
+      <button id="btn-hino" class="btn btn-dark shadow-sm fw-bold px-3 py-2" style="background-color:#000; border:none; transition: all 0.3s;" onclick="tocarHino()">▶ Tocar Hino Oficial</button>
     </div>
   </div>
 
   <!-- CONTEÚDO PRINCIPAL: HISTÓRIA E HINO -->
   <div class="row g-4">
+    
     <div class="col-md-7">
       <div class="conteudo-box h-100">
         <h4 class="fw-bold mb-3">História e Glórias</h4>
@@ -128,125 +120,43 @@
         </div>
       </div>
     </div>
-  </div>
-</div>
 
-<!-- ========================================== -->
-<!-- MODAL: CANTOS DA TORCIDA (EFEITO VIDRO)    -->
-<!-- ========================================== -->
-<div class="modal fade" id="modalCantos" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-    <div class="modal-content modal-vidro">
-      
-      <div class="modal-header border-bottom-0" style="background-color: rgba(0,0,0,0.9); border-radius: 12px 12px 0 0;">
-        <h5 class="modal-title fw-bold text-white">🎤 Cantos da Força Jovem / Barreira</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      
-      <div class="modal-body p-4">
-        
-        <!-- CANTO 1 -->
-        <div class="canto-card">
-          <h5 class="fw-bold">1. O Sentimento Não Pode Parar</h5>
-          <audio controls class="w-100 mt-2 audio-canto">
-            <!-- Substitua './canto1.mp3' pelo arquivo de áudio real depois -->
-            <source src="./canto1.mp3" type="audio/mp4">
-          </audio>
-          <div class="canto-letra">
-            "Eu, te amo
-            Meu Vasco, eu te amo
-            E o meu peito é uma festa
-            Porque sou Vascaíno
-            E o sentimento não pode parar!"
-          </div>
-        </div>
-
-        <!-- CANTO 2 -->
-        <div class="canto-card">
-          <h5 class="fw-bold">2. O Vasco é o Time da Virada</h5>
-          <audio controls class="w-100 mt-2 audio-canto">
-            <source src="./canto2.mp3" type="audio/mp4">
-          </audio>
-          <div class="canto-letra">
-            "O Vasco é o time da virada!
-            O Vasco é o time do amor!
-            Lelê, lelê, lelê, lelê, lelê, lelê, oh!
-            Lelê, lelê, lelê, lelê, lelê, lelê, oh!"
-          </div>
-        </div>
-
-        <!-- CANTO 3 -->
-        <div class="canto-card">
-          <h5 class="fw-bold">3. De Todos os Amores</h5>
-          <audio controls class="w-100 mt-2 audio-canto">
-            <source src="./canto3.mp3" type="audio/mp4">
-          </audio>
-          <div class="canto-letra">
-            "De todos os amores que eu tive na vida
-            O Vasco da Gama é a minha paixão
-            Eu te sigo a toda parte
-            Com muito orgulho no coração!
-            
-            Vasco! Vasco! Vasco!"
-          </div>
-        </div>
-
-      </div>
-    </div>
   </div>
 </div>
 
 <!-- ÁUDIO DO HINO -->
 <audio id="audio-hino" src="./hino-vasco.mp3"></audio>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-  // CONTROLE DO HINO
-  let audioHino = document.getElementById('audio-hino');
+  let audio = document.getElementById('audio-hino');
   let hinoTocando = false;
 
   function tocarHino() {
     const b = document.getElementById('btn-hino');
+    
     if (!hinoTocando) {
-      // Pausa os cantos se o hino for tocar
-      document.querySelectorAll('.audio-canto').forEach(aud => aud.pause());
-      
-      audioHino.play();
+      audio.play();
       b.innerText = "🔇 Parar Hino";
-      b.classList.replace('btn-dark', 'btn-secondary');
+      b.classList.replace('btn-dark', 'btn-danger'); // Botão fica vermelho
+      document.body.classList.add('tocando-hino'); // Aciona o Efeito da Torcida!
       hinoTocando = true;
     } else {
-      audioHino.pause();
-      audioHino.currentTime = 0;
+      audio.pause();
+      audio.currentTime = 0;
       b.innerText = "▶ Tocar Hino Oficial";
-      b.classList.replace('btn-secondary', 'btn-dark');
-      b.style.backgroundColor = '#000';
+      b.classList.replace('btn-danger', 'btn-dark'); // Volta ao normal
+      document.body.classList.remove('tocando-hino'); // Desliga a torcida
       hinoTocando = false;
     }
   }
 
-  // CONTROLE INTELIGENTE DOS ÁUDIOS DOS CANTOS
-  // 1. Pausa todos os outros se um canto der 'play'
-  document.querySelectorAll('.audio-canto').forEach(audioCanto => {
-    audioCanto.addEventListener('play', () => {
-      // Se hino estiver tocando, para o hino
-      if(hinoTocando) tocarHino(); 
-
-      // Para os outros cantos
-      document.querySelectorAll('.audio-canto').forEach(outro => {
-        if(outro !== audioCanto) {
-          outro.pause();
-        }
-      });
-    });
-  });
-
-  // 2. Quando fechar a janela dos cantos, desliga a música automaticamente
-  document.getElementById('modalCantos').addEventListener('hidden.bs.modal', function () {
-    document.querySelectorAll('.audio-canto').forEach(aud => {
-      aud.pause();
-      aud.currentTime = 0; // Volta a música pro começo
-    });
+  // Se o hino acabar sozinho, ele desliga a torcida automaticamente
+  audio.addEventListener("ended", function() {
+      const b = document.getElementById('btn-hino');
+      b.innerText = "▶ Tocar Hino Oficial";
+      b.classList.replace('btn-danger', 'btn-dark');
+      document.body.classList.remove('tocando-hino');
+      hinoTocando = false;
   });
 </script>
 </body>

@@ -38,7 +38,6 @@
 </head>
 <body>
 
-<!-- NOTIFICAÇÃO DE GOL AO VIVO -->
 <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 2000;">
   <div id="toastGol" class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
     <div class="d-flex">
@@ -111,7 +110,33 @@
 <div class="modal fade" id="modalGrafico" tabindex="-1" aria-hidden="true"><div class="modal-dialog modal-dialog-centered modal-lg"><div class="modal-content"><div class="modal-header text-white" style="background: linear-gradient(to right, #007A33, #001E60);"><h5 class="modal-title fw-bold" id="tituloModalGrafico">📈 Evolução na Tabela</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body p-2" style="background-color: var(--bg-body);"><canvas id="graficoCanvas" style="max-height: 400px;"></canvas></div></div></div></div>
 
 <!-- MODAL PROBABILIDADES -->
-<div class="modal fade" id="modalProbabilidades" tabindex="-1" aria-hidden="true"><div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable"><div class="modal-content"><div class="modal-header text-white" style="background: linear-gradient(to right, #007A33, #001E60);"><h5 class="modal-title fw-bold">📊 Probabilidades</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body p-0"><table class="table table-hover text-center align-middle mb-0"><tbody id="corpo-probabilidades"></tbody></table></div></div></div></div>
+<div class="modal fade" id="modalProbabilidades" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header text-white" style="background: linear-gradient(to right, #007A33, #001E60);">
+        <h5 class="modal-title fw-bold">📊 Probabilidades</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-0">
+        <table class="table table-hover text-center align-middle mb-0">
+          
+          <!-- CABEÇALHO ADICIONADO AQUI -->
+          <thead class="table-light sticky-top" style="font-size: 0.85rem; border-bottom: 2px solid #ccc;">
+            <tr>
+              <th class="text-start ps-3">Clube</th>
+              <th>🏆 Ser Campeão</th>
+              <th>🌎 Libertadores</th>
+              <th>✈️ Sul-Americana</th>
+              <th>🔻 Rebaixamento</th>
+            </tr>
+          </thead>
+          
+          <tbody id="corpo-probabilidades"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
@@ -131,7 +156,6 @@
   function pegarEscudo(n) { const norm = normalizar(n); for (const [k, v] of Object.entries(escudos)) { if (normalizar(k) === norm) return v; } return ""; }
   function formatarNomeClube(nome) { return urlsClubes[nome] ? `<a href="${urlsClubes[nome]}" target="_blank" class="link-clube" style="color: inherit;">${nome}</a>` : nome; }
 
-  // VERIFICAR GOLS E DISPARAR NOTIFICAÇÃO
   function verificarGolsAoVivo(jogosAtualizados) {
     if(modoSimulacao) return;
     let placaresAnteriores = JSON.parse(localStorage.getItem('placaresAnteriores')) || {};
@@ -168,7 +192,6 @@
       dadosArtilharia = Array.isArray(resArt) ? resArt : []; dadosProbabilidades = Array.isArray(resProb) ? resProb : [];
       if (!modoSimulacao && !silencioso && resRodadaAtual && resRodadaAtual.rodada) rodadaAtual = parseInt(resRodadaAtual.rodada);
       
-      // Salva os jogos para os Clubes lerem (Último/Próximo Jogo)
       localStorage.setItem('brasileirao_jogos', JSON.stringify(todosOsJogos));
       
       verificarGolsAoVivo(todosOsJogos);
@@ -272,8 +295,15 @@
   function renderizarProbabilidades() {
     const c = document.getElementById('corpo-probabilidades'); c.innerHTML='';
     dadosProbabilidades.sort((a,b)=> { let pA = ordemClassificacao.indexOf(normalizar(a.Clube)), pB = ordemClassificacao.indexOf(normalizar(b.Clube)); return (pA===-1?99:pA) - (pB===-1?99:pB); });
-    const b = (v, cor) => `<div class="d-flex align-items-center"><div class="progress" style="width:40px; height:6px; margin-right:4px;"><div class="progress-bar ${cor}" style="width:${parseFloat(String(v).replace(',','.'))||0}%;"></div></div><span style="font-size:0.7rem;">${v}</span></div>`;
-    dadosProbabilidades.forEach(d => c.innerHTML += `<tr><td class="text-start ps-3"><img src="${pegarEscudo(d.Clube)}" class="logo-clube" onerror="this.style.display='none';">${d.Clube}</td><td>${b(d.Titulo,'bg-success')}</td><td>${b(d.Libertadores,'bg-primary')}</td><td>${b(d.SulAmericana,'bg-warning')}</td><td>${b(d.Rebaixamento,'bg-danger')}</td></tr>`);
+    
+    // FUNÇÃO QUE ADICIONA O "%" NOS NÚMEROS
+    const b = (v, cor) => {
+      let num = parseFloat(String(v).replace(',','.')) || 0;
+      let texto = (v === "0" || v === "" || num === 0) ? "0%" : `${v}%`.replace('%%', '%');
+      return `<div class="d-flex align-items-center justify-content-center"><div class="progress" style="width:45px; height:6px; margin-right:6px; background-color: rgba(128,128,128,0.2);"><div class="progress-bar ${cor}" style="width:${num}%;"></div></div><span style="font-size:0.75rem; width:45px; text-align:right; font-weight:600;">${texto}</span></div>`;
+    };
+
+    dadosProbabilidades.forEach(d => c.innerHTML += `<tr><td class="text-start ps-3"><img src="${pegarEscudo(d.Clube)}" class="logo-clube" onerror="this.style.display='none';"><span class="fw-bold" style="font-size:0.85rem;">${d.Clube}</span></td><td>${b(d.Titulo,'bg-success')}</td><td>${b(d.Libertadores,'bg-primary')}</td><td>${b(d.SulAmericana,'bg-warning')}</td><td>${b(d.Rebaixamento,'bg-danger')}</td></tr>`);
   }
 
   window.onload = function() { carregarTudo(); setInterval(() => { if (!modoSimulacao) carregarTudo(true); }, 30000); };

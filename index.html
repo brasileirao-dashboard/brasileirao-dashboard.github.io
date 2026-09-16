@@ -114,13 +114,11 @@
   <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header text-white" style="background: linear-gradient(to right, #007A33, #001E60);">
-        <h5 class="modal-title fw-bold">📊 Probabilidades</h5>
+        <h5 class="modal-title fw-bold">📊 Probabilidades Matemáticas</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body p-0">
         <table class="table table-hover text-center align-middle mb-0">
-          
-          <!-- CABEÇALHO ADICIONADO AQUI -->
           <thead class="table-light sticky-top" style="font-size: 0.85rem; border-bottom: 2px solid #ccc;">
             <tr>
               <th class="text-start ps-3">Clube</th>
@@ -130,7 +128,6 @@
               <th>🔻 Rebaixamento</th>
             </tr>
           </thead>
-          
           <tbody id="corpo-probabilidades"></tbody>
         </table>
       </div>
@@ -232,7 +229,14 @@
     const corpo = document.getElementById('tabela-corpo'); corpo.innerHTML = ''; 
     arrayTabela.forEach((time, index) => {
       const pos = index + 1;
-      let classe = ''; if (pos <= 4) classe = 'zona-libertadores text-primary'; else if (pos <= 6) classe = 'zona-pre-liberta text-info'; else if (pos >= 7 && pos <= 12) classe = 'zona-sulamericana text-success'; else if (pos >= 17) classe = 'zona-rebaixamento text-danger';
+      let classe = ''; 
+      
+      // NOVA REGRA (G4 e G11)
+      if (pos <= 4) classe = 'zona-libertadores text-primary'; 
+      else if (pos === 5) classe = 'zona-pre-liberta text-info'; 
+      else if (pos >= 6 && pos <= 11) classe = 'zona-sulamericana text-success'; 
+      else if (pos >= 17) classe = 'zona-rebaixamento text-danger';
+
       let formaHtml = (formaTimes[time.Clube] || []).slice(-5).map(f => { if(f==='V') return `<span class="form-dot form-v">V</span>`; if(f==='E') return `<span class="form-dot form-e">E</span>`; return `<span class="form-dot form-d">D</span>`; }).join('');
       let linkNome = formatarNomeClube(time.Clube); let escudoImg = pegarEscudo(time.Clube) ? `<img src="${pegarEscudo(time.Clube)}" class="logo-clube" onerror="this.style.display='none';">` : '';
 
@@ -261,7 +265,15 @@
     document.getElementById('tituloModalGrafico').innerText = `📈 Evolução: ${clubeNome}`; let modal = new bootstrap.Modal(document.getElementById('modalGrafico')); modal.show();
     let ctx = document.getElementById('graficoCanvas').getContext('2d'); if (chartEvolucao) chartEvolucao.destroy(); let isDark = document.body.classList.contains('dark-mode');
     chartEvolucao = new Chart(ctx, { type: 'line', data: { labels: labels, datasets: [{ label: 'Posição na Tabela', data: posicoesAteRodada, borderColor: '#007A33', backgroundColor: 'rgba(0,122,51,0.2)', borderWidth: 3, tension: 0.3, pointRadius: 4, fill: true }] },
-      options: { responsive: true, scales: { y: { reverse: true, min: 1, max: 20, ticks: { stepSize: 1, autoSkip: false, font: { weight: 'bold' }, color: function(context) { let v = context.tick.value; if(v <= 4) return '#0d6efd'; if(v <= 6) return '#0dcaf0'; if(v >= 7 && v <= 12) return '#198754'; if(v >= 17) return '#dc3545'; return isDark ? '#ffffff' : '#444444'; } }, grid: { color: isDark ? '#333' : '#ddd' } }, x: { ticks: { color: isDark ? '#ffffff' : '#333' }, grid: { color: isDark ? '#333' : '#ddd' } } }, plugins: { legend: { labels: { color: isDark ? '#ffffff' : '#333' } } } }
+      options: { responsive: true, scales: { y: { reverse: true, min: 1, max: 20, ticks: { stepSize: 1, autoSkip: false, font: { weight: 'bold' }, 
+      color: function(context) { 
+        let v = context.tick.value; 
+        if(v <= 4) return '#0d6efd'; 
+        if(v === 5) return '#0dcaf0'; 
+        if(v >= 6 && v <= 11) return '#198754'; 
+        if(v >= 17) return '#dc3545'; 
+        return isDark ? '#ffffff' : '#444444'; 
+      } }, grid: { color: isDark ? '#333' : '#ddd' } }, x: { ticks: { color: isDark ? '#ffffff' : '#333' }, grid: { color: isDark ? '#333' : '#ddd' } } }, plugins: { legend: { labels: { color: isDark ? '#ffffff' : '#333' } } } }
     });
   }
 
@@ -296,7 +308,7 @@
     const c = document.getElementById('corpo-probabilidades'); c.innerHTML='';
     dadosProbabilidades.sort((a,b)=> { let pA = ordemClassificacao.indexOf(normalizar(a.Clube)), pB = ordemClassificacao.indexOf(normalizar(b.Clube)); return (pA===-1?99:pA) - (pB===-1?99:pB); });
     
-    // FUNÇÃO QUE ADICIONA O "%" NOS NÚMEROS
+    // FORMATANDO COM SINAL DE PORCENTAGEM (%)
     const b = (v, cor) => {
       let num = parseFloat(String(v).replace(',','.')) || 0;
       let texto = (v === "0" || v === "" || num === 0) ? "0%" : `${v}%`.replace('%%', '%');

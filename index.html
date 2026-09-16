@@ -32,14 +32,25 @@
     @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.2; } 100% { opacity: 1; } }
     .painel-inferior { background-color: var(--bg-painel); border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); border: 3px solid var(--border-color); padding: 15px 20px; width: 80vw; margin: 20px auto; transition: all 0.3s; }
     
-    /* BOLINHAS V-E-D */
-    .form-dot { display: inline-block; width: 15px; height: 15px; border-radius: 50%; margin: 0 1px; font-size: 9px; text-align: center; color: white; line-height: 15px; font-weight: bold; cursor: pointer; transition: transform 0.2s; } 
-    .form-dot:hover { transform: scale(1.2); }
+    /* BOLINHAS V-E-D E NOVO POP-UP (TOOLTIP) PERSONALIZADO */
+    .form-dot { display: inline-block; width: 15px; height: 15px; border-radius: 50%; margin: 0 1px; font-size: 9px; text-align: center; color: white; line-height: 15px; font-weight: bold; transition: transform 0.2s; } 
     .form-v { background-color: #198754; } .form-e { background-color: #6c757d; } .form-d { background-color: #dc3545; }
     
-    /* ESTILIZANDO O POP-UP (TOOLTIP) */
-    .tooltip-inner { max-width: 300px; white-space: nowrap; background-color: rgba(0,0,0,0.9); border: 1px solid #FFD700; padding: 6px 12px; }
-    .tooltip.bs-tooltip-top .tooltip-arrow::before { border-top-color: #FFD700; }
+    .form-dot-wrapper { position: relative; display: inline-block; cursor: pointer; }
+    .form-dot-wrapper:hover .form-dot, .form-dot-wrapper:active .form-dot { transform: scale(1.2); }
+    
+    .tooltip-placar {
+      visibility: hidden; opacity: 0; position: absolute; bottom: 140%; left: 50%; transform: translateX(-50%);
+      background-color: rgba(0, 0, 0, 0.9); color: #fff; border: 1px solid #FFD700;
+      padding: 6px 10px; border-radius: 6px; white-space: nowrap; font-size: 0.75rem; 
+      z-index: 9999; pointer-events: none; transition: opacity 0.2s;
+      display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    }
+    /* Seta do pop-up */
+    .tooltip-placar::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: #FFD700 transparent transparent transparent; }
+    
+    /* Mostra no mouse (PC) ou no toque (Celular) */
+    .form-dot-wrapper:hover .tooltip-placar, .form-dot-wrapper:active .tooltip-placar { visibility: visible; opacity: 1; }
 
     .modal-content { background-color: var(--bg-painel); color: var(--text-main); border-radius: 12px; border: 2px solid var(--border-color); }
     @media (max-width: 900px) { .painel-classificacao, .painel-jogos, .painel-inferior { width: 100%; height: auto; min-height: 40vh; } .d-flex.gap-4 { flex-direction: column; gap: 15px !important; } }
@@ -74,7 +85,7 @@
     <div>
       <div class="painel-classificacao">
         <h6 class="mb-2 fw-bold text-center" style="color: var(--text-muted);">Classificação e Momento</h6>
-        <div class="table-responsive" style="flex-grow: 1; overflow-y: auto;">
+        <div class="table-responsive" style="flex-grow: 1; overflow-y: auto; overflow-x: visible;">
           <table class="table table-hover tabela-alinhada mb-0">
             <thead class="text-center border-bottom sticky-top" style="z-index: 1;">
               <tr><th style="width: 5%;">Pos</th><th class="text-start">Clube</th><th>P</th><th>J</th><th>V</th><th>E</th><th>D</th><th>GP</th><th>GC</th><th>SG</th><th>Últ. 5</th></tr>
@@ -142,10 +153,7 @@
 <script>
   const API_URL = 'https://script.google.com/macros/s/AKfycby2W_byRD0m1qHTSs_W20VynlNc2zcFPW6j01U9YWJnGNM4eqLrwmfWF_gp_20DTgdDWA/exec';
   const escudos = { "Flamengo": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/orE554NToSkH6nuwofe7Yg_500x500.png", "Palmeiras": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/7spurne-xDt2p6C0imYYNA_500x500.png", "Athletico-PR": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/9LkdBR4L5plovKM8eIy7nQ_500x500.png", "Fluminense": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/fCMxMMDF2AZPU7LzYKSlig_500x500.png", "Bahia": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/nIdbR6qIUDyZUBO9vojSPw_500x500.png", "Cruzeiro": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/Tcv9X__nIh-6wFNJPMwIXQ_500x500.png", "Coritiba": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/LaFlBADLmsjHfGTehCYtuA_500x500.png", "Atlético-MG": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/q9fhEsgpuyRq58OgmSndcQ_500x500.png", "Bragantino": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/lMyw2zn1Z4cdkaxKJWnsQw_500x500.png", "São Paulo": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/4w2Z97Hf9CSOqICK3a8AxQ_500x500.png", "Vitória": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/LHSM6VchpkI4NIptoSTHOg_500x500.png", "Corinthians": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/tCMSqgXVHROpdCpQhzTo1g_500x500.png", "Santos": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/VHdNOT6wWOw_vJ38GMjMzg_500x500.png", "Botafogo": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/KLDWYp-H8CAOT9H_JgizRg_500x500.png", "Grêmio": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/Ku-73v_TW9kpex-IEGb0ZA_500x500.png", "Mirassol": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/5J3JY7fcdiDYU5rbPW7AKA_500x500.png", "Vasco": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/hHwT8LwRmYCAGxQ-STLxYA_500x500.png", "Internacional": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/OWVFKuHrQuf4q2Wk0hEmSA_500x500.png", "Remo": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/bENrK5iSMF6sXrEkDNNxng_500x500.png", "Chapecoense": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/K7JQUKTRsuXfO9YrD5dq5g_500x500.png" };
-  const urlsClubes = { "Athletico-PR": "./athletico.html", "Atlético-MG": "./atletico.html", "Bahia": "./bahia.html", "Botafogo": "./botafogo.html", "Bragantino": "./bragantino.html", "Chapecoense": "./chapecoense.html", "Corinthians": "./corinthians.html", "Coritiba": "./coritiba.html", "Cruzeiro": "./cruzeiro.html", "Flamengo": "./flamengo.html", "Fluminense": "./fluminense.html", "Grêmio": "./gremio.html", "Internacional": "./internacional.html", "Mirassol": "./mirassol.html", "Palmeiras": "./palmeiras.html", "Remo": "./remo.html", "Santos": "./santos.html", "São Paulo": "./saopaulo.html", "Vasco": "./vasco.html", "Vitória": "./vitoria.html" };
-  const estadiosFotos = { "maracan": "./maracana.jpg", "allianz": "./allianz.jpg", "mineir": "./mineirao.jpg", "química": "./quimica.jpg", "morum": "./morumbis.jpg", "beira": "./beirario.jpg", "grêmio": "./gremio.jpg", "nilton": "./niltonsantos.jpg", "januário": "./saojanuario.jpg", "couto": "./couto.jpg", "mrv": "./mrv.jpg", "fonte": "./fontenova.jpg", "barradão": "./barradao.jpg", "belmiro": "./vilabelmiro.jpg", "baixada": "./baixada.jpg", "mangueirão": "./mangueirao.jpg", "bragantino": "./bragantino.jpg", "chedid": "./bragantino.jpg", "campos maia": "./mirassol.jpg", "mirassol": "./mirassol.jpg", "condá": "./conda.jpg" };
-
-  // O DICIONÁRIO DE SIGLAS PARA O POP-UP DAS BOLINHAS
+  
   const siglasClubes = { "Flamengo": "FLA", "Palmeiras": "PAL", "Athletico-PR": "CAP", "Fluminense": "FLU", "Bahia": "BAH", "Cruzeiro": "CRU", "Coritiba": "CFC", "Atlético-MG": "CAM", "Bragantino": "RBB", "São Paulo": "SAO", "Vitória": "VIT", "Corinthians": "COR", "Santos": "SAN", "Botafogo": "BOT", "Grêmio": "GRE", "Mirassol": "MIR", "Vasco": "VAS", "Internacional": "INT", "Remo": "REM", "Chapecoense": "CHA" };
 
   let rodadaAtual = 1; let todosOsJogos = []; let dadosClassificacaoBase = []; let dadosArtilharia = []; let dadosProbabilidades = []; let modoSimulacao = false; let placaresSimulados = {}; let ordemClassificacao = []; let chartEvolucao = null;
@@ -195,7 +203,6 @@
       if (!modoSimulacao && !silencioso && resRodadaAtual && resRodadaAtual.rodada) rodadaAtual = parseInt(resRodadaAtual.rodada);
       
       localStorage.setItem('brasileirao_jogos', JSON.stringify(todosOsJogos));
-      
       verificarGolsAoVivo(todosOsJogos);
       recalcularEAtualizarTabela(); renderizarRodada(); renderizarArtilhariaAssistencias(); if(dadosProbabilidades.length > 0) renderizarProbabilidades();
     } catch (e) { if (!silencioso) console.error("Erro:", e); }
@@ -216,7 +223,6 @@
         const m = jogo.Mandante, v = jogo.Visitante;
         if (stats[m] && stats[v]) {
           stats[m].Jogos++; stats[v].Jogos++; stats[m].GP += gm; stats[m].GC += gv; stats[v].GP += gv; stats[v].GC += gm;
-          // Salva o jogo inteiro na memória da Forma para desenhar o pop-up depois!
           if (gm > gv) { stats[m].Pontos+=3; stats[m].Vitorias++; stats[v].Derrotas++; formaTimes[m].push({res:'V', m:m, v:v, gm:gm, gv:gv}); formaTimes[v].push({res:'D', m:m, v:v, gm:gm, gv:gv}); }
           else if (gm < gv) { stats[v].Pontos+=3; stats[v].Vitorias++; stats[m].Derrotas++; formaTimes[m].push({res:'D', m:m, v:v, gm:gm, gv:gv}); formaTimes[v].push({res:'V', m:m, v:v, gm:gm, gv:gv}); }
           else { stats[m].Pontos+=1; stats[m].Empates++; stats[v].Pontos+=1; stats[v].Empates++; formaTimes[m].push({res:'E', m:m, v:v, gm:gm, gv:gv}); formaTimes[v].push({res:'E', m:m, v:v, gm:gm, gv:gv}); }
@@ -232,39 +238,27 @@
     localStorage.setItem('brasileirao_tabela', JSON.stringify(arrayTabela));
     localStorage.setItem('brasileirao_artilharia', JSON.stringify(dadosArtilharia));
 
-    // Limpa popups velhos do HTML
-    document.querySelectorAll('.tooltip').forEach(t => t.remove());
-
     const corpo = document.getElementById('tabela-corpo'); corpo.innerHTML = ''; 
     arrayTabela.forEach((time, index) => {
       const pos = index + 1;
       let classe = ''; 
-      if (pos <= 4) classe = 'zona-libertadores text-primary'; 
-      else if (pos === 5) classe = 'zona-pre-liberta text-info'; 
-      else if (pos >= 6 && pos <= 11) classe = 'zona-sulamericana text-success'; 
-      else if (pos >= 17) classe = 'zona-rebaixamento text-danger';
+      if (pos <= 4) classe = 'zona-libertadores text-primary'; else if (pos === 5) classe = 'zona-pre-liberta text-info'; else if (pos >= 6 && pos <= 11) classe = 'zona-sulamericana text-success'; else if (pos >= 17) classe = 'zona-rebaixamento text-danger';
 
-      // GERADOR DAS BOLINHAS MÁGICAS COM O POP-UP
       let formaHtml = (formaTimes[time.Clube] || []).slice(-5).map(f => { 
         let cor = f.res === 'V' ? 'form-v' : (f.res === 'E' ? 'form-e' : 'form-d');
-        
         let escudoM = pegarEscudo(f.m); let siglaM = pegarSigla(f.m);
         let escudoV = pegarEscudo(f.v); let siglaV = pegarSigla(f.v);
         
-        // Estrutura do Pop-Up (Tooltip)
-        let popup = `<div class='d-flex align-items-center justify-content-center' style='gap:8px; padding:2px;'><img src='${escudoM}' style='width:18px; height:18px; object-fit:contain;'> <span class='fw-bold' style='font-size:0.95rem;'>${siglaM} ${f.gm} x ${f.gv} ${siglaV}</span> <img src='${escudoV}' style='width:18px; height:18px; object-fit:contain;'></div>`;
+        // CAIXINHA DE CSS PURO: Resolve o pisca-pisca e o tamanho gigante no celular!
+        let popup = `<div class="tooltip-placar"><img src="${escudoM}" style="width:16px;height:16px;object-fit:contain;"> <span class="fw-bold">${siglaM} ${f.gm} x ${f.gv} ${siglaV}</span> <img src="${escudoV}" style="width:16px;height:16px;object-fit:contain;"></div>`;
         
-        return `<span class="form-dot ${cor}" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="top" data-bs-title="${popup.replace(/"/g, '&quot;')}">${f.res}</span>`; 
+        return `<div class="form-dot-wrapper"><span class="form-dot ${cor}">${f.res}</span>${popup}</div>`; 
       }).join('');
       
       let linkNome = formatarNomeClube(time.Clube); let escudoImg = pegarEscudo(time.Clube) ? `<img src="${pegarEscudo(time.Clube)}" class="logo-clube" onerror="this.style.display='none';">` : '';
 
       corpo.innerHTML += `<tr class="${classe.split(' ')[0]}"><td class="fw-bold ${classe.split(' ')[1]||'text-secondary'}">${pos}</td><td class="text-start d-flex justify-content-between align-items-center" style="border:none;"><span>${escudoImg}${linkNome}</span><span style="cursor:pointer; font-size:1.1rem;" onclick="gerarGrafico('${time.Clube}')" title="Ver Evolução">📈</span></td><td class="fw-bold">${time.Pontos}</td><td>${time.Jogos}</td><td>${time.Vitorias}</td><td>${time.Empates}</td><td>${time.Derrotas}</td><td>${time.GP}</td><td>${time.GC}</td><td>${time.Saldo}</td><td><div class="d-flex justify-content-center">${formaHtml}</div></td></tr>`;
     });
-
-    // ATIVA OS POP-UPS ASSIM QUE A TABELA TERMINA DE CARREGAR
-    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-    [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
   }
 
   function gerarGrafico(clubeNome) {

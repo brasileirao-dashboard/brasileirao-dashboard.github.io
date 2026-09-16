@@ -32,7 +32,7 @@
     @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.2; } 100% { opacity: 1; } }
     .painel-inferior { background-color: var(--bg-painel); border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); border: 3px solid var(--border-color); padding: 15px 20px; width: 80vw; margin: 20px auto; transition: all 0.3s; }
     
-    /* BOLINHAS V-E-D E NOVO POP-UP (TOOLTIP) PERSONALIZADO */
+    /* BOLINHAS V-E-D E NOVO POP-UP PERSONALIZADO BLINDADO */
     .form-dot { display: inline-block; width: 15px; height: 15px; border-radius: 50%; margin: 0 1px; font-size: 9px; text-align: center; color: white; line-height: 15px; font-weight: bold; transition: transform 0.2s; } 
     .form-v { background-color: #198754; } .form-e { background-color: #6c757d; } .form-d { background-color: #dc3545; }
     
@@ -46,10 +46,7 @@
       z-index: 9999; pointer-events: none; transition: opacity 0.2s;
       display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.4);
     }
-    /* Seta do pop-up */
     .tooltip-placar::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: #FFD700 transparent transparent transparent; }
-    
-    /* Mostra no mouse (PC) ou no toque (Celular) */
     .form-dot-wrapper:hover .tooltip-placar, .form-dot-wrapper:active .tooltip-placar { visibility: visible; opacity: 1; }
 
     .modal-content { background-color: var(--bg-painel); color: var(--text-main); border-radius: 12px; border: 2px solid var(--border-color); }
@@ -166,7 +163,14 @@
   function normalizar(t) { return String(t || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim(); }
   function pegarEscudo(n) { const norm = normalizar(n); for (const [k, v] of Object.entries(escudos)) { if (normalizar(k) === norm) return v; } return ""; }
   function formatarNomeClube(nome) { return urlsClubes[nome] ? `<a href="${urlsClubes[nome]}" target="_blank" class="link-clube" style="color: inherit;">${nome}</a>` : nome; }
-  function pegarSigla(nome) { const norm = normalizar(nome); for (const [k, v] of Object.entries(siglasClubes)) { if (normalizar(k) === norm) return v; } return nome.substring(0,3).toUpperCase(); }
+  
+  // BLINDAGEM ANTI-CRASH NA SIGLA
+  function pegarSigla(nome) { 
+    if(!nome) return "";
+    const norm = normalizar(nome); 
+    for (const [k, v] of Object.entries(siglasClubes)) { if (normalizar(k) === norm) return v; } 
+    return String(nome).substring(0,3).toUpperCase(); 
+  }
 
   function verificarGolsAoVivo(jogosAtualizados) {
     if(modoSimulacao) return;
@@ -238,25 +242,30 @@
     localStorage.setItem('brasileirao_tabela', JSON.stringify(arrayTabela));
     localStorage.setItem('brasileirao_artilharia', JSON.stringify(dadosArtilharia));
 
+    // Remove qualquer resquício de popups travados do sistema antigo
+    document.querySelectorAll('.tooltip').forEach(t => t.remove());
+
     const corpo = document.getElementById('tabela-corpo'); corpo.innerHTML = ''; 
     arrayTabela.forEach((time, index) => {
       const pos = index + 1;
       let classe = ''; 
       if (pos <= 4) classe = 'zona-libertadores text-primary'; else if (pos === 5) classe = 'zona-pre-liberta text-info'; else if (pos >= 6 && pos <= 11) classe = 'zona-sulamericana text-success'; else if (pos >= 17) classe = 'zona-rebaixamento text-danger';
 
+      // BLINDAGEM DO POP-UP
       let formaHtml = (formaTimes[time.Clube] || []).slice(-5).map(f => { 
+        if(typeof f === 'string') {
+          let corStr = f === 'V' ? 'form-v' : (f === 'E' ? 'form-e' : 'form-d');
+          return `<div class="form-dot-wrapper"><span class="form-dot ${corStr}">${f}</span></div>`; 
+        }
         let cor = f.res === 'V' ? 'form-v' : (f.res === 'E' ? 'form-e' : 'form-d');
         let escudoM = pegarEscudo(f.m); let siglaM = pegarSigla(f.m);
         let escudoV = pegarEscudo(f.v); let siglaV = pegarSigla(f.v);
         
-        // CAIXINHA DE CSS PURO: Resolve o pisca-pisca e o tamanho gigante no celular!
         let popup = `<div class="tooltip-placar"><img src="${escudoM}" style="width:16px;height:16px;object-fit:contain;"> <span class="fw-bold">${siglaM} ${f.gm} x ${f.gv} ${siglaV}</span> <img src="${escudoV}" style="width:16px;height:16px;object-fit:contain;"></div>`;
-        
         return `<div class="form-dot-wrapper"><span class="form-dot ${cor}">${f.res}</span>${popup}</div>`; 
       }).join('');
       
       let linkNome = formatarNomeClube(time.Clube); let escudoImg = pegarEscudo(time.Clube) ? `<img src="${pegarEscudo(time.Clube)}" class="logo-clube" onerror="this.style.display='none';">` : '';
-
       corpo.innerHTML += `<tr class="${classe.split(' ')[0]}"><td class="fw-bold ${classe.split(' ')[1]||'text-secondary'}">${pos}</td><td class="text-start d-flex justify-content-between align-items-center" style="border:none;"><span>${escudoImg}${linkNome}</span><span style="cursor:pointer; font-size:1.1rem;" onclick="gerarGrafico('${time.Clube}')" title="Ver Evolução">📈</span></td><td class="fw-bold">${time.Pontos}</td><td>${time.Jogos}</td><td>${time.Vitorias}</td><td>${time.Empates}</td><td>${time.Derrotas}</td><td>${time.GP}</td><td>${time.GC}</td><td>${time.Saldo}</td><td><div class="d-flex justify-content-center">${formaHtml}</div></td></tr>`;
     });
   }

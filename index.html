@@ -31,25 +31,74 @@
     .live-dot { height: 8px; width: 8px; background-color: #dc3545; border-radius: 50%; display: inline-block; animation: blink 1s infinite; margin-right: 4px; }
     @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.2; } 100% { opacity: 1; } }
     .painel-inferior { background-color: var(--bg-painel); border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); border: 3px solid var(--border-color); padding: 15px 20px; width: 80vw; margin: 20px auto; transition: all 0.3s; }
-    
-    /* BOLINHAS V-E-D E NOVO POP-UP PERSONALIZADO BLINDADO */
-    .form-dot { display: inline-block; width: 15px; height: 15px; border-radius: 50%; margin: 0 1px; font-size: 9px; text-align: center; color: white; line-height: 15px; font-weight: bold; transition: transform 0.2s; } 
-    .form-v { background-color: #198754; } .form-e { background-color: #6c757d; } .form-d { background-color: #dc3545; }
-    
-    .form-dot-wrapper { position: relative; display: inline-block; cursor: pointer; }
-    .form-dot-wrapper:hover .form-dot, .form-dot-wrapper:active .form-dot { transform: scale(1.2); }
-    
-    .tooltip-placar {
-      visibility: hidden; opacity: 0; position: absolute; bottom: 140%; left: 50%; transform: translateX(-50%);
-      background-color: rgba(0, 0, 0, 0.9); color: #fff; border: 1px solid #FFD700;
-      padding: 6px 10px; border-radius: 6px; white-space: nowrap; font-size: 0.75rem; 
-      z-index: 9999; pointer-events: none; transition: opacity 0.2s;
-      display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-    }
-    .tooltip-placar::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: #FFD700 transparent transparent transparent; }
-    .form-dot-wrapper:hover .tooltip-placar, .form-dot-wrapper:active .tooltip-placar { visibility: visible; opacity: 1; }
-
     .modal-content { background-color: var(--bg-painel); color: var(--text-main); border-radius: 12px; border: 2px solid var(--border-color); }
+    
+    /* BOLINHAS V-E-D - REDESENHADAS PARA DESKTOP SEM PISCAR */
+    .form-dot-wrapper {
+      position: relative;
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      margin: 0 2px;
+      vertical-align: middle;
+    }
+    .form-dot { 
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%; 
+      font-size: 10px; 
+      color: white; 
+      font-weight: bold; 
+      cursor: default; 
+      transition: transform 0.15s; 
+    } 
+    .form-v { background-color: #198754; } 
+    .form-e { background-color: #6c757d; } 
+    .form-d { background-color: #dc3545; }
+    
+    /* O POP-UP PERFEITO */
+    .tooltip-placar {
+      position: absolute;
+      bottom: 26px; /* Bem acima do mouse */
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #111;
+      color: #fff;
+      border: 1px solid #FFD700;
+      padding: 5px 10px;
+      border-radius: 6px;
+      white-space: nowrap;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      pointer-events: none; /* ESSA É A TRAVA FANTASMA! O mouse ignora a caixa. */
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      z-index: 9999;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+    
+    /* A Setinha embaixo do Pop-up */
+    .tooltip-placar::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 5px;
+      border-style: solid;
+      border-color: #FFD700 transparent transparent transparent;
+    }
+
+    /* MÁGICA: Quando passa o mouse no wrapper, aciona o efeito */
+    .form-dot-wrapper:hover .form-dot { transform: scale(1.2); }
+    .form-dot-wrapper:hover .tooltip-placar { visibility: visible; opacity: 1; }
+
     @media (max-width: 900px) { .painel-classificacao, .painel-jogos, .painel-inferior { width: 100%; height: auto; min-height: 40vh; } .d-flex.gap-4 { flex-direction: column; gap: 15px !important; } }
   </style>
 </head>
@@ -164,7 +213,6 @@
   function pegarEscudo(n) { const norm = normalizar(n); for (const [k, v] of Object.entries(escudos)) { if (normalizar(k) === norm) return v; } return ""; }
   function formatarNomeClube(nome) { return urlsClubes[nome] ? `<a href="${urlsClubes[nome]}" target="_blank" class="link-clube" style="color: inherit;">${nome}</a>` : nome; }
   
-  // BLINDAGEM ANTI-CRASH NA SIGLA
   function pegarSigla(nome) { 
     if(!nome) return "";
     const norm = normalizar(nome); 
@@ -242,16 +290,13 @@
     localStorage.setItem('brasileirao_tabela', JSON.stringify(arrayTabela));
     localStorage.setItem('brasileirao_artilharia', JSON.stringify(dadosArtilharia));
 
-    // Remove qualquer resquício de popups travados do sistema antigo
-    document.querySelectorAll('.tooltip').forEach(t => t.remove());
-
     const corpo = document.getElementById('tabela-corpo'); corpo.innerHTML = ''; 
     arrayTabela.forEach((time, index) => {
       const pos = index + 1;
       let classe = ''; 
       if (pos <= 4) classe = 'zona-libertadores text-primary'; else if (pos === 5) classe = 'zona-pre-liberta text-info'; else if (pos >= 6 && pos <= 11) classe = 'zona-sulamericana text-success'; else if (pos >= 17) classe = 'zona-rebaixamento text-danger';
 
-      // BLINDAGEM DO POP-UP
+      // GERADOR DAS BOLINHAS (V-E-D) COM POP-UP EM CSS PURO (Sem Piscar)
       let formaHtml = (formaTimes[time.Clube] || []).slice(-5).map(f => { 
         if(typeof f === 'string') {
           let corStr = f === 'V' ? 'form-v' : (f === 'E' ? 'form-e' : 'form-d');
@@ -261,7 +306,7 @@
         let escudoM = pegarEscudo(f.m); let siglaM = pegarSigla(f.m);
         let escudoV = pegarEscudo(f.v); let siglaV = pegarSigla(f.v);
         
-        let popup = `<div class="tooltip-placar"><img src="${escudoM}" style="width:16px;height:16px;object-fit:contain;"> <span class="fw-bold">${siglaM} ${f.gm} x ${f.gv} ${siglaV}</span> <img src="${escudoV}" style="width:16px;height:16px;object-fit:contain;"></div>`;
+        let popup = `<div class="tooltip-placar"><img src="${escudoM}" style="width:16px;height:16px;object-fit:contain;"> <span>${siglaM} ${f.gm} x ${f.gv} ${siglaV}</span> <img src="${escudoV}" style="width:16px;height:16px;object-fit:contain;"></div>`;
         return `<div class="form-dot-wrapper"><span class="form-dot ${cor}">${f.res}</span>${popup}</div>`; 
       }).join('');
       

@@ -10,30 +10,50 @@
   <style>
     :root { --bg-body: #e2eee6; --bg-painel: rgba(255, 255, 255, 0.96); --text-main: #212529; --border-color: #FFD700; --bg-table: transparent; --bg-card: #f8f9fa; --text-muted: #6c757d; --bg-header: #f8f9fa; }
     body.dark-mode { --bg-body: #121212; --bg-painel: #1e1e1e; --text-main: #ffffff; --border-color: #444; --bg-table: #1e1e1e; --bg-card: #2a2a2a; --text-muted: #ced4da; --bg-header: #212529; }
+    
     body { background-color: var(--bg-body); color: var(--text-main); margin: 0; padding: 0; min-height: 100vh; overflow-x: hidden; transition: background 0.3s; }
     body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: url('https://flagcdn.com/w2560/br.png'); background-size: cover; background-position: center; opacity: 0.12; z-index: -1; }
     body.dark-mode::before { opacity: 0.04; filter: grayscale(50%); }
+    
     .text-brasil { background: linear-gradient(to right, #007A33 0%, #D6A800 50%, #001E60 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; text-transform: uppercase; }
     body.dark-mode .text-brasil { background: linear-gradient(to right, #4ade80 0%, #facc15 50%, #60a5fa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    
     .painel-classificacao, .painel-jogos { background-color: var(--bg-painel); border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); border: 3px solid var(--border-color); padding: 12px 15px; height: 82vh; display: flex; flex-direction: column; transition: all 0.3s; }
     .painel-classificacao { width: 42vw; } .painel-jogos { width: 36vw; }
+    
     .logo-clube { width: 20px; height: 20px; object-fit: contain; margin-right: 6px; vertical-align: middle; }
     .logo-estadio { width: 38px; height: 38px; object-fit: cover; border-radius: 6px; margin-right: 6px; border: 1px solid #dcdcdc; }
-    .zona-libertadores td:first-child { border-left: 4px solid #0d6efd !important; } .zona-pre-liberta td:first-child { border-left: 4px solid #0dcaf0 !important; } .zona-sulamericana td:first-child { border-left: 4px solid #198754 !important; } .zona-rebaixamento td:first-child { border-left: 4px solid #dc3545 !important; } 
-    .table { color: var(--text-main); } body.dark-mode .table, body.dark-mode .table td, body.dark-mode .table th { color: var(--text-main) !important; border-color: #333; }
-    .table-hover tbody tr:hover { background-color: rgba(128,128,128,0.1); } body.dark-mode .table-hover tbody tr:hover { background-color: rgba(255,255,255,0.05) !important; }
-    .tabela-alinhada td, .tabela-alinhada th { vertical-align: middle; padding: 3px 6px !important; font-size: 0.8rem; background-color: var(--bg-table); } .tabela-alinhada thead th { background-color: var(--bg-header); }
+    
+    .zona-libertadores td:first-child { border-left: 4px solid #0d6efd !important; } 
+    .zona-pre-liberta td:first-child { border-left: 4px solid #0dcaf0 !important; } 
+    .zona-sulamericana td:first-child { border-left: 4px solid #198754 !important; } 
+    .zona-rebaixamento td:first-child { border-left: 4px solid #dc3545 !important; } 
+    
+    .table { color: var(--text-main); } 
+    body.dark-mode .table, body.dark-mode .table td, body.dark-mode .table th { color: var(--text-main) !important; border-color: #333; }
+    .table-hover tbody tr:hover { background-color: rgba(128,128,128,0.1); } 
+    body.dark-mode .table-hover tbody tr:hover { background-color: rgba(255,255,255,0.05) !important; }
+    .tabela-alinhada td, .tabela-alinhada th { vertical-align: middle; padding: 3px 6px !important; font-size: 0.8rem; background-color: var(--bg-table); } 
+    .tabela-alinhada thead th { background-color: var(--bg-header); }
+    
     .box-cor { display: inline-block; width: 10px; height: 10px; margin-right: 3px; border-radius: 3px; vertical-align: middle; }
-    .card-jogo { background: var(--bg-card); border-radius: 6px; padding: 8px 10px; margin-bottom: 8px; border-left: 4px solid #007A33; } body.dark-mode .card-jogo { border-left-color: #4ade80; }
+    .card-jogo { background: var(--bg-card); border-radius: 6px; padding: 8px 10px; margin-bottom: 8px; border-left: 4px solid #007A33; } 
+    body.dark-mode .card-jogo { border-left-color: #4ade80; }
     .info-partida { font-size: 0.73rem; color: var(--text-muted); text-align: center; margin-bottom: 6px; font-weight: 600; display: flex; align-items: center; justify-content: space-between; }
+    
     .input-simulacao { width: 35px; text-align: center; font-weight: bold; border: 1px solid #ced4da; border-radius: 4px; background: var(--bg-painel); color: var(--text-main); }
-    .link-clube { color: inherit; text-decoration: none; font-weight: bold; } .link-clube:hover { text-decoration: underline; color: #007A33; }
+    .link-clube { color: inherit; text-decoration: none; font-weight: bold; } 
+    .link-clube:hover { text-decoration: underline; color: #007A33; }
+    
     .live-dot { height: 8px; width: 8px; background-color: #dc3545; border-radius: 50%; display: inline-block; animation: blink 1s infinite; margin-right: 4px; }
     @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.2; } 100% { opacity: 1; } }
+    
     .painel-inferior { background-color: var(--bg-painel); border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); border: 3px solid var(--border-color); padding: 15px 20px; width: 80vw; margin: 20px auto; transition: all 0.3s; }
     .modal-content { background-color: var(--bg-painel); color: var(--text-main); border-radius: 12px; border: 2px solid var(--border-color); }
     
-    /* BOLINHAS V-E-D - REDESENHADAS PARA DESKTOP SEM PISCAR */
+    /* ---------------------------------------------------- */
+    /* BOLINHAS V-E-D E O POP-UP PERSONALIZADO DE CSS PURO  */
+    /* ---------------------------------------------------- */
     .form-dot-wrapper {
       position: relative;
       display: inline-block;
@@ -59,10 +79,9 @@
     .form-e { background-color: #6c757d; } 
     .form-d { background-color: #dc3545; }
     
-    /* O POP-UP PERFEITO */
     .tooltip-placar {
       position: absolute;
-      bottom: 26px; /* Bem acima do mouse */
+      bottom: 26px; /* Bem alto para o mouse não encostar */
       left: 50%;
       transform: translateX(-50%);
       background-color: #111;
@@ -75,7 +94,7 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      pointer-events: none; /* ESSA É A TRAVA FANTASMA! O mouse ignora a caixa. */
+      pointer-events: none; /* Trava anti-piscar */
       visibility: hidden;
       opacity: 0;
       transition: opacity 0.2s ease;
@@ -83,7 +102,6 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.5);
     }
     
-    /* A Setinha embaixo do Pop-up */
     .tooltip-placar::after {
       content: "";
       position: absolute;
@@ -95,15 +113,18 @@
       border-color: #FFD700 transparent transparent transparent;
     }
 
-    /* MÁGICA: Quando passa o mouse no wrapper, aciona o efeito */
     .form-dot-wrapper:hover .form-dot { transform: scale(1.2); }
     .form-dot-wrapper:hover .tooltip-placar { visibility: visible; opacity: 1; }
 
-    @media (max-width: 900px) { .painel-classificacao, .painel-jogos, .painel-inferior { width: 100%; height: auto; min-height: 40vh; } .d-flex.gap-4 { flex-direction: column; gap: 15px !important; } }
+    @media (max-width: 900px) { 
+      .painel-classificacao, .painel-jogos, .painel-inferior { width: 100%; height: auto; min-height: 40vh; } 
+      .d-flex.gap-4 { flex-direction: column; gap: 15px !important; } 
+    }
   </style>
 </head>
 <body>
 
+<!-- TOAST DE GOL -->
 <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 2000;">
   <div id="toastGol" class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
     <div class="d-flex">
@@ -114,6 +135,7 @@
 </div>
 
 <div class="container-fluid px-2 py-2">
+  <!-- CABEÇALHO DO SITE -->
   <div class="d-flex justify-content-between align-items-center mb-2 px-3 flex-wrap">
     <div class="d-flex align-items-center mb-2 mb-md-0">
       <img src="./taca.png" style="height: 45px; margin-right: 12px; object-fit: contain; filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.1));" onerror="this.style.display='none';">
@@ -127,6 +149,7 @@
     </div>
   </div>
 
+  <!-- MEIO: TABELA E JOGOS -->
   <div class="d-flex justify-content-center gap-4 mt-2">
     <div>
       <div class="painel-classificacao">
@@ -136,13 +159,17 @@
             <thead class="text-center border-bottom sticky-top" style="z-index: 1;">
               <tr><th style="width: 5%;">Pos</th><th class="text-start">Clube</th><th>P</th><th>J</th><th>V</th><th>E</th><th>D</th><th>GP</th><th>GC</th><th>SG</th><th>Últ. 5</th></tr>
             </thead>
-            <tbody id="tabela-corpo" class="text-center border-top-0"><tr><td colspan="11" class="py-3 text-muted">Carregando tabela...</td></tr></tbody>
+            <tbody id="tabela-corpo" class="text-center border-top-0">
+              <tr><td colspan="11" class="py-3 text-muted">Carregando tabela...</td></tr>
+            </tbody>
           </table>
         </div>
       </div>
       <div class="mt-1 d-flex flex-wrap justify-content-center gap-3 fw-bold" style="font-size: 0.7rem; color: var(--text-main);">
-        <div><span class="box-cor bg-primary"></span>Libertadores</div><div><span class="box-cor bg-info"></span>Pré-Libertadores</div>
-        <div><span class="box-cor bg-success"></span>Sul-Americana</div><div><span class="box-cor bg-danger"></span>Rebaixamento</div>
+        <div><span class="box-cor bg-primary"></span>Libertadores</div>
+        <div><span class="box-cor bg-info"></span>Pré-Libertadores</div>
+        <div><span class="box-cor bg-success"></span>Sul-Americana</div>
+        <div><span class="box-cor bg-danger"></span>Rebaixamento</div>
       </div>
     </div>
     
@@ -158,22 +185,39 @@
     </div>
   </div>
 
+  <!-- RODAPÉ: ARTILHARIA E ASSISTÊNCIA -->
   <div class="painel-inferior">
     <div class="row">
       <div class="col-md-6 mb-3 mb-md-0">
         <h6 class="fw-bold text-success mb-2">⚽ Artilharia</h6>
-        <div class="table-responsive" style="max-height: 200px; overflow-y: auto;"><table class="table table-sm tabela-alinhada table-striped mb-0"><tbody id="corpo-artilharia"></tbody></table></div>
+        <div class="table-responsive" style="max-height: 200px; overflow-y: auto;">
+          <table class="table table-sm tabela-alinhada table-striped mb-0"><tbody id="corpo-artilharia"></tbody></table>
+        </div>
       </div>
       <div class="col-md-6">
         <h6 class="fw-bold text-primary mb-2">🎯 Assistências</h6>
-        <div class="table-responsive" style="max-height: 200px; overflow-y: auto;"><table class="table table-sm tabela-alinhada table-striped mb-0"><tbody id="corpo-assistencias"></tbody></table></div>
+        <div class="table-responsive" style="max-height: 200px; overflow-y: auto;">
+          <table class="table table-sm tabela-alinhada table-striped mb-0"><tbody id="corpo-assistencias"></tbody></table>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
 <!-- MODAL GRÁFICO (EVOLUÇÃO) -->
-<div class="modal fade" id="modalGrafico" tabindex="-1" aria-hidden="true"><div class="modal-dialog modal-dialog-centered modal-lg"><div class="modal-content"><div class="modal-header text-white" style="background: linear-gradient(to right, #007A33, #001E60);"><h5 class="modal-title fw-bold" id="tituloModalGrafico">📈 Evolução na Tabela</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body p-2" style="background-color: var(--bg-body);"><canvas id="graficoCanvas" style="max-height: 400px;"></canvas></div></div></div></div>
+<div class="modal fade" id="modalGrafico" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header text-white" style="background: linear-gradient(to right, #007A33, #001E60);">
+        <h5 class="modal-title fw-bold" id="tituloModalGrafico">📈 Evolução na Tabela</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-2" style="background-color: var(--bg-body);">
+        <canvas id="graficoCanvas" style="max-height: 400px;"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- MODAL PROBABILIDADES -->
 <div class="modal fade" id="modalProbabilidades" tabindex="-1" aria-hidden="true">
@@ -195,19 +239,54 @@
   </div>
 </div>
 
+<!-- SCRIPTS EXPANDIDOS E BLINDADOS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+  // 1. DADOS ESTÁTICOS
   const API_URL = 'https://script.google.com/macros/s/AKfycby2W_byRD0m1qHTSs_W20VynlNc2zcFPW6j01U9YWJnGNM4eqLrwmfWF_gp_20DTgdDWA/exec';
   const escudos = { "Flamengo": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/orE554NToSkH6nuwofe7Yg_500x500.png", "Palmeiras": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/7spurne-xDt2p6C0imYYNA_500x500.png", "Athletico-PR": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/9LkdBR4L5plovKM8eIy7nQ_500x500.png", "Fluminense": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/fCMxMMDF2AZPU7LzYKSlig_500x500.png", "Bahia": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/nIdbR6qIUDyZUBO9vojSPw_500x500.png", "Cruzeiro": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/Tcv9X__nIh-6wFNJPMwIXQ_500x500.png", "Coritiba": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/LaFlBADLmsjHfGTehCYtuA_500x500.png", "Atlético-MG": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/q9fhEsgpuyRq58OgmSndcQ_500x500.png", "Bragantino": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/lMyw2zn1Z4cdkaxKJWnsQw_500x500.png", "São Paulo": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/4w2Z97Hf9CSOqICK3a8AxQ_500x500.png", "Vitória": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/LHSM6VchpkI4NIptoSTHOg_500x500.png", "Corinthians": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/tCMSqgXVHROpdCpQhzTo1g_500x500.png", "Santos": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/VHdNOT6wWOw_vJ38GMjMzg_500x500.png", "Botafogo": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/KLDWYp-H8CAOT9H_JgizRg_500x500.png", "Grêmio": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/Ku-73v_TW9kpex-IEGb0ZA_500x500.png", "Mirassol": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/5J3JY7fcdiDYU5rbPW7AKA_500x500.png", "Vasco": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/hHwT8LwRmYCAGxQ-STLxYA_500x500.png", "Internacional": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/OWVFKuHrQuf4q2Wk0hEmSA_500x500.png", "Remo": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/bENrK5iSMF6sXrEkDNNxng_500x500.png", "Chapecoense": "https://ssl.gstatic.com/onebox/media/sports/logos/optimized/K7JQUKTRsuXfO9YrD5dq5g_500x500.png" };
-  
+  const urlsClubes = { "Athletico-PR": "./athletico.html", "Atlético-MG": "./atletico.html", "Bahia": "./bahia.html", "Botafogo": "./botafogo.html", "Bragantino": "./bragantino.html", "Chapecoense": "./chapecoense.html", "Corinthians": "./corinthians.html", "Coritiba": "./coritiba.html", "Cruzeiro": "./cruzeiro.html", "Flamengo": "./flamengo.html", "Fluminense": "./fluminense.html", "Grêmio": "./gremio.html", "Internacional": "./internacional.html", "Mirassol": "./mirassol.html", "Palmeiras": "./palmeiras.html", "Remo": "./remo.html", "Santos": "./santos.html", "São Paulo": "./saopaulo.html", "Vasco": "./vasco.html", "Vitória": "./vitoria.html" };
+  const estadiosFotos = { "maracan": "./maracana.jpg", "allianz": "./allianz.jpg", "mineir": "./mineirao.jpg", "química": "./quimica.jpg", "morum": "./morumbis.jpg", "beira": "./beirario.jpg", "grêmio": "./gremio.jpg", "nilton": "./niltonsantos.jpg", "januário": "./saojanuario.jpg", "couto": "./couto.jpg", "mrv": "./mrv.jpg", "fonte": "./fontenova.jpg", "barradão": "./barradao.jpg", "belmiro": "./vilabelmiro.jpg", "baixada": "./baixada.jpg", "mangueirão": "./mangueirao.jpg", "bragantino": "./bragantino.jpg", "chedid": "./bragantino.jpg", "campos maia": "./mirassol.jpg", "mirassol": "./mirassol.jpg", "condá": "./conda.jpg" };
   const siglasClubes = { "Flamengo": "FLA", "Palmeiras": "PAL", "Athletico-PR": "CAP", "Fluminense": "FLU", "Bahia": "BAH", "Cruzeiro": "CRU", "Coritiba": "CFC", "Atlético-MG": "CAM", "Bragantino": "RBB", "São Paulo": "SAO", "Vitória": "VIT", "Corinthians": "COR", "Santos": "SAN", "Botafogo": "BOT", "Grêmio": "GRE", "Mirassol": "MIR", "Vasco": "VAS", "Internacional": "INT", "Remo": "REM", "Chapecoense": "CHA" };
 
-  let rodadaAtual = 1; let todosOsJogos = []; let dadosClassificacaoBase = []; let dadosArtilharia = []; let dadosProbabilidades = []; let modoSimulacao = false; let placaresSimulados = {}; let ordemClassificacao = []; let chartEvolucao = null;
-  let audioTema = new Audio('./hino-brasileirao.mp3'); audioTema.loop = true; let musicaTocando = false;
+  // 2. VARIÁVEIS DO SISTEMA
+  let rodadaAtual = 1; 
+  let todosOsJogos = []; 
+  let dadosClassificacaoBase = []; 
+  let dadosArtilharia = []; 
+  let dadosProbabilidades = []; 
+  let modoSimulacao = false; 
+  let placaresSimulados = {}; 
+  let ordemClassificacao = []; 
+  let chartEvolucao = null;
+  let audioTema = new Audio('./hino-brasileirao.mp3'); 
+  audioTema.loop = true; 
+  let musicaTocando = false;
 
+  // 3. FUNÇÕES BÁSICAS
   if (localStorage.getItem('temaEscuro') === 'sim') document.body.classList.add('dark-mode');
-  function toggleDarkMode() { document.body.classList.toggle('dark-mode'); localStorage.setItem('temaEscuro', document.body.classList.contains('dark-mode') ? 'sim' : 'nao'); if(chartEvolucao) chartEvolucao.update(); }
-  function tocarTema() { const btn = document.getElementById('btn-audio'); if (!musicaTocando) { audioTema.play(); btn.innerText = "🔇 Parar Som"; btn.classList.replace('btn-outline-success', 'btn-danger'); musicaTocando = true; } else { audioTema.pause(); audioTema.currentTime = 0; btn.innerText = "▶ Som"; btn.classList.replace('btn-danger', 'btn-outline-success'); musicaTocando = false; } }
+  
+  function toggleDarkMode() { 
+    document.body.classList.toggle('dark-mode'); 
+    localStorage.setItem('temaEscuro', document.body.classList.contains('dark-mode') ? 'sim' : 'nao'); 
+    if(chartEvolucao) chartEvolucao.update(); 
+  }
+  
+  function tocarTema() { 
+    const btn = document.getElementById('btn-audio'); 
+    if (!musicaTocando) { 
+      audioTema.play(); 
+      btn.innerText = "🔇 Parar Som"; 
+      btn.classList.replace('btn-outline-success', 'btn-danger'); 
+      musicaTocando = true; 
+    } else { 
+      audioTema.pause(); 
+      audioTema.currentTime = 0; 
+      btn.innerText = "▶ Som"; 
+      btn.classList.replace('btn-danger', 'btn-outline-success'); 
+      musicaTocando = false; 
+    } 
+  }
 
   function normalizar(t) { return String(t || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim(); }
   function pegarEscudo(n) { const norm = normalizar(n); for (const [k, v] of Object.entries(escudos)) { if (normalizar(k) === norm) return v; } return ""; }
@@ -222,14 +301,20 @@
 
   function verificarGolsAoVivo(jogosAtualizados) {
     if(modoSimulacao) return;
-    let placaresAnteriores = JSON.parse(localStorage.getItem('placaresAnteriores')) || {};
+    
+    // Tenta ler com segurança. Se der erro, cria um vazio.
+    let placaresAnteriores = {};
+    try { placaresAnteriores = JSON.parse(localStorage.getItem('placaresAnteriores')) || {}; } catch(e) {}
+    
     let placaresAtuais = {};
+    
     jogosAtualizados.forEach(jogo => {
       if(jogo.Status === 'Ao Vivo' || jogo.Status === 'Intervalo') {
         let ch = jogo.Mandante + "-" + jogo.Visitante;
         let gm = parseInt(jogo.GolsMandante) || 0;
         let gv = parseInt(jogo.GolsVisitante) || 0;
         placaresAtuais[ch] = { gm: gm, gv: gv };
+        
         if(placaresAnteriores[ch]) {
           if(gm > placaresAnteriores[ch].gm || gv > placaresAnteriores[ch].gv) {
             document.getElementById('textoToastGol').innerHTML = `⚽ GOL! ${jogo.Mandante} ${gm} x ${gv} ${jogo.Visitante}`;
@@ -242,66 +327,139 @@
     localStorage.setItem('placaresAnteriores', JSON.stringify(placaresAtuais));
   }
 
+  // 4. MOTOR PRINCIPAL (ANTI-CRASH)
   async function carregarTudo(silencioso = false) {
     try {
-      const fetchJsonSeguro = async (url) => { try { const res = await fetch(url); return await res.json(); } catch(e) { return []; } };
+      const fetchJsonSeguro = async (url) => { 
+        try { 
+          const res = await fetch(url); 
+          return await res.json(); 
+        } catch(e) { return []; } 
+      };
+
       const [resClass, resRodadas, resRodadaAtual, resArt, resProb] = await Promise.all([
-        fetchJsonSeguro(API_URL + "?acao=classificacao"), fetchJsonSeguro(API_URL + "?acao=rodadas"),
-        fetchJsonSeguro(API_URL + "?acao=rodada_atual"), fetchJsonSeguro(API_URL + "?acao=artilharia"), fetchJsonSeguro(API_URL + "?acao=probabilidades")
+        fetchJsonSeguro(API_URL + "?acao=classificacao"), 
+        fetchJsonSeguro(API_URL + "?acao=rodadas"),
+        fetchJsonSeguro(API_URL + "?acao=rodada_atual"), 
+        fetchJsonSeguro(API_URL + "?acao=artilharia"), 
+        fetchJsonSeguro(API_URL + "?acao=probabilidades")
       ]);
       
-      dadosClassificacaoBase = Array.isArray(resClass) ? resClass : []; todosOsJogos = Array.isArray(resRodadas) ? resRodadas : []; 
-      dadosArtilharia = Array.isArray(resArt) ? resArt : []; dadosProbabilidades = Array.isArray(resProb) ? resProb : [];
-      if (!modoSimulacao && !silencioso && resRodadaAtual && resRodadaAtual.rodada) rodadaAtual = parseInt(resRodadaAtual.rodada);
+      dadosClassificacaoBase = Array.isArray(resClass) ? resClass : []; 
+      todosOsJogos = Array.isArray(resRodadas) ? resRodadas : []; 
+      dadosArtilharia = Array.isArray(resArt) ? resArt : []; 
+      dadosProbabilidades = Array.isArray(resProb) ? resProb : [];
       
-      localStorage.setItem('brasileirao_jogos', JSON.stringify(todosOsJogos));
-      verificarGolsAoVivo(todosOsJogos);
-      recalcularEAtualizarTabela(); renderizarRodada(); renderizarArtilhariaAssistencias(); if(dadosProbabilidades.length > 0) renderizarProbabilidades();
-    } catch (e) { if (!silencioso) console.error("Erro:", e); }
+      if (!modoSimulacao && !silencioso && resRodadaAtual && resRodadaAtual.rodada) {
+         rodadaAtual = parseInt(resRodadaAtual.rodada);
+      }
+      
+      // Tenta salvar, mas se a memória estiver cheia, não trava o site
+      try { localStorage.setItem('brasileirao_jogos', JSON.stringify(todosOsJogos)); } catch(e) {}
+      
+      // Se houver falha nos gols ao vivo, não afeta a tabela
+      try { verificarGolsAoVivo(todosOsJogos); } catch(e) {}
+      
+      recalcularEAtualizarTabela(); 
+      renderizarRodada(); 
+      renderizarArtilhariaAssistencias(); 
+      
+      if(dadosProbabilidades.length > 0) {
+        renderizarProbabilidades();
+      }
+      
+    } catch (e) { 
+      if (!silencioso) console.error("Erro geral no carregamento:", e); 
+    }
   }
 
   function recalcularEAtualizarTabela() {
-    let stats = {}; let formaTimes = {};
-    dadosClassificacaoBase.forEach(t => { let nome = t['Clube']; stats[nome] = { Clube: nome, Pontos: 0, Jogos: 0, Vitorias: 0, Empates: 0, Derrotas: 0, GP: 0, GC: 0, Saldo: 0 }; formaTimes[nome] = []; });
+    let stats = {}; 
+    let formaTimes = {};
+    
+    dadosClassificacaoBase.forEach(t => { 
+      let nome = t['Clube']; 
+      stats[nome] = { Clube: nome, Pontos: 0, Jogos: 0, Vitorias: 0, Empates: 0, Derrotas: 0, GP: 0, GC: 0, Saldo: 0 }; 
+      formaTimes[nome] = []; 
+    });
+    
     let jogosOrdenados = [...todosOsJogos].sort((a, b) => parseInt(a.Rodada) - parseInt(b.Rodada));
 
     jogosOrdenados.forEach((jogo, index) => {
       const chave = `${parseInt(jogo['Rodada'])}-${jogo.originalIndex || index}`;
       let gm = NaN, gv = NaN;
-      if ((jogo.Status === 'Encerrado' || jogo.Status === 'Ao Vivo' || jogo.Status === 'Intervalo') && jogo.GolsMandante !== '' && jogo.GolsVisitante !== '') { gm = parseInt(jogo.GolsMandante); gv = parseInt(jogo.GolsVisitante); } 
-      else if (modoSimulacao && placaresSimulados[chave] && placaresSimulados[chave].mandante !== "" && placaresSimulados[chave].visitante !== "") { gm = parseInt(placaresSimulados[chave].mandante); gv = parseInt(placaresSimulados[chave].visitante); }
+      
+      if ((jogo.Status === 'Encerrado' || jogo.Status === 'Ao Vivo' || jogo.Status === 'Intervalo') && jogo.GolsMandante !== '' && jogo.GolsVisitante !== '') { 
+        gm = parseInt(jogo.GolsMandante); 
+        gv = parseInt(jogo.GolsVisitante); 
+      } else if (modoSimulacao && placaresSimulados[chave] && placaresSimulados[chave].mandante !== "" && placaresSimulados[chave].visitante !== "") { 
+        gm = parseInt(placaresSimulados[chave].mandante); 
+        gv = parseInt(placaresSimulados[chave].visitante); 
+      }
 
       if (!isNaN(gm) && !isNaN(gv)) {
-        const m = jogo.Mandante, v = jogo.Visitante;
+        const m = jogo.Mandante;
+        const v = jogo.Visitante;
+        
+        // Verifica se os times existem na tabela base antes de somar
         if (stats[m] && stats[v]) {
-          stats[m].Jogos++; stats[v].Jogos++; stats[m].GP += gm; stats[m].GC += gv; stats[v].GP += gv; stats[v].GC += gm;
-          if (gm > gv) { stats[m].Pontos+=3; stats[m].Vitorias++; stats[v].Derrotas++; formaTimes[m].push({res:'V', m:m, v:v, gm:gm, gv:gv}); formaTimes[v].push({res:'D', m:m, v:v, gm:gm, gv:gv}); }
-          else if (gm < gv) { stats[v].Pontos+=3; stats[v].Vitorias++; stats[m].Derrotas++; formaTimes[m].push({res:'D', m:m, v:v, gm:gm, gv:gv}); formaTimes[v].push({res:'V', m:m, v:v, gm:gm, gv:gv}); }
-          else { stats[m].Pontos+=1; stats[m].Empates++; stats[v].Pontos+=1; stats[v].Empates++; formaTimes[m].push({res:'E', m:m, v:v, gm:gm, gv:gv}); formaTimes[v].push({res:'E', m:m, v:v, gm:gm, gv:gv}); }
-          stats[m].Saldo = stats[m].GP - stats[m].GC; stats[v].Saldo = stats[v].GP - stats[v].GC;
+          stats[m].Jogos++; stats[v].Jogos++; 
+          stats[m].GP += gm; stats[m].GC += gv; 
+          stats[v].GP += gv; stats[v].GC += gm;
+          
+          if (gm > gv) { 
+            stats[m].Pontos+=3; stats[m].Vitorias++; stats[v].Derrotas++; 
+            formaTimes[m].push({res:'V', m:m, v:v, gm:gm, gv:gv}); 
+            formaTimes[v].push({res:'D', m:m, v:v, gm:gm, gv:gv}); 
+          } else if (gm < gv) { 
+            stats[v].Pontos+=3; stats[v].Vitorias++; stats[m].Derrotas++; 
+            formaTimes[m].push({res:'D', m:m, v:v, gm:gm, gv:gv}); 
+            formaTimes[v].push({res:'V', m:m, v:v, gm:gm, gv:gv}); 
+          } else { 
+            stats[m].Pontos+=1; stats[m].Empates++; stats[v].Pontos+=1; stats[v].Empates++; 
+            formaTimes[m].push({res:'E', m:m, v:v, gm:gm, gv:gv}); 
+            formaTimes[v].push({res:'E', m:m, v:v, gm:gm, gv:gv}); 
+          }
+          
+          stats[m].Saldo = stats[m].GP - stats[m].GC; 
+          stats[v].Saldo = stats[v].GP - stats[v].GC;
         }
       }
     });
 
     let arrayTabela = Object.values(stats);
-    arrayTabela.sort((a, b) => { if (b.Pontos !== a.Pontos) return b.Pontos - a.Pontos; if (b.Vitorias !== a.Vitorias) return b.Vitorias - a.Vitorias; if (b.Saldo !== a.Saldo) return b.Saldo - a.Saldo; return b.GP - a.GP; });
+    arrayTabela.sort((a, b) => { 
+      if (b.Pontos !== a.Pontos) return b.Pontos - a.Pontos; 
+      if (b.Vitorias !== a.Vitorias) return b.Vitorias - a.Vitorias; 
+      if (b.Saldo !== a.Saldo) return b.Saldo - a.Saldo; 
+      return b.GP - a.GP; 
+    });
     
     ordemClassificacao = arrayTabela.map(t => normalizar(t.Clube));
-    localStorage.setItem('brasileirao_tabela', JSON.stringify(arrayTabela));
-    localStorage.setItem('brasileirao_artilharia', JSON.stringify(dadosArtilharia));
+    
+    // Tenta salvar, sem travar em caso de erro
+    try { localStorage.setItem('brasileirao_tabela', JSON.stringify(arrayTabela)); } catch(e){}
+    try { localStorage.setItem('brasileirao_artilharia', JSON.stringify(dadosArtilharia)); } catch(e){}
 
-    const corpo = document.getElementById('tabela-corpo'); corpo.innerHTML = ''; 
+    const corpo = document.getElementById('tabela-corpo'); 
+    corpo.innerHTML = ''; 
+    
     arrayTabela.forEach((time, index) => {
       const pos = index + 1;
       let classe = ''; 
-      if (pos <= 4) classe = 'zona-libertadores text-primary'; else if (pos === 5) classe = 'zona-pre-liberta text-info'; else if (pos >= 6 && pos <= 11) classe = 'zona-sulamericana text-success'; else if (pos >= 17) classe = 'zona-rebaixamento text-danger';
+      
+      if (pos <= 4) classe = 'zona-libertadores text-primary'; 
+      else if (pos === 5) classe = 'zona-pre-liberta text-info'; 
+      else if (pos >= 6 && pos <= 11) classe = 'zona-sulamericana text-success'; 
+      else if (pos >= 17) classe = 'zona-rebaixamento text-danger';
 
-      // GERADOR DAS BOLINHAS (V-E-D) COM POP-UP EM CSS PURO (Sem Piscar)
       let formaHtml = (formaTimes[time.Clube] || []).slice(-5).map(f => { 
+        // Se a memória vier corrompida apenas com a string "V", mostra normal sem quebrar
         if(typeof f === 'string') {
           let corStr = f === 'V' ? 'form-v' : (f === 'E' ? 'form-e' : 'form-d');
           return `<div class="form-dot-wrapper"><span class="form-dot ${corStr}">${f}</span></div>`; 
         }
+        
         let cor = f.res === 'V' ? 'form-v' : (f.res === 'E' ? 'form-e' : 'form-d');
         let escudoM = pegarEscudo(f.m); let siglaM = pegarSigla(f.m);
         let escudoV = pegarEscudo(f.v); let siglaV = pegarSigla(f.v);
@@ -310,8 +468,19 @@
         return `<div class="form-dot-wrapper"><span class="form-dot ${cor}">${f.res}</span>${popup}</div>`; 
       }).join('');
       
-      let linkNome = formatarNomeClube(time.Clube); let escudoImg = pegarEscudo(time.Clube) ? `<img src="${pegarEscudo(time.Clube)}" class="logo-clube" onerror="this.style.display='none';">` : '';
-      corpo.innerHTML += `<tr class="${classe.split(' ')[0]}"><td class="fw-bold ${classe.split(' ')[1]||'text-secondary'}">${pos}</td><td class="text-start d-flex justify-content-between align-items-center" style="border:none;"><span>${escudoImg}${linkNome}</span><span style="cursor:pointer; font-size:1.1rem;" onclick="gerarGrafico('${time.Clube}')" title="Ver Evolução">📈</span></td><td class="fw-bold">${time.Pontos}</td><td>${time.Jogos}</td><td>${time.Vitorias}</td><td>${time.Empates}</td><td>${time.Derrotas}</td><td>${time.GP}</td><td>${time.GC}</td><td>${time.Saldo}</td><td><div class="d-flex justify-content-center">${formaHtml}</div></td></tr>`;
+      let linkNome = formatarNomeClube(time.Clube); 
+      let escudoImg = pegarEscudo(time.Clube) ? `<img src="${pegarEscudo(time.Clube)}" class="logo-clube" onerror="this.style.display='none';">` : '';
+      
+      corpo.innerHTML += `
+        <tr class="${classe.split(' ')[0]}">
+          <td class="fw-bold ${classe.split(' ')[1]||'text-secondary'}">${pos}</td>
+          <td class="text-start d-flex justify-content-between align-items-center" style="border:none;">
+            <span>${escudoImg}${linkNome}</span>
+            <span style="cursor:pointer; font-size:1.1rem;" onclick="gerarGrafico('${time.Clube}')" title="Ver Evolução">📈</span>
+          </td>
+          <td class="fw-bold">${time.Pontos}</td><td>${time.Jogos}</td><td>${time.Vitorias}</td><td>${time.Empates}</td><td>${time.Derrotas}</td><td>${time.GP}</td><td>${time.GC}</td><td>${time.Saldo}</td>
+          <td><div class="d-flex justify-content-center">${formaHtml}</div></td>
+        </tr>`;
     });
   }
 
@@ -344,41 +513,85 @@
     document.getElementById('titulo-rodada').innerText = `Rodada ${rodadaAtual}`; const cont = document.getElementById('lista-jogos'); cont.innerHTML = '';
     const jogosDaRodada = todosOsJogos.map((j, i) => ({...j, originalIndex: i})).filter(j => parseInt(j.Rodada) === rodadaAtual);
     if(jogosDaRodada.length === 0) { cont.innerHTML = `<p class="text-center py-4 text-muted">Sem jogos agendados.</p>`; return; }
+    
     jogosDaRodada.forEach(jogo => {
       let central = "", badge = `<span class="text-muted" style="font-size: 0.68rem;">${jogo.Status||'Agendado'}</span>`;
       if (jogo.Status === 'Ao Vivo') badge = `<span class="badge bg-danger"><span class="live-dot"></span>AO VIVO</span>`; else if (jogo.Status === 'Intervalo') badge = `<span class="badge bg-warning text-dark">Intervalo</span>`;
+      
       const chave = `${rodadaAtual}-${jogo.originalIndex}`;
-      if ((jogo.Status === 'Encerrado' || jogo.Status === 'Ao Vivo' || jogo.Status === 'Intervalo') && jogo.GolsMandante !== '' && jogo.GolsVisitante !== '') { central = `<div class="text-center px-2 py-1 rounded fw-bold" style="background:var(--bg-header); width: 24%; border:1px solid #ccc;">${jogo.GolsMandante} x ${jogo.GolsVisitante}</div>`; } 
-      else if (modoSimulacao) { let vM = placaresSimulados[chave]?.mandante || "", vV = placaresSimulados[chave]?.visitante || ""; central = `<div class="d-flex justify-content-center gap-1" style="width: 32%;"><input type="number" class="input-simulacao" value="${vM}" oninput="atualizarSimulacao(${rodadaAtual}, ${jogo.originalIndex}, 'mandante', this.value)"> x <input type="number" class="input-simulacao" value="${vV}" oninput="atualizarSimulacao(${rodadaAtual}, ${jogo.originalIndex}, 'visitante', this.value)"></div>`; } 
-      else { central = `<div class="text-center px-2 py-1 rounded text-muted fw-bold" style="background:var(--bg-header); width: 24%; border:1px solid #ccc;">x</div>`; }
-      let estNome = jogo.Estadio || 'A Definir', estSrc = ""; for (const [k, v] of Object.entries(estadiosFotos)) if (estNome.toLowerCase().includes(k)) { estSrc = v; break; }
+      if ((jogo.Status === 'Encerrado' || jogo.Status === 'Ao Vivo' || jogo.Status === 'Intervalo') && jogo.GolsMandante !== '' && jogo.GolsVisitante !== '') { 
+        central = `<div class="text-center px-2 py-1 rounded fw-bold" style="background:var(--bg-header); width: 24%; border:1px solid #ccc;">${jogo.GolsMandante} x ${jogo.GolsVisitante}</div>`; 
+      } else if (modoSimulacao) { 
+        let vM = placaresSimulados[chave]?.mandante || "", vV = placaresSimulados[chave]?.visitante || ""; 
+        central = `<div class="d-flex justify-content-center gap-1" style="width: 32%;"><input type="number" class="input-simulacao" value="${vM}" oninput="atualizarSimulacao(${rodadaAtual}, ${jogo.originalIndex}, 'mandante', this.value)"> x <input type="number" class="input-simulacao" value="${vV}" oninput="atualizarSimulacao(${rodadaAtual}, ${jogo.originalIndex}, 'visitante', this.value)"></div>`; 
+      } else { 
+        central = `<div class="text-center px-2 py-1 rounded text-muted fw-bold" style="background:var(--bg-header); width: 24%; border:1px solid #ccc;">x</div>`; 
+      }
+      
+      let estNome = jogo.Estadio || 'A Definir', estSrc = ""; 
+      for (const [k, v] of Object.entries(estadiosFotos)) if (estNome.toLowerCase().includes(k)) { estSrc = v; break; }
+      
       cont.innerHTML += `<div class="card-jogo"><div class="info-partida"><span>📅 ${String(jogo.Data||'').split(' ')[0]} ${jogo.Horario||''} | ${estSrc?`<img src="${estSrc}" class="logo-estadio" onerror="this.style.display='none';">`:''}${estNome}</span> ${badge}</div><div class="d-flex justify-content-between align-items-center"><div class="text-end text-truncate fw-bold" style="width: 38%;">${formatarNomeClube(jogo.Mandante)} <img src="${pegarEscudo(jogo.Mandante)}" class="logo-clube ms-1" onerror="this.style.display='none';"></div>${central}<div class="text-start text-truncate fw-bold" style="width: 38%;"><img src="${pegarEscudo(jogo.Visitante)}" class="logo-clube me-1" onerror="this.style.display='none';"> ${formatarNomeClube(jogo.Visitante)}</div></div></div>`;
     });
   }
 
   function mudarRodada(d) { rodadaAtual += d; if(rodadaAtual < 1) rodadaAtual = 1; if(rodadaAtual > 38) rodadaAtual = 38; renderizarRodada(); }
-  function alternarModoSimulacao() { modoSimulacao = !modoSimulacao; const b = document.getElementById('btn-simulacao'); b.innerText = modoSimulacao ? "Simulador: ON" : "Simulador: OFF"; b.className = modoSimulacao ? "btn btn-danger btn-sm fw-bold" : "btn btn-warning btn-sm fw-bold"; renderizarRodada(); recalcularEAtualizarTabela(); }
-  function atualizarSimulacao(r, i, c, v) { const ch = `${r}-${i}`; if(!placaresSimulados[ch]) placaresSimulados[ch] = {mandante:"", visitante:""}; placaresSimulados[ch][c] = v; recalcularEAtualizarTabela(); }
+  
+  function alternarModoSimulacao() { 
+    modoSimulacao = !modoSimulacao; 
+    const b = document.getElementById('btn-simulacao'); 
+    b.innerText = modoSimulacao ? "Simulador: ON" : "Simulador: OFF"; 
+    b.className = modoSimulacao ? "btn btn-danger btn-sm fw-bold" : "btn btn-warning btn-sm fw-bold"; 
+    renderizarRodada(); 
+    recalcularEAtualizarTabela(); 
+  }
+  
+  function atualizarSimulacao(r, i, c, v) { 
+    const ch = `${r}-${i}`; 
+    if(!placaresSimulados[ch]) placaresSimulados[ch] = {mandante:"", visitante:""}; 
+    placaresSimulados[ch][c] = v; 
+    recalcularEAtualizarTabela(); 
+  }
 
   function renderizarArtilhariaAssistencias() {
-    const cArt = document.getElementById('corpo-artilharia'), cAst = document.getElementById('corpo-assistencias'); cArt.innerHTML=''; cAst.innerHTML='';
-    if (!dadosArtilharia || dadosArtilharia.length === 0) { cArt.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-3">Aguardando dados...</td></tr>'; cAst.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-3">Aguardando dados...</td></tr>'; return; }
-    [...dadosArtilharia].sort((a,b)=> (b.Gols||0) - (a.Gols||0)).slice(0,10).forEach((a,i) => cArt.innerHTML += `<tr><td class="fw-bold">${i+1}</td><td class="text-start">${a.Jogador}</td><td class="text-start"><img src="${pegarEscudo(a.Clube)}" class="logo-clube" onerror="this.style.display='none';">${a.Clube}</td><td class="fw-bold text-success text-center">${a.Gols||0}</td></tr>`);
-    [...dadosArtilharia].sort((a,b)=> (b.Assistencias||0) - (a.Assistencias||0)).slice(0,10).forEach((a,i) => cAst.innerHTML += `<tr><td class="fw-bold">${i+1}</td><td class="text-start">${a.Jogador}</td><td class="text-start"><img src="${pegarEscudo(a.Clube)}" class="logo-clube" onerror="this.style.display='none';">${a.Clube}</td><td class="fw-bold text-primary text-center">${a.Assistencias||0}</td></tr>`);
+    const cArt = document.getElementById('corpo-artilharia'), cAst = document.getElementById('corpo-assistencias'); 
+    cArt.innerHTML=''; cAst.innerHTML='';
+    if (!dadosArtilharia || dadosArtilharia.length === 0) { 
+      cArt.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-3">Aguardando dados...</td></tr>'; 
+      cAst.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-3">Aguardando dados...</td></tr>'; 
+      return; 
+    }
+    
+    [...dadosArtilharia].sort((a,b)=> (b.Gols||0) - (a.Gols||0)).slice(0,10).forEach((a,i) => {
+      cArt.innerHTML += `<tr><td class="fw-bold">${i+1}</td><td class="text-start">${a.Jogador}</td><td class="text-start"><img src="${pegarEscudo(a.Clube)}" class="logo-clube" onerror="this.style.display='none';">${a.Clube}</td><td class="fw-bold text-success text-center">${a.Gols||0}</td></tr>`;
+    });
+    
+    [...dadosArtilharia].sort((a,b)=> (b.Assistencias||0) - (a.Assistencias||0)).slice(0,10).forEach((a,i) => {
+      cAst.innerHTML += `<tr><td class="fw-bold">${i+1}</td><td class="text-start">${a.Jogador}</td><td class="text-start"><img src="${pegarEscudo(a.Clube)}" class="logo-clube" onerror="this.style.display='none';">${a.Clube}</td><td class="fw-bold text-primary text-center">${a.Assistencias||0}</td></tr>`;
+    });
   }
   
   function renderizarProbabilidades() {
-    const c = document.getElementById('corpo-probabilidades'); c.innerHTML='';
+    const c = document.getElementById('corpo-probabilidades'); 
+    c.innerHTML='';
     dadosProbabilidades.sort((a,b)=> { let pA = ordemClassificacao.indexOf(normalizar(a.Clube)), pB = ordemClassificacao.indexOf(normalizar(b.Clube)); return (pA===-1?99:pA) - (pB===-1?99:pB); });
+    
     const b = (v, cor) => {
       let num = parseFloat(String(v).replace(',','.')) || 0;
       let texto = (v === "0" || v === "" || num === 0) ? "0%" : `${v}%`.replace('%%', '%');
       return `<div class="d-flex align-items-center justify-content-center"><div class="progress" style="width:45px; height:6px; margin-right:6px; background-color: rgba(128,128,128,0.2);"><div class="progress-bar ${cor}" style="width:${num}%;"></div></div><span style="font-size:0.75rem; width:45px; text-align:right; font-weight:600;">${texto}</span></div>`;
     };
-    dadosProbabilidades.forEach(d => c.innerHTML += `<tr><td class="text-start ps-3"><img src="${pegarEscudo(d.Clube)}" class="logo-clube" onerror="this.style.display='none';"><span class="fw-bold" style="font-size:0.85rem;">${d.Clube}</span></td><td>${b(d.Titulo,'bg-success')}</td><td>${b(d.Libertadores,'bg-primary')}</td><td>${b(d.SulAmericana,'bg-warning')}</td><td>${b(d.Rebaixamento,'bg-danger')}</td></tr>`);
+    
+    dadosProbabilidades.forEach(d => {
+      c.innerHTML += `<tr><td class="text-start ps-3"><img src="${pegarEscudo(d.Clube)}" class="logo-clube" onerror="this.style.display='none';"><span class="fw-bold" style="font-size:0.85rem;">${d.Clube}</span></td><td>${b(d.Titulo,'bg-success')}</td><td>${b(d.Libertadores,'bg-primary')}</td><td>${b(d.SulAmericana,'bg-warning')}</td><td>${b(d.Rebaixamento,'bg-danger')}</td></tr>`;
+    });
   }
 
-  window.onload = function() { carregarTudo(); setInterval(() => { if (!modoSimulacao) carregarTudo(true); }, 30000); };
+  // DISPARA TUDO QUANDO O SITE ABRE
+  window.onload = function() { 
+    carregarTudo(); 
+    setInterval(() => { if (!modoSimulacao) carregarTudo(true); }, 30000); 
+  };
 </script>
 </body>
 </html>

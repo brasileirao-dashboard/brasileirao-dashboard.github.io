@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -7,15 +8,13 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body {
-      background-color: #111; /* Fundo preto sólido */
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
+      background-color: #111; /* Fundo preto sólido para dar contraste máximo */
+      margin: 0; padding: 0; min-height: 100vh;
       font-family: 'Segoe UI', sans-serif;
       overflow-x: hidden;
     }
     
-    /* CAMADA 1: ESCUDO DE FUNDO (Sempre visível) */
+    /* CAMADA 1: ESCUDO DE FUNDO (Sempre visível, bem fraquinho) */
     .fundo-escudo {
       content: "";
       background: url('./escudovasco.png') no-repeat center center fixed;
@@ -23,91 +22,90 @@
       opacity: 0.10;
       top: 0; left: 0; bottom: 0; right: 0;
       position: fixed;
-      z-index: 1; /* Fica na primeira camada acima do fundo preto */
+      z-index: 1; /* Primeira camada (Fundo) */
       pointer-events: none;
     }
 
-    /* CAMADA 2: EFEITO CALDEIRÃO (Slideshow de fotos) */
+    /* CAMADA 2: O CARROSSEL CINEMATOGRÁFICO */
     #slideshow-torcida {
       position: fixed;
       top: 0; left: 0; width: 100vw; height: 100vh;
-      z-index: 2; /* Fica acima do escudo e ACIMA do fundo preto */
+      z-index: 2; /* Fica em cima do escudo, mas atrás do texto */
       opacity: 0; /* Invisível por padrão */
       transition: opacity 1.5s ease-in-out;
       pointer-events: none; 
     }
 
-    /* Quando clicar no play, a camada 2 acende */
+    /* A MÁGICA: Quando o Hino toca, o slideshow acende com 60% de luz */
     body.tocando-hino #slideshow-torcida {
-      opacity: 0.65; /* 65% de visibilidade para as fotos */
+      opacity: 0.60; 
     }
 
-    /* Estilo de cada foto do carrossel */
     .slide-foto {
       position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
       background-size: cover;
       background-position: center;
       opacity: 0; 
-      transition: opacity 2.5s ease-in-out; 
+      transition: opacity 2s ease-in-out; /* Transição fantasma entre as fotos */
     }
 
-    /* A foto ativa ganha zoom cinematográfico */
+    /* A foto ativa ganha um zoom lento e dramático */
     .slide-foto.ativo {
       opacity: 1;
-      animation: zoomCinematografico 10s infinite alternate linear;
+      animation: zoomLento 10s infinite alternate linear;
     }
 
-    @keyframes zoomCinematografico {
+    @keyframes zoomLento {
       0% { transform: scale(1.0); }
-      100% { transform: scale(1.1); }
+      100% { transform: scale(1.08); } /* Dá um zoom de 8% bem devagar */
     }
 
-    /* As 3 fotos confiáveis da torcida */
-    .foto-1 { background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/41/Vasco_x_Cear%C3%A1_-_Maracan%C3%A3_%281%29.jpg'); }
-    .foto-2 { background-image: url('https://upload.wikimedia.org/wikipedia/commons/6/65/Estadio_Sao_Januario_2.jpg'); }
-    .foto-3 { background-image: url('https://upload.wikimedia.org/wikipedia/commons/8/87/Torcida_do_Vasco.jpg'); }
+    /* FOTOS CORRIGIDAS (Links diretos para as imagens reais) */
+    .foto-1 { background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Torcida_do_Vasco.jpg/1024px-Torcida_do_Vasco.jpg'); }
+    .foto-2 { background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Estadio_Sao_Januario_2.jpg/1024px-Estadio_Sao_Januario_2.jpg'); }
+    .foto-3 { background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Torcida_do_vasco_no_maracan%C3%A3.jpg/1024px-Torcida_do_vasco_no_maracan%C3%A3.jpg'); }
 
-    /* CAMADA 10: CONTEÚDO PRINCIPAL (Para ficar na frente de tudo) */
+    /* CAMADA 10: CONTEÚDO (Para nunca sumir) */
     .conteudo-frente {
       position: relative;
-      z-index: 10; /* Protege os textos para nunca sumirem */
+      z-index: 10; 
     }
 
-    /* CAIXAS DE CONTEÚDO */
+    /* CAIXAS BRANCAS ESTILO "VIDRO" */
     .conteudo-box {
-      background-color: rgba(255, 255, 255, 0.85); 
-      backdrop-filter: blur(5px);
+      background-color: rgba(255, 255, 255, 0.90); 
+      backdrop-filter: blur(4px);
       border-radius: 12px;
       padding: 24px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
       border: 1px solid rgba(255, 255, 255, 0.4);
-      transition: background-color 1.5s ease; 
+      transition: background-color 1.5s ease; /* Anima a cor da caixa */
     }
     
-    /* Quando toca o hino, as caixas ficam mais "vidro" */
+    /* Quando toca o hino, as caixas ficam BEM transparentes para a torcida aparecer! */
     body.tocando-hino .conteudo-box {
-      background-color: rgba(255, 255, 255, 0.65); 
+      background-color: rgba(255, 255, 255, 0.55); 
     }
 
     .titulo-clube { color: #000; font-weight: 900; text-transform: uppercase; }
-    .hino-letra { font-style: italic; line-height: 1.9; color: #111; text-align: center; font-size: 1.05rem; font-weight: 700; }
+    .hino-letra { font-style: italic; line-height: 1.9; color: #000; text-align: center; font-size: 1.05rem; font-weight: 700; }
     .mascote { max-width: 140px; float: right; margin-left: 15px; margin-bottom: 10px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
   </style>
 </head>
 <body>
 
-<!-- CAMADA 1: O Escudo -->
+<!-- ESCUDO DE FUNDO FIXO -->
 <div class="fundo-escudo"></div>
 
-<!-- CAMADA 2: O Carrossel de Fotos da Torcida -->
+<!-- O SHOW DE FOTOS (Fica invisível até você clicar no Play) -->
 <div id="slideshow-torcida">
   <div class="slide-foto foto-1"></div>
   <div class="slide-foto foto-2"></div>
   <div class="slide-foto foto-3"></div>
 </div>
 
-<!-- CAMADA 10: O Site em si -->
+<!-- CONTEÚDO DA PÁGINA -->
 <div class="container py-4 conteudo-frente">
 
   <!-- CABEÇALHO -->
@@ -115,12 +113,11 @@
     <h1 class="titulo-clube m-0">Club de Regatas Vasco da Gama</h1>
     <div class="d-flex align-items-center">
       <img src="./escudovasco.png" style="height: 50px; margin-right: 15px; object-fit: contain;" onerror="this.style.display='none';">
-      <!-- BOTÃO DO HINO -->
+      <!-- O BOTÃO DO HINO -->
       <button id="btn-hino" class="btn btn-dark shadow-sm fw-bold px-3 py-2" style="background-color:#000; border:none; transition: all 0.3s;" onclick="tocarHino()">▶ Tocar Hino Oficial</button>
     </div>
   </div>
 
-  <!-- CONTEÚDO PRINCIPAL: HISTÓRIA E HINO -->
   <div class="row g-4">
     
     <!-- ESQUERDA: HISTÓRIA -->
@@ -135,10 +132,10 @@
         
         <h5 class="fw-bold mt-4 mb-3">Principais Títulos 🏆</h5>
         <ul class="list-group list-group-flush" style="background:transparent;">
-          <li class="list-group-item px-0" style="background:transparent; border-color: rgba(0,0,0,0.15);"><strong>Copa Libertadores da América:</strong> 1 (1998)</li>
-          <li class="list-group-item px-0" style="background:transparent; border-color: rgba(0,0,0,0.15);"><strong>Campeonato Sul-Americano de Campeões:</strong> 1 (1948)</li>
-          <li class="list-group-item px-0" style="background:transparent; border-color: rgba(0,0,0,0.15);"><strong>Campeonato Brasileiro:</strong> 4 (1974, 1989, 1997, 2000)</li>
-          <li class="list-group-item px-0" style="background:transparent; border-color: rgba(0,0,0,0.15);"><strong>Copa do Brasil:</strong> 1 (2011)</li>
+          <li class="list-group-item px-0" style="background:transparent; border-color: rgba(0,0,0,0.2);"><strong>Copa Libertadores da América:</strong> 1 (1998)</li>
+          <li class="list-group-item px-0" style="background:transparent; border-color: rgba(0,0,0,0.2);"><strong>Campeonato Sul-Americano de Campeões:</strong> 1 (1948)</li>
+          <li class="list-group-item px-0" style="background:transparent; border-color: rgba(0,0,0,0.2);"><strong>Campeonato Brasileiro:</strong> 4 (1974, 1989, 1997, 2000)</li>
+          <li class="list-group-item px-0" style="background:transparent; border-color: rgba(0,0,0,0.2);"><strong>Copa do Brasil:</strong> 1 (2011)</li>
         </ul>
       </div>
     </div>
@@ -167,18 +164,18 @@
   </div>
 </div>
 
-<!-- O ÁUDIO INVISÍVEL -->
+<!-- ÁUDIO DO HINO -->
 <audio id="audio-hino" src="./hino-vasco.mp3"></audio>
 
 <script>
   let audio = document.getElementById('audio-hino');
   let hinoTocando = false;
   
-  // Controle do Carrossel
   let fotos = document.querySelectorAll('.slide-foto');
   let fotoAtual = 0;
   let timerSlides;
 
+  // Troca a foto de fundo a cada 4 segundos
   function iniciarCarrossel() {
     fotos[fotoAtual].classList.add('ativo'); 
     timerSlides = setInterval(function() {
@@ -186,7 +183,7 @@
       fotoAtual++; 
       if (fotoAtual >= fotos.length) { fotoAtual = 0; } 
       fotos[fotoAtual].classList.add('ativo'); 
-    }, 4500); // Troca a foto a cada 4 segundos e meio
+    }, 4000); 
   }
 
   function pararCarrossel() {
@@ -199,21 +196,23 @@
     const b = document.getElementById('btn-hino');
     
     if (!hinoTocando) {
-      audio.play().catch(function() { alert("Verifique se o arquivo hino-vasco.mp3 está na pasta."); });
-      
+      audio.play().catch(function() { console.log("O áudio hino-vasco.mp3 não foi encontrado."); });
       b.innerHTML = "🔇 Parar Hino e Efeito";
       b.classList.replace('btn-dark', 'btn-danger'); 
-      document.body.classList.add('tocando-hino'); // Acende as fotos!
+      
+      // ACENDE A TORCIDA NO FUNDO
+      document.body.classList.add('tocando-hino'); 
       iniciarCarrossel();
       
       hinoTocando = true;
     } else {
       audio.pause();
       audio.currentTime = 0;
-      
       b.innerHTML = "▶ Tocar Hino Oficial";
       b.classList.replace('btn-danger', 'btn-dark'); 
-      document.body.classList.remove('tocando-hino'); // Apaga as fotos!
+      
+      // APAGA A TORCIDA
+      document.body.classList.remove('tocando-hino'); 
       pararCarrossel();
       
       hinoTocando = false;

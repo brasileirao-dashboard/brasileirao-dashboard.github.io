@@ -1,36 +1,170 @@
-<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Athletico Paranaense</title><link rel="icon" type="image/png" href="./escudoathetico.png"><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"><style>body{background:linear-gradient(135deg,#c8102e 0%,#000 100%);position:relative;min-height:100vh;}body::before{content:"";background:url('./escudoathetico.png') no-repeat center center fixed;background-size:50%;opacity:0.15;top:0;left:0;bottom:0;right:0;position:absolute;z-index:-1;}.conteudo-box{background-color:rgba(255,255,255,0.92);border-radius:12px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,0.3);}.titulo-clube{color:#c8102e;font-weight:900;text-transform:uppercase;border-bottom:3px solid #c8102e;padding-bottom:5px;}.hino-letra{font-style:italic;line-height:1.8;color:#222;text-align:center;font-size:1.05rem;}.mascote{max-width:140px;float:right;margin-left:15px;border-radius:8px;}</style></head><body><div class="container py-4">
-  
-  <!-- CABEÇALHO ATUALIZADO: Nome Completo + Escudo + Botão -->
-  <div class="d-flex justify-content-between align-items-center mb-4 conteudo-box">
-    <h1 class="titulo-clube m-0 border-0">Club Athletico Paranaense</h1>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Club Athletico Paranaense</title>
+  <link rel="icon" type="image/png" href="./escudoathleticopr.png">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #050505; 
+      margin: 0; padding: 0; min-height: 100vh;
+      font-family: 'Segoe UI', sans-serif;
+      overflow-x: hidden;
+    }
+    
+    .fundo-escudo {
+      content: ""; background: url('./escudoathleticopr.png') no-repeat center center fixed;
+      background-size: 50%; opacity: 0.10;
+      top: 0; left: 0; bottom: 0; right: 0; position: fixed; z-index: 1; pointer-events: none;
+    }
+
+    #slideshow-torcida {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: 2; opacity: 0; transition: opacity 1.5s ease-in-out; pointer-events: none; 
+    }
+    
+    body.tocando-hino #slideshow-torcida { opacity: 0.65; }
+
+    .slide-foto {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background-size: cover; background-position: center 15%; 
+      opacity: 0; transition: opacity 2s ease-in-out; 
+    }
+
+    .slide-foto.ativo { opacity: 1; animation: zoomLento 12s infinite alternate linear; }
+    @keyframes zoomLento { 0% { transform: scale(1.0); } 100% { transform: scale(1.08); } }
+
+    /* As 5 fotos exatas que você salvou */
+    .foto-1 { background-image: url('./torcidaathleticopr1.png'); }
+    .foto-2 { background-image: url('./torcidaathleticopr2.png'); }
+    .foto-3 { background-image: url('./torcidaathleticopr3.png'); }
+    .foto-4 { background-image: url('./torcidaathleticopr4.png'); }
+    .foto-5 { background-image: url('./torcidaathleticopr5.png'); }
+
+    .conteudo-frente { position: relative; z-index: 10; }
+
+    .conteudo-box {
+      background-color: rgba(255, 255, 255, 0.90); backdrop-filter: blur(4px);
+      border-radius: 12px; padding: 24px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.4); transition: background-color 1.5s ease;
+    }
+    
+    body.tocando-hino .conteudo-box { background-color: rgba(255, 255, 255, 0.55); }
+
+    .titulo-clube { color: #b10000; font-weight: 900; text-transform: uppercase; } 
+    .hino-letra { font-style: italic; line-height: 1.9; color: #000; text-align: center; font-size: 1.05rem; font-weight: 700; }
+    .mascote { max-width: 140px; float: right; margin-left: 15px; margin-bottom: 10px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+  </style>
+</head>
+<body>
+
+<div class="fundo-escudo"></div>
+
+<div id="slideshow-torcida">
+  <div class="slide-foto foto-1"></div>
+  <div class="slide-foto foto-2"></div>
+  <div class="slide-foto foto-3"></div>
+  <div class="slide-foto foto-4"></div>
+  <div class="slide-foto foto-5"></div>
+</div>
+
+<div class="container py-4 conteudo-frente">
+  <div class="d-flex justify-content-between align-items-center mb-4 conteudo-box flex-wrap gap-3">
+    <h1 class="titulo-clube m-0">Club Athletico Paranaense</h1>
     <div class="d-flex align-items-center">
-      <img src="./escudoathetico.png" style="height: 50px; margin-right: 15px; object-fit: contain;">
-      <button id="btn-hino" class="btn btn-dark shadow-sm fw-bold" style="background-color:#c8102e;border:none;" onclick="tocarHino()">▶ Tocar Hino Oficial</button>
+      <img src="./escudoathleticopr.png" style="height: 50px; margin-right: 15px; object-fit: contain;" onerror="this.style.display='none';">
+      <button id="btn-hino" class="btn btn-dark shadow-sm fw-bold px-3 py-2" style="background-color:#000; border:none; transition: all 0.3s;" onclick="tocarHino()">▶ Tocar Hino Oficial</button>
     </div>
   </div>
 
-  <div class="row g-4"><div class="col-md-7"><div class="conteudo-box h-100">
-    <h4 class="fw-bold mb-3">História e Glórias</h4>
-    <img src="./mascote-athletico.png" class="mascote" onerror="this.style.display='none';">
-    
-    <p class="text-justify mb-2"><strong>Fundação:</strong> 26 de março de 1924</p>
-    <p class="text-justify">O Club Athletico Paranaense nasceu da fusão entre o International Foot-Ball Club e o América Futebol Clube. O clube carrega o apelido de "Furacão" desde 1949, quando montou um esquadrão que aplicou goleadas impiedosas no campeonato estadual, ganhando fama nacional por seu ímpeto ofensivo.</p>
-    <p class="text-justify">Reconhecido por ter uma das infraestruturas mais modernas da América Latina, incluindo a Ligga Arena (a primeira arena com teto retrátil do Brasil) e o CT do Caju, o clube quebrou a hegemonia do eixo Rio-São Paulo. Conquistou o Campeonato Brasileiro em 2001 e consolidou sua força internacional levantando duas Copas Sul-Americanas (2018 e 2021).</p>
-    
-    <h5 class="fw-bold mt-4 mb-3">Principais Títulos 🏆</h5>
-    <ul class="list-group list-group-flush" style="background:transparent;">
-      <li class="list-group-item" style="background:transparent;"><strong>Copa Sul-Americana:</strong> 2 (2018, 2021)</li>
-      <li class="list-group-item" style="background:transparent;"><strong>Campeonato Brasileiro:</strong> 1 (2001)</li>
-      <li class="list-group-item" style="background:transparent;"><strong>Copa do Brasil:</strong> 1 (2019)</li>
-    </ul>
-  </div></div>
-  <div class="col-md-5"><div class="conteudo-box h-100 d-flex flex-column align-items-center">
-    <h4 class="fw-bold mb-3">Hino do Clube</h4>
-    <div class="hino-letra">
-      Athletico! Athletico!<br>Conhecemos teu valor<br>E a camisa rubro-negra<br>Só se veste por amor!<br><br>
-      Vamos marchar, sempre cantando<br>O hino do Furacão<br>E no peito ostentando<br>A faixa de campeão!<br><br>
-      O coração athleticano<br>Estará sempre voltado<br>Para os feitos do presente<br>E as glórias do passado!<br><br>
-      A tradição, a raça, o destemor<br>Ousadia, a rebeldia, o Furacão<br>São virtudes que o torcedor<br>Traz dentro do coração!
+  <div class="row g-4">
+    <div class="col-md-7">
+      <div class="conteudo-box h-100">
+        <h4 class="fw-bold mb-3">História e Glórias</h4>
+        <img src="./mascote-athleticopr.png" class="mascote" alt="Mascote Athletico" onerror="this.onerror=null; this.src='./mascote-athleticopr.jpg';">
+        
+        <p class="text-justify mb-2"><strong>Fundação:</strong> 26 de março de 1924</p>
+        <p class="text-justify">Nascido da fusão de dois clubes de Curitiba, o Club Athletico Paranaense construiu uma das histórias mais modernas e revolucionárias do futebol brasileiro. Conhecido como "Furacão" pela forma avassaladora como conquistou o Campeonato Paranaense de 1949, o clube orgulha-se de sua gestão inovadora e de sua casa, a Ligga Arena (Arena da Baixada), o primeiro estádio da América Latina com teto retrátil.</p>
+        <p class="text-justify">O Athletico rompeu as fronteiras estaduais e se consolidou como um gigante nacional em 2001, ao vencer o Campeonato Brasileiro. A partir da década de 2010, o clube tornou-se uma potência copeira indiscutível no continente, erguendo a Copa do Brasil e conquistando duas vezes a Copa Sul-Americana, firmando seu status entre a elite do futebol continental.</p>
+        
+        <h5 class="fw-bold mt-4 mb-3">Principais Títulos 🏆</h5>
+        <ul class="list-group list-group-flush" style="background:transparent;">
+          <li class="list-group-item px-0" style="background:transparent; border-color: rgba(0,0,0,0.2);"><strong>Copa Sul-Americana:</strong> 2 (2018, 2021)</li>
+          <li class="list-group-item px-0" style="background:transparent; border-color: rgba(0,0,0,0.2);"><strong>Campeonato Brasileiro:</strong> 1 (2001)</li>
+          <li class="list-group-item px-0" style="background:transparent; border-color: rgba(0,0,0,0.2);"><strong>Copa do Brasil:</strong> 1 (2019)</li>
+          <li class="list-group-item px-0" style="background:transparent; border-color: rgba(0,0,0,0.2);"><strong>Levain Cup/Conmebol:</strong> 1 (2019)</li>
+        </ul>
+      </div>
     </div>
-  </div></div></div></div>
-<script>let audio=new Audio('./hino-athletico.mp3');let hinoTocando=false;function tocarHino(){const b=document.getElementById('btn-hino');if(!hinoTocando){audio.play();b.innerText="🔇 Parar Hino";b.classList.replace('btn-dark','btn-secondary');hinoTocando=true;}else{audio.pause();audio.currentTime=0;b.innerText="▶ Tocar Hino Oficial";b.classList.replace('btn-secondary','btn-dark');b.style.backgroundColor='#c8102e';hinoTocando=false;}}</script></body></html>
+
+    <div class="col-md-5">
+      <div class="conteudo-box h-100 d-flex flex-column align-items-center">
+        <h4 class="fw-bold mb-3">Hino do Clube</h4>
+        <div class="hino-letra mt-2">
+          Athletico! Athletico!<br>
+          Conhecemos teu valor<br>
+          E a camisa rubro-negra<br>
+          Só se veste por amor!<br><br>
+          Vamos marchar sempre cantando<br>
+          O hino do Furacão<br>
+          E no peito ostentando<br>
+          A faixa de campeão!<br><br>
+          O coração athleticano<br>
+          Estará sempre voltado<br>
+          Para os feitos do presente<br>
+          E as glórias do passado!<br><br>
+          Athletico! Athletico!<br>
+          Conhecemos teu valor<br>
+          E a camisa rubro-negra<br>
+          Só se veste por amor!
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<audio id="audio-hino" src="./hino-athleticopr.mp3"></audio>
+
+<script>
+  let audio = document.getElementById('audio-hino');
+  let hinoTocando = false;
+  let fotos = document.querySelectorAll('.slide-foto');
+  let fotoAtual = 0; let timerSlides;
+
+  function iniciarCarrossel() {
+    fotos[fotoAtual].classList.add('ativo'); 
+    timerSlides = setInterval(function() {
+      fotos[fotoAtual].classList.remove('ativo'); 
+      fotoAtual++; if (fotoAtual >= fotos.length) { fotoAtual = 0; } 
+      fotos[fotoAtual].classList.add('ativo'); 
+    }, 6000); 
+  }
+
+  function pararCarrossel() {
+    clearInterval(timerSlides);
+    fotos.forEach(function(f) { f.classList.remove('ativo'); });
+    fotoAtual = 0;
+  }
+
+  function tocarHino() {
+    const b = document.getElementById('btn-hino');
+    if (!hinoTocando) {
+      audio.play().catch(function() { console.log("O áudio não foi encontrado."); });
+      b.innerHTML = "🔇 Parar Hino e Efeito"; b.classList.replace('btn-dark', 'btn-danger'); 
+      document.body.classList.add('tocando-hino'); iniciarCarrossel(); hinoTocando = true;
+    } else {
+      audio.pause(); audio.currentTime = 0;
+      b.innerHTML = "▶ Tocar Hino Oficial"; b.classList.replace('btn-danger', 'btn-dark'); 
+      document.body.classList.remove('tocando-hino'); pararCarrossel(); hinoTocando = false;
+    }
+  }
+
+  audio.addEventListener("ended", function() {
+      const b = document.getElementById('btn-hino');
+      b.innerHTML = "▶ Tocar Hino Oficial"; b.classList.replace('btn-danger', 'btn-dark');
+      document.body.classList.remove('tocando-hino'); pararCarrossel(); hinoTocando = false;
+  });
+</script>
+</body>
+</html>

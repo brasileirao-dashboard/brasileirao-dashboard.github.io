@@ -1,34 +1,168 @@
-<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Palmeiras</title><link rel="icon" type="image/png" href="./escudopalmeiras.png"><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"><style>body{background:linear-gradient(135deg,#006437 0%,#fff 100%);position:relative;min-height:100vh;}body::before{content:"";background:url('./escudopalmeiras.png') no-repeat center center fixed;background-size:50%;opacity:0.15;top:0;left:0;bottom:0;right:0;position:absolute;z-index:-1;}.conteudo-box{background-color:rgba(255,255,255,0.92);border-radius:12px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,0.3);}.titulo-clube{color:#006437;font-weight:900;text-transform:uppercase;border-bottom:3px solid #006437;padding-bottom:5px;}.hino-letra{font-style:italic;line-height:1.8;color:#222;text-align:center;font-size:1.05rem;}.mascote{max-width:140px;float:right;margin-left:15px;border-radius:8px;}</style></head><body><div class="container py-4">
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Sociedade Esportiva Palmeiras</title>
+  <link rel="icon" type="image/png" href="./escudopalmeiras.png">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #050505; 
+      margin: 0; padding: 0; min-height: 100vh;
+      font-family: 'Segoe UI', sans-serif;
+      overflow-x: hidden;
+    }
+    
+    .fundo-escudo {
+      content: ""; background: url('./escudopalmeiras.png') no-repeat center center fixed;
+      background-size: 50%; opacity: 0.10;
+      top: 0; left: 0; bottom: 0; right: 0; position: fixed; z-index: 1; pointer-events: none;
+    }
 
-  <div class="d-flex justify-content-between align-items-center mb-4 conteudo-box">
-    <h1 class="titulo-clube m-0 border-0">Sociedade Esportiva Palmeiras</h1>
+    #slideshow-torcida {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: 2; opacity: 0; transition: opacity 1.5s ease-in-out; pointer-events: none; 
+    }
+
+    body.tocando-hino #slideshow-torcida { opacity: 0.65; }
+
+    .slide-foto {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background-size: cover; background-position: center 15%; 
+      opacity: 0; transition: opacity 2s ease-in-out; 
+    }
+
+    .slide-foto.ativo { opacity: 1; animation: zoomLento 12s infinite alternate linear; }
+    @keyframes zoomLento { 0% { transform: scale(1.0); } 100% { transform: scale(1.08); } }
+
+    /* As 5 fotos exatas que você salvou */
+    .foto-1 { background-image: url('./torcidapalmeiras1.png'); }
+    .foto-2 { background-image: url('./torcidapalmeiras2.png'); }
+    .foto-3 { background-image: url('./torcidapalmeiras3.png'); }
+    .foto-4 { background-image: url('./torcidapalmeiras4.png'); }
+    .foto-5 { background-image: url('./torcidapalmeiras5.png'); }
+
+    .conteudo-frente { position: relative; z-index: 10; }
+
+    .conteudo-box {
+      background-color: rgba(255, 255, 255, 0.90); backdrop-filter: blur(4px);
+      border-radius: 12px; padding: 24px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.4); transition: background-color 1.5s ease;
+    }
+    
+    body.tocando-hino .conteudo-box { background-color: rgba(255, 255, 255, 0.55); }
+
+    .titulo-clube { color: #006437; font-weight: 900; text-transform: uppercase; } 
+    .hino-letra { font-style: italic; line-height: 1.9; color: #000; text-align: center; font-size: 1.05rem; font-weight: 700; }
+    .mascote { max-width: 140px; float: right; margin-left: 15px; margin-bottom: 10px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+  </style>
+</head>
+<body>
+
+<div class="fundo-escudo"></div>
+
+<div id="slideshow-torcida">
+  <div class="slide-foto foto-1"></div>
+  <div class="slide-foto foto-2"></div>
+  <div class="slide-foto foto-3"></div>
+  <div class="slide-foto foto-4"></div>
+  <div class="slide-foto foto-5"></div>
+</div>
+
+<div class="container py-4 conteudo-frente">
+  <div class="d-flex justify-content-between align-items-center mb-4 conteudo-box flex-wrap gap-3">
+    <h1 class="titulo-clube m-0">Sociedade Esportiva Palmeiras</h1>
     <div class="d-flex align-items-center">
-      <img src="./escudopalmeiras.png" style="height: 50px; margin-right: 15px; object-fit: contain;">
-      <button id="btn-hino" class="btn btn-dark shadow-sm fw-bold" style="background-color:#006437;border:none;" onclick="tocarHino()">▶ Tocar Hino Oficial</button>
+      <img src="./escudopalmeiras.png" style="height: 50px; margin-right: 15px; object-fit: contain;" onerror="this.style.display='none';">
+      <button id="btn-hino" class="btn btn-dark shadow-sm fw-bold px-3 py-2" style="background-color:#000; border:none; transition: all 0.3s;" onclick="tocarHino()">▶ Tocar Hino Oficial</button>
     </div>
   </div>
 
-  <div class="row g-4"><div class="col-md-7"><div class="conteudo-box h-100">
-    <h4 class="fw-bold mb-3">História e Glórias</h4>
-    <img src="./mascote-palmeiras.png" class="mascote" onerror="this.style.display='none';">
-    
-    <p class="text-justify mb-2"><strong>Fundação:</strong> 26 de agosto de 1914</p>
-    <p class="text-justify">Fundado por imigrantes italianos sob o nome de Società Sportiva Palestra Italia, o clube foi obrigado a mudar de nome em 1942 devido à 2ª Guerra Mundial. No evento conhecido como a "Arrancada Heroica", o time entrou em campo já rebatizado como Sociedade Esportiva Palmeiras, sagrando-se campeão paulista na mesma partida.</p>
-    <p class="text-justify">Reconhecido pela excelência técnica, formou nas décadas de 60 e 70 os lendários elencos conhecidos como "A Primeira e Segunda Academia", sendo a única equipe a fazer frente ao Santos de Pelé. É oficialmente o Maior Campeão do Brasil (12 conquistas). Em sua era recente, comanda uma hegemonia continental com a conquista do bicampeonato consecutivo da Libertadores em 2020 e 2021.</p>
-    
-    <h5 class="fw-bold mt-4 mb-3">Principais Títulos 🏆</h5>
-    <ul class="list-group list-group-flush" style="background:transparent;">
-      <li class="list-group-item" style="background:transparent;"><strong>Copa Rio Internacional:</strong> 1 (1951)</li>
-      <li class="list-group-item" style="background:transparent;"><strong>Copa Libertadores:</strong> 3 (1999, 2020, 2021)</li>
-      <li class="list-group-item" style="background:transparent;"><strong>Campeonato Brasileiro:</strong> 12 Vezes (Maior Vencedor)</li>
-    </ul>
-  </div></div>
-  <div class="col-md-5"><div class="conteudo-box h-100 d-flex flex-column align-items-center">
-    <h4 class="fw-bold mb-3">Hino do Clube</h4>
-    <div class="hino-letra">
-      Quando surge o alviverde imponente<br>No gramado em que a luta o aguarda<br>Sabe bem o que vem pela frente<br>Que a dureza do prélio não tarda!<br><br>
-      E o Palmeiras no ardor da partida<br>Transformando a lealdade em padrão<br>Sabe sempre levar de vencida<br>E mostrar que, de fato, é campeão!<br><br>
-      Defesa que ninguém passa<br>Linha atacante de raça<br>Torcida que canta e vibra<br>Por nosso Alviverde inteiro<br>Que sabe ser brasileiro<br>Ostentando a sua fibra!
+  <div class="row g-4">
+    <div class="col-md-7">
+      <div class="conteudo-box h-100">
+        <h4 class="fw-bold mb-3">História e Glórias</h4>
+        <img src="./mascote-palmeiras.png" class="mascote" alt="Mascote Palmeiras" onerror="this.onerror=null; this.src='./mascote-palmeiras.jpg';">
+        
+        <p class="text-justify mb-2"><strong>Fundação:</strong> 26 de agosto de 1914</p>
+        <p class="text-justify">Fundado por imigrantes italianos como Palestra Italia, o clube precisou mudar de nome em 1942 devido à Segunda Guerra Mundial, nascendo assim a Sociedade Esportiva Palmeiras. Em seu primeiro jogo com o novo nome, já sagrou-se campeão paulista, episódio eternizado como a "Arrancada Heroica".</p>
+        <p class="text-justify">O Palmeiras é o maior campeão nacional do Brasil. Durante as décadas de 60 e 70, montou esquadrões tão técnicos que ficaram conhecidos como "A Primeira e Segunda Academia". Após a gloriosa era Parmalat nos anos 90, o Alviverde Imponente construiu o Allianz Parque e iniciou a "Terceira Academia" sob o comando do técnico português Abel Ferreira, empilhando títulos consecutivos.</p>
+        
+        <h5 class="fw-bold mt-4 mb-3">Principais Títulos 🏆</h5>
+        <ul class="list-group list-group-flush" style="background:transparent;">
+          <li class="list-group-item px-0" style="background:transparent; border-color: rgba(0,0,0,0.2);"><strong>Copa Libertadores da América:</strong> 3 (1999, 2020, 2021)</li>
+          <li class="list-group-item px-0" style="background:transparent; border-color: rgba(0,0,0,0.2);"><strong>Campeonato Brasileiro:</strong> 12 (Maior Campeão)</li>
+          <li class="list-group-item px-0" style="background:transparent; border-color: rgba(0,0,0,0.2);"><strong>Copa do Brasil:</strong> 4 (1998, 2012, 2015, 2020)</li>
+          <li class="list-group-item px-0" style="background:transparent; border-color: rgba(0,0,0,0.2);"><strong>Copa Mercosul:</strong> 1 (1998)</li>
+        </ul>
+      </div>
     </div>
-  </div></div></div></div>
-<script>let audio=new Audio('./hino-palmeiras.mp3');let hinoTocando=false;function tocarHino(){const b=document.getElementById('btn-hino');if(!hinoTocando){audio.play();b.innerText="🔇 Parar Hino";b.classList.replace('btn-dark','btn-secondary');hinoTocando=true;}else{audio.pause();audio.currentTime=0;b.innerText="▶ Tocar Hino Oficial";b.classList.replace('btn-secondary','btn-dark');b.style.backgroundColor='#006437';hinoTocando=false;}}</script></body></html>
+
+    <div class="col-md-5">
+      <div class="conteudo-box h-100 d-flex flex-column align-items-center">
+        <h4 class="fw-bold mb-3">Hino do Clube</h4>
+        <div class="hino-letra mt-2">
+          Quando surge o alviverde imponente<br>
+          No gramado em que a luta o aguarda<br>
+          Sabe bem o que vem pela frente<br>
+          Que a dureza do prélio não tarda!<br><br>
+          E o Palmeiras no ardor da partida<br>
+          Transformando a lealdade em padrão<br>
+          Sabe sempre levar de vencida<br>
+          E mostrar que, de fato, é campeão!<br><br>
+          Defesa que ninguém passa<br>
+          Linha atacante de raça<br>
+          Torcida que canta e vibra<br><br>
+          Por nosso alviverde inteiro<br>
+          Que sabe ser brasileiro<br>
+          Ostentando a sua fibra!
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<audio id="audio-hino" src="./hino-palmeiras.mp3"></audio>
+
+<script>
+  let audio = document.getElementById('audio-hino');
+  let hinoTocando = false;
+  let fotos = document.querySelectorAll('.slide-foto');
+  let fotoAtual = 0; let timerSlides;
+
+  function iniciarCarrossel() {
+    fotos[fotoAtual].classList.add('ativo'); 
+    timerSlides = setInterval(function() {
+      fotos[fotoAtual].classList.remove('ativo'); 
+      fotoAtual++; if (fotoAtual >= fotos.length) { fotoAtual = 0; } 
+      fotos[fotoAtual].classList.add('ativo'); 
+    }, 6000); 
+  }
+
+  function pararCarrossel() {
+    clearInterval(timerSlides);
+    fotos.forEach(function(f) { f.classList.remove('ativo'); });
+    fotoAtual = 0;
+  }
+
+  function tocarHino() {
+    const b = document.getElementById('btn-hino');
+    if (!hinoTocando) {
+      audio.play().catch(function() { console.log("O áudio não foi encontrado."); });
+      b.innerHTML = "🔇 Parar Hino e Efeito"; b.classList.replace('btn-dark', 'btn-danger'); 
+      document.body.classList.add('tocando-hino'); iniciarCarrossel(); hinoTocando = true;
+    } else {
+      audio.pause(); audio.currentTime = 0;
+      b.innerHTML = "▶ Tocar Hino Oficial"; b.classList.replace('btn-danger', 'btn-dark'); 
+      document.body.classList.remove('tocando-hino'); pararCarrossel(); hinoTocando = false;
+    }
+  }
+
+  audio.addEventListener("ended", function() {
+      const b = document.getElementById('btn-hino');
+      b.innerHTML = "▶ Tocar Hino Oficial"; b.classList.replace('btn-danger', 'btn-dark');
+      document.body.classList.remove('tocando-hino'); pararCarrossel(); hinoTocando = false;
+  });
+</script>
+</body>
+</html>
